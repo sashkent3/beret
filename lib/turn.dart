@@ -1,4 +1,4 @@
-import 'package:beret/game_state.dart';
+import 'package:beret/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
@@ -8,11 +8,13 @@ import 'end_game.dart';
 
 class Turn extends StatelessWidget {
   Widget build(BuildContext context) {
-    final currentState = Provider.of<GameState>(context);
+    final currentState = Provider.of<AppState>(context).gameState;
 
     return Observer(
       builder: (_) {
-        if(currentState.timerTicking) {
+        if (currentState.word == '') {
+          return EndGame();
+        } else if(currentState.timerTicking) {
           return MaterialApp(
             title: 'Шляпа',
             home: Scaffold(
@@ -67,7 +69,7 @@ class Turn extends StatelessWidget {
 class PlayersDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<GameState>(context);
+    final currentState = Provider.of<AppState>(context).gameState;
 
     return Observer(
       builder: (_) => Stack(
@@ -89,7 +91,7 @@ class PlayersDisplay extends StatelessWidget {
 class GameStartButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<GameState>(context);
+    final currentState = Provider.of<AppState>(context).gameState;
 
     return RaisedButton(
       onPressed: () {
@@ -103,17 +105,11 @@ class GameStartButton extends StatelessWidget {
 class GuessedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<GameState>(context);
+    final currentState = Provider.of<AppState>(context).gameState;
 
     return RaisedButton(
       onPressed: () {
         currentState.guessedRight();
-        if(currentState.word == '') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => EndGame()),
-          );
-        }
       },
       child: Text('Угадано', style: TextStyle(fontSize: 20)),
     );
@@ -123,7 +119,7 @@ class GuessedButton extends StatelessWidget {
 class CurrentWord extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<GameState>(context);
+    final currentState = Provider.of<AppState>(context).gameState;
 
     return Observer(
       builder: (_) => Text(currentState.word, style: TextStyle(fontSize: 40))

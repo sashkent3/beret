@@ -20,4 +20,8 @@ class Hat {
       return '';
     }
   }
+
+  void putWord(String word) {
+    words.add(word);
+  }
 }

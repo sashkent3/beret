@@ -237,47 +237,6 @@ mixin _$GameState on _GameState, Store {
     }, _$hatAtom, name: '${_$hatAtom.name}_set');
   }
 
-  final _$loadingAtom = Atom(name: '_GameState.loading');
-
-  @override
-  bool get loading {
-    _$loadingAtom.context.enforceReadPolicy(_$loadingAtom);
-    _$loadingAtom.reportObserved();
-    return super.loading;
-  }
-
-  @override
-  set loading(bool value) {
-    _$loadingAtom.context.conditionallyRunInAction(() {
-      super.loading = value;
-      _$loadingAtom.reportChanged();
-    }, _$loadingAtom, name: '${_$loadingAtom.name}_set');
-  }
-
-  final _$dictionaryAtom = Atom(name: '_GameState.dictionary');
-
-  @override
-  Dictionary get dictionary {
-    _$dictionaryAtom.context.enforceReadPolicy(_$dictionaryAtom);
-    _$dictionaryAtom.reportObserved();
-    return super.dictionary;
-  }
-
-  @override
-  set dictionary(Dictionary value) {
-    _$dictionaryAtom.context.conditionallyRunInAction(() {
-      super.dictionary = value;
-      _$dictionaryAtom.reportChanged();
-    }, _$dictionaryAtom, name: '${_$dictionaryAtom.name}_set');
-  }
-
-  final _$loadDictionaryAsyncAction = AsyncAction('loadDictionary');
-
-  @override
-  Future<void> loadDictionary() {
-    return _$loadDictionaryAsyncAction.run(() => super.loadDictionary());
-  }
-
   final _$_GameStateActionController = ActionController(name: '_GameState');
 
   @override
@@ -325,16 +284,6 @@ mixin _$GameState on _GameState, Store {
     final _$actionInfo = _$_GameStateActionController.startAction();
     try {
       return super.resetTimer();
-    } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void newGame() {
-    final _$actionInfo = _$_GameStateActionController.startAction();
-    try {
-      return super.newGame();
     } finally {
       _$_GameStateActionController.endAction(_$actionInfo);
     }

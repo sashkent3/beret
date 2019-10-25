@@ -10,8 +10,12 @@ part 'game_state.g.dart';
 class GameState = _GameState with _$GameState;
 
 abstract class _GameState with Store {
+  _GameState(final Dictionary dictionary) {
+    hat = Hat(dictionary.getWords(hatSize, matchDifficulty, difficultyDispersion));
+  }
+
   @observable
-  List log;
+  List log = [];
 
   @observable
   int matchDifficulty = 50;
@@ -70,8 +74,10 @@ abstract class _GameState with Store {
     timerTicking = true;
     Timer.periodic(Duration(seconds: 1), (Timer timeout) {
       timerSecondPass();
-      if(timer == 1) {
+      if(timer == 0) {
         resetTimer();
+      }
+      if (!timerTicking) {
         timeout.cancel();
       }
     });
@@ -92,27 +98,5 @@ abstract class _GameState with Store {
   void resetTimer() {
     timerTicking = false;
     timer = 20;
-  }
-
-  @observable
-  bool loading = false;
-
-  @observable
-  Dictionary dictionary = Dictionary();
-
-  @action
-  Future<void> loadDictionary() async {
-    if (!(dictionary.loaded) && !(loading)) {
-      loading = true;
-      await dictionary.load();
-      loading = false;
-    }
-  }
-
-  @action
-  void newGame() {
-    turn = 0;
-    log = [];
-    hat = Hat(dictionary.getWords(hatSize, matchDifficulty, difficultyDispersion));
   }
 }

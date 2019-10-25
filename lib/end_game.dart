@@ -1,14 +1,13 @@
-import 'package:beret/main.dart';
+import 'package:beret/app_state.dart';
 import 'package:flutter/material.dart';
-import 'package:beret/game_state.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 
 
 class EndGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<GameState>(context);
+    final currentState = Provider.of<AppState>(context).gameState;
 
     return Observer(
       builder: (_) => Scaffold(
@@ -21,9 +20,8 @@ class EndGame extends StatelessWidget {
               Text(currentState.log.toString()),
               RaisedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyApp()),
+                  Navigator.pop(
+                    context
                   );
                 },
                 child: Text('Закончить игру', style: TextStyle(fontSize: 20))

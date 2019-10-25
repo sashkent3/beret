@@ -1,33 +1,38 @@
-import 'package:beret/game_state.dart';
+import 'package:beret/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import 'match.dart';
 
-void main() => runApp(MyApp());
-
+void main() {
+  runApp(
+    Provider<AppState>(
+      builder: (_) => AppState(),
+      child: MaterialApp(
+        title: 'Шляпа',
+        home: MyApp()
+      )
+    )
+  );
+}
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context)  => Provider<GameState>(
-    builder: (_) => GameState(),
-    child: MaterialApp(
-      title: 'Шляпа',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Шляпа'),
-        ),
-        body: MainScreen(),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Шляпа')
       ),
-    )
-  );
+      body: MainScreen()
+    );
+  }
 }
 
 class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<GameState>(context);
+    final currentState = Provider.of<AppState>(context);
     currentState.loadDictionary();
 
     return Observer(
