@@ -203,6 +203,40 @@ mixin _$GameState on _GameState, Store {
     }, _$wordAtom, name: '${_$wordAtom.name}_set');
   }
 
+  final _$timeSpentAtom = Atom(name: '_GameState.timeSpent');
+
+  @override
+  int get timeSpent {
+    _$timeSpentAtom.context.enforceReadPolicy(_$timeSpentAtom);
+    _$timeSpentAtom.reportObserved();
+    return super.timeSpent;
+  }
+
+  @override
+  set timeSpent(int value) {
+    _$timeSpentAtom.context.conditionallyRunInAction(() {
+      super.timeSpent = value;
+      _$timeSpentAtom.reportChanged();
+    }, _$timeSpentAtom, name: '${_$timeSpentAtom.name}_set');
+  }
+
+  final _$stopwatchAtom = Atom(name: '_GameState.stopwatch');
+
+  @override
+  Stopwatch get stopwatch {
+    _$stopwatchAtom.context.enforceReadPolicy(_$stopwatchAtom);
+    _$stopwatchAtom.reportObserved();
+    return super.stopwatch;
+  }
+
+  @override
+  set stopwatch(Stopwatch value) {
+    _$stopwatchAtom.context.conditionallyRunInAction(() {
+      super.stopwatch = value;
+      _$stopwatchAtom.reportChanged();
+    }, _$stopwatchAtom, name: '${_$stopwatchAtom.name}_set');
+  }
+
   final _$timerTickingAtom = Atom(name: '_GameState.timerTicking');
 
   @override
