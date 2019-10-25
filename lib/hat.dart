@@ -12,12 +12,12 @@ class Hat {
     if (words.length != 0) {
       int wordIdx = randomGenerator.nextInt(words.length);
       String swappedWord = words[wordIdx];
-      words[wordIdx] = words[-1];
+      words[wordIdx] = words.last;
       words.removeLast();
       return swappedWord;
     }
     else {
-      return null;
+      return '';
     }
   }
 }

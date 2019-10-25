@@ -6,7 +6,7 @@ part of 'game_state.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars
+// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$GameState on _GameState, Store {
   Computed<int> _$playerOneIDComputed;
@@ -24,6 +24,11 @@ mixin _$GameState on _GameState, Store {
   @override
   String get playerOne =>
       (_$playerOneComputed ??= Computed<String>(() => super.playerOne)).value;
+  Computed<String> _$playerTwoComputed;
+
+  @override
+  String get playerTwo =>
+      (_$playerTwoComputed ??= Computed<String>(() => super.playerTwo)).value;
 
   final _$logAtom = Atom(name: '_GameState.log');
 
@@ -40,6 +45,23 @@ mixin _$GameState on _GameState, Store {
       super.log = value;
       _$logAtom.reportChanged();
     }, _$logAtom, name: '${_$logAtom.name}_set');
+  }
+
+  final _$matchDifficultyAtom = Atom(name: '_GameState.matchDifficulty');
+
+  @override
+  int get matchDifficulty {
+    _$matchDifficultyAtom.context.enforceReadPolicy(_$matchDifficultyAtom);
+    _$matchDifficultyAtom.reportObserved();
+    return super.matchDifficulty;
+  }
+
+  @override
+  set matchDifficulty(int value) {
+    _$matchDifficultyAtom.context.conditionallyRunInAction(() {
+      super.matchDifficulty = value;
+      _$matchDifficultyAtom.reportChanged();
+    }, _$matchDifficultyAtom, name: '${_$matchDifficultyAtom.name}_set');
   }
 
   final _$playersNumberAtom = Atom(name: '_GameState.playersNumber');
@@ -144,21 +166,24 @@ mixin _$GameState on _GameState, Store {
     }, _$wordsAtom, name: '${_$wordsAtom.name}_set');
   }
 
-  final _$wordNumAtom = Atom(name: '_GameState.wordNum');
+  final _$difficultyDispersionAtom =
+      Atom(name: '_GameState.difficultyDispersion');
 
   @override
-  int get wordNum {
-    _$wordNumAtom.context.enforceReadPolicy(_$wordNumAtom);
-    _$wordNumAtom.reportObserved();
-    return super.wordNum;
+  int get difficultyDispersion {
+    _$difficultyDispersionAtom.context
+        .enforceReadPolicy(_$difficultyDispersionAtom);
+    _$difficultyDispersionAtom.reportObserved();
+    return super.difficultyDispersion;
   }
 
   @override
-  set wordNum(int value) {
-    _$wordNumAtom.context.conditionallyRunInAction(() {
-      super.wordNum = value;
-      _$wordNumAtom.reportChanged();
-    }, _$wordNumAtom, name: '${_$wordNumAtom.name}_set');
+  set difficultyDispersion(int value) {
+    _$difficultyDispersionAtom.context.conditionallyRunInAction(() {
+      super.difficultyDispersion = value;
+      _$difficultyDispersionAtom.reportChanged();
+    }, _$difficultyDispersionAtom,
+        name: '${_$difficultyDispersionAtom.name}_set');
   }
 
   final _$wordAtom = Atom(name: '_GameState.word');
@@ -195,17 +220,65 @@ mixin _$GameState on _GameState, Store {
     }, _$timerTickingAtom, name: '${_$timerTickingAtom.name}_set');
   }
 
-  final _$_GameStateActionController = ActionController(name: '_GameState');
+  final _$hatAtom = Atom(name: '_GameState.hat');
 
   @override
-  void newWord() {
-    final _$actionInfo = _$_GameStateActionController.startAction();
-    try {
-      return super.newWord();
-    } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
-    }
+  Hat get hat {
+    _$hatAtom.context.enforceReadPolicy(_$hatAtom);
+    _$hatAtom.reportObserved();
+    return super.hat;
   }
+
+  @override
+  set hat(Hat value) {
+    _$hatAtom.context.conditionallyRunInAction(() {
+      super.hat = value;
+      _$hatAtom.reportChanged();
+    }, _$hatAtom, name: '${_$hatAtom.name}_set');
+  }
+
+  final _$loadingAtom = Atom(name: '_GameState.loading');
+
+  @override
+  bool get loading {
+    _$loadingAtom.context.enforceReadPolicy(_$loadingAtom);
+    _$loadingAtom.reportObserved();
+    return super.loading;
+  }
+
+  @override
+  set loading(bool value) {
+    _$loadingAtom.context.conditionallyRunInAction(() {
+      super.loading = value;
+      _$loadingAtom.reportChanged();
+    }, _$loadingAtom, name: '${_$loadingAtom.name}_set');
+  }
+
+  final _$dictionaryAtom = Atom(name: '_GameState.dictionary');
+
+  @override
+  Dictionary get dictionary {
+    _$dictionaryAtom.context.enforceReadPolicy(_$dictionaryAtom);
+    _$dictionaryAtom.reportObserved();
+    return super.dictionary;
+  }
+
+  @override
+  set dictionary(Dictionary value) {
+    _$dictionaryAtom.context.conditionallyRunInAction(() {
+      super.dictionary = value;
+      _$dictionaryAtom.reportChanged();
+    }, _$dictionaryAtom, name: '${_$dictionaryAtom.name}_set');
+  }
+
+  final _$loadDictionaryAsyncAction = AsyncAction('loadDictionary');
+
+  @override
+  Future<void> loadDictionary() {
+    return _$loadDictionaryAsyncAction.run(() => super.loadDictionary());
+  }
+
+  final _$_GameStateActionController = ActionController(name: '_GameState');
 
   @override
   void guessedRight() {
@@ -222,16 +295,6 @@ mixin _$GameState on _GameState, Store {
     final _$actionInfo = _$_GameStateActionController.startAction();
     try {
       return super.newTurn();
-    } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void refresh() {
-    final _$actionInfo = _$_GameStateActionController.startAction();
-    try {
-      return super.refresh();
     } finally {
       _$_GameStateActionController.endAction(_$actionInfo);
     }
@@ -262,6 +325,16 @@ mixin _$GameState on _GameState, Store {
     final _$actionInfo = _$_GameStateActionController.startAction();
     try {
       return super.resetTimer();
+    } finally {
+      _$_GameStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void newGame() {
+    final _$actionInfo = _$_GameStateActionController.startAction();
+    try {
+      return super.newGame();
     } finally {
       _$_GameStateActionController.endAction(_$actionInfo);
     }

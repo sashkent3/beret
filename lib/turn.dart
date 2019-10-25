@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:beret/game_state.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
+
 import 'end_game.dart';
 
 
@@ -90,14 +91,11 @@ class GameStartButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentState = Provider.of<GameState>(context);
 
-    return Observer(
-      builder: (_) => RaisedButton(
-        onPressed: () {
-          currentState.newTurn();
-          currentState.timerStart();
-        },
-        child: Text('Поехали', style: TextStyle(fontSize: 20))
-      )
+    return RaisedButton(
+      onPressed: () {
+        currentState.newTurn();
+      },
+      child: Text('Поехали', style: TextStyle(fontSize: 20))
     );
   }
 }
@@ -107,19 +105,17 @@ class GuessedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentState = Provider.of<GameState>(context);
 
-    return Observer(
-      builder: (_) => RaisedButton(
-        onPressed: () {
-          currentState.guessedRight();
-          if(currentState.hatSize == currentState.wordNum) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => EndGame()),
-            );
-          } 
-        },
-        child: Text('Угадано', style: TextStyle(fontSize: 20)),
-      )
+    return RaisedButton(
+      onPressed: () {
+        currentState.guessedRight();
+        if(currentState.word == '') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => EndGame()),
+          );
+        }
+      },
+      child: Text('Угадано', style: TextStyle(fontSize: 20)),
     );
   }
 }

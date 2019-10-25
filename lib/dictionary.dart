@@ -20,9 +20,12 @@ class Dictionary {
 
   SharedPreferences prefs;
 
-  Dictionary(this.words) {
+  bool loaded;
+
+  Dictionary() {
     buckets = List.filled(101, List());
     bucketsIters = List.filled(101, 0);
+    loaded = false;
   }
 
   Future<void> getDirectories() async {
@@ -32,6 +35,7 @@ class Dictionary {
   }
 
   Future<void> load() async {
+    loaded = true;
     var dictionaryFile = await DefaultCacheManager().getSingleFile('http://the-hat.appspot.com/api/v2/dictionary/ru');
     var dictionaryList = jsonDecode(dictionaryFile.readAsStringSync());
 
@@ -40,13 +44,13 @@ class Dictionary {
       buckets[dictionaryList[i]['diff']].add(dictionaryList[i]['word']);
     }
 
-    for (int i; i < 101; i++) {
+    for (int i = 0; i < 101; i++) {
       buckets[i].shuffle();
       bucketsIters[i] = 0;
     }
   }
 
-  Future<int> getUsedWordsIter () async {
+  int getUsedWordsIter () {
     final int usedWordsIter = prefs.getInt('usedWordsIter') ?? -1;
 
     if (usedWordsIter == -1) {
@@ -59,31 +63,32 @@ class Dictionary {
     }
   }
 
-  Future<List> getUsedWords() async {
+  List getUsedWords() {
     if (!File('$usedWordsPath/used_words.json').existsSync()) {
       List usedWords = List(1000);
       new File('$usedWordsPath/used_words.json').createSync();
-      File('$usedWordsPath/used_words.json').writeAsString(jsonEncode(usedWords));
+      File('$usedWordsPath/used_words.json').writeAsStringSync(jsonEncode(usedWords));
       return usedWords;
     }
 
     else {
-      final file = await File('$usedWordsPath/used_words.json').readAsString();
+      final file = File('$usedWordsPath/used_words.json').readAsStringSync();
       List usedWords = jsonDecode(file);
       return usedWords;
     }
   }
 
-  Future<List> getWords(int size, int difficulty, int difficultyDispersion) async {
-    List hatWords = List(size);
+  List getWords(int size, int difficulty, int difficultyDispersion) {
+    List hatWords = List();
     List bucketsDispersion = Normal.generate(size);
-    List usedWords = await getUsedWords();
-    int usedWordsIter = await getUsedWordsIter();
+    List usedWords = getUsedWords();
+    int usedWordsIter = getUsedWordsIter();
 
     for (var i = 0; i < size; i++) {
       int bucketIdx = (bucketsDispersion[i] * difficultyDispersion + difficulty).round();
       String word = buckets[bucketIdx][bucketsIters[bucketIdx]];
       while (usedWords.contains(word)) {
+        word = buckets[bucketIdx][bucketsIters[bucketIdx]];
         bucketsIters[bucketIdx]++;
         if (bucketsIters[bucketIdx] == buckets[bucketIdx].length) {
           buckets[bucketIdx].shuffle();
