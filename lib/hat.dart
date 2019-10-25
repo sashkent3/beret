@@ -24,4 +24,8 @@ class Hat {
   void putWord(String word) {
     words.add(word);
   }
+
+  bool isEmpty() {
+    return words.isEmpty;
+  }
 }

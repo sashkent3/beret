@@ -30,6 +30,23 @@ mixin _$GameState on _GameState, Store {
   String get playerTwo =>
       (_$playerTwoComputed ??= Computed<String>(() => super.playerTwo)).value;
 
+  final _$stateAtom = Atom(name: '_GameState.state');
+
+  @override
+  String get state {
+    _$stateAtom.context.enforceReadPolicy(_$stateAtom);
+    _$stateAtom.reportObserved();
+    return super.state;
+  }
+
+  @override
+  set state(String value) {
+    _$stateAtom.context.conditionallyRunInAction(() {
+      super.state = value;
+      _$stateAtom.reportChanged();
+    }, _$stateAtom, name: '${_$stateAtom.name}_set');
+  }
+
   final _$logAtom = Atom(name: '_GameState.log');
 
   @override
@@ -149,23 +166,6 @@ mixin _$GameState on _GameState, Store {
     }, _$timerAtom, name: '${_$timerAtom.name}_set');
   }
 
-  final _$wordsAtom = Atom(name: '_GameState.words');
-
-  @override
-  List get words {
-    _$wordsAtom.context.enforceReadPolicy(_$wordsAtom);
-    _$wordsAtom.reportObserved();
-    return super.words;
-  }
-
-  @override
-  set words(List value) {
-    _$wordsAtom.context.conditionallyRunInAction(() {
-      super.words = value;
-      _$wordsAtom.reportChanged();
-    }, _$wordsAtom, name: '${_$wordsAtom.name}_set');
-  }
-
   final _$difficultyDispersionAtom =
       Atom(name: '_GameState.difficultyDispersion');
 
@@ -240,10 +240,40 @@ mixin _$GameState on _GameState, Store {
   final _$_GameStateActionController = ActionController(name: '_GameState');
 
   @override
+  void changeState(String newState) {
+    final _$actionInfo = _$_GameStateActionController.startAction();
+    try {
+      return super.changeState(newState);
+    } finally {
+      _$_GameStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void concede() {
+    final _$actionInfo = _$_GameStateActionController.startAction();
+    try {
+      return super.concede();
+    } finally {
+      _$_GameStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void guessedRight() {
     final _$actionInfo = _$_GameStateActionController.startAction();
     try {
       return super.guessedRight();
+    } finally {
+      _$_GameStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void error() {
+    final _$actionInfo = _$_GameStateActionController.startAction();
+    try {
+      return super.error();
     } finally {
       _$_GameStateActionController.endAction(_$actionInfo);
     }

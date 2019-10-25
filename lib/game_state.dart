@@ -15,16 +15,19 @@ abstract class _GameState with Store {
   }
 
   @observable
+  String state = 'lobby';
+
+  @observable
   List log = [];
 
   @observable
   int matchDifficulty = 50;
 
   @observable
-  int playersNumber = 4;
+  int playersNumber = 2;
 
   @observable
-  List players = ['Коля', 'Саша', 'Мама', 'Папа'];
+  List players = ['Первый игрок', 'Второй игрок'];
 
   @observable
   int turn = 0;
@@ -42,13 +45,10 @@ abstract class _GameState with Store {
   String get playerTwo => players[playerTwoID];
   
   @observable
-  int hatSize = 3;
+  int hatSize = 40;
 
   @observable
   int timer = 20;
-
-  @observable
-  List words = [];
 
   @observable
   int difficultyDispersion = 5;
@@ -57,14 +57,43 @@ abstract class _GameState with Store {
   String word;
 
   @action
+  void changeState(String newState) {
+    state = newState;
+  }
+
+  @action
+  void concede() {
+    hat.putWord(word);
+    resetTimer();
+    changeState('lobby');
+  }
+
+  @action
   void guessedRight() {
     log.add([playerOneID, playerTwoID, word]);
-    word = hat.getWord();
+    if (hat.isEmpty()) {
+      changeState('end');
+    }
+    else {
+      word = hat.getWord();
+    }
+  }
+
+  @action
+  void error() {
+    resetTimer();
+    if (hat.isEmpty()) {
+      changeState('end');
+    }
+    else {
+      changeState('lobby');
+    }
   }
 
   @action
   void newTurn() {
     word = hat.getWord();
+    changeState('main');
     timerStart();
     turn++;
   }
@@ -74,7 +103,11 @@ abstract class _GameState with Store {
     timerTicking = true;
     Timer.periodic(Duration(seconds: 1), (Timer timeout) {
       timerSecondPass();
-      if(timer == 0) {
+      if (timer == 0) {
+        changeState('last');
+      }
+      else if (timer == -3) {
+        changeState('verdict');
         resetTimer();
       }
       if (!timerTicking) {
