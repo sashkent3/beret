@@ -26,6 +26,40 @@ mixin _$AppState on _AppState, Store {
     }, _$loadingAtom, name: '${_$loadingAtom.name}_set');
   }
 
+  final _$playersAtom = Atom(name: '_AppState.players');
+
+  @override
+  List get players {
+    _$playersAtom.context.enforceReadPolicy(_$playersAtom);
+    _$playersAtom.reportObserved();
+    return super.players;
+  }
+
+  @override
+  set players(List value) {
+    _$playersAtom.context.conditionallyRunInAction(() {
+      super.players = value;
+      _$playersAtom.reportChanged();
+    }, _$playersAtom, name: '${_$playersAtom.name}_set');
+  }
+
+  final _$playersNumberAtom = Atom(name: '_AppState.playersNumber');
+
+  @override
+  int get playersNumber {
+    _$playersNumberAtom.context.enforceReadPolicy(_$playersNumberAtom);
+    _$playersNumberAtom.reportObserved();
+    return super.playersNumber;
+  }
+
+  @override
+  set playersNumber(int value) {
+    _$playersNumberAtom.context.conditionallyRunInAction(() {
+      super.playersNumber = value;
+      _$playersNumberAtom.reportChanged();
+    }, _$playersNumberAtom, name: '${_$playersNumberAtom.name}_set');
+  }
+
   final _$dictionaryAtom = Atom(name: '_AppState.dictionary');
 
   @override

@@ -12,6 +12,12 @@ abstract class _AppState with Store {
   bool loading = false;
 
   @observable
+  List players = List();
+
+  @observable
+  int playersNumber = 2;
+
+  @observable
   Dictionary dictionary = Dictionary();
 
   @action
@@ -28,6 +34,6 @@ abstract class _AppState with Store {
 
   @action
   void newGame() {
-    gameState = GameState(dictionary);
+    gameState = GameState(dictionary, playersNumber, players);
   }
 }

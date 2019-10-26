@@ -9,16 +9,40 @@ class Match extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context);
+    final playersFormKey = GlobalKey<FormState>();
+    List<Widget> playersTextFormField = List.filled(
+      currentState.playersNumber,
+      TextFormField(
+        onSaved: (value) {
+          currentState.players.add(value);
+        },
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Please enter some text';
+          }
+          return null;
+        },
+      ),
+    );
     return Center(
       child: Column(
         children: <Widget>[
+          Form(
+              key: playersFormKey,
+              child: Column(
+                  children: playersTextFormField
+              )
+          ),
           RaisedButton(
             onPressed: () {
-              currentState.newGame();
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Turn()),
-              );
+              if (playersFormKey.currentState.validate()) {
+                playersFormKey.currentState.save();
+                currentState.newGame();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Turn()),
+                );
+              }
             },
             child: Text('Начать игру', style: TextStyle(fontSize: 20))
           ),

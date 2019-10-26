@@ -30,6 +30,23 @@ mixin _$GameState on _GameState, Store {
   String get playerTwo =>
       (_$playerTwoComputed ??= Computed<String>(() => super.playerTwo)).value;
 
+  final _$playersNumberAtom = Atom(name: '_GameState.playersNumber');
+
+  @override
+  int get playersNumber {
+    _$playersNumberAtom.context.enforceReadPolicy(_$playersNumberAtom);
+    _$playersNumberAtom.reportObserved();
+    return super.playersNumber;
+  }
+
+  @override
+  set playersNumber(int value) {
+    _$playersNumberAtom.context.conditionallyRunInAction(() {
+      super.playersNumber = value;
+      _$playersNumberAtom.reportChanged();
+    }, _$playersNumberAtom, name: '${_$playersNumberAtom.name}_set');
+  }
+
   final _$stateAtom = Atom(name: '_GameState.state');
 
   @override
@@ -79,23 +96,6 @@ mixin _$GameState on _GameState, Store {
       super.matchDifficulty = value;
       _$matchDifficultyAtom.reportChanged();
     }, _$matchDifficultyAtom, name: '${_$matchDifficultyAtom.name}_set');
-  }
-
-  final _$playersNumberAtom = Atom(name: '_GameState.playersNumber');
-
-  @override
-  int get playersNumber {
-    _$playersNumberAtom.context.enforceReadPolicy(_$playersNumberAtom);
-    _$playersNumberAtom.reportObserved();
-    return super.playersNumber;
-  }
-
-  @override
-  set playersNumber(int value) {
-    _$playersNumberAtom.context.conditionallyRunInAction(() {
-      super.playersNumber = value;
-      _$playersNumberAtom.reportChanged();
-    }, _$playersNumberAtom, name: '${_$playersNumberAtom.name}_set');
   }
 
   final _$playersAtom = Atom(name: '_GameState.players');
@@ -237,23 +237,6 @@ mixin _$GameState on _GameState, Store {
     }, _$stopwatchAtom, name: '${_$stopwatchAtom.name}_set');
   }
 
-  final _$timerTickingAtom = Atom(name: '_GameState.timerTicking');
-
-  @override
-  bool get timerTicking {
-    _$timerTickingAtom.context.enforceReadPolicy(_$timerTickingAtom);
-    _$timerTickingAtom.reportObserved();
-    return super.timerTicking;
-  }
-
-  @override
-  set timerTicking(bool value) {
-    _$timerTickingAtom.context.conditionallyRunInAction(() {
-      super.timerTicking = value;
-      _$timerTickingAtom.reportChanged();
-    }, _$timerTickingAtom, name: '${_$timerTickingAtom.name}_set');
-  }
-
   final _$hatAtom = Atom(name: '_GameState.hat');
 
   @override
@@ -338,16 +321,6 @@ mixin _$GameState on _GameState, Store {
     final _$actionInfo = _$_GameStateActionController.startAction();
     try {
       return super.timerSecondPass();
-    } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void resetTimer() {
-    final _$actionInfo = _$_GameStateActionController.startAction();
-    try {
-      return super.resetTimer();
     } finally {
       _$_GameStateActionController.endAction(_$actionInfo);
     }

@@ -96,6 +96,14 @@ class Turn extends StatelessWidget {
                             alignment: Alignment.bottomRight,
                             child: GuessedRightButton()
                         ),
+                        Align(
+                            alignment: Alignment.bottomCenter,
+                            child: GuessedWrongButton()
+                        ),
+                        Align(
+                            alignment: Alignment.bottomLeft,
+                            child: ErrorButton()
+                        ),
                         Center(
                             child: CurrentWord()
                         )

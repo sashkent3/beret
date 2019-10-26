@@ -10,9 +10,15 @@ part 'game_state.g.dart';
 class GameState = _GameState with _$GameState;
 
 abstract class _GameState with Store {
-  _GameState(final Dictionary dictionary) {
+  _GameState(final Dictionary dictionary, final int playersNumberInit,
+      final List playersInit) {
     hat = Hat(dictionary.getWords(hatSize, matchDifficulty, difficultyDispersion));
+    playersNumber = playersNumberInit;
+    players = playersInit;
   }
+
+  @observable
+  int playersNumber;
 
   @observable
   String state = 'lobby';
@@ -24,10 +30,7 @@ abstract class _GameState with Store {
   int matchDifficulty = 50;
 
   @observable
-  int playersNumber = 2;
-
-  @observable
-  List players = ['Первый игрок', 'Второй игрок'];
+  List players;
 
   @observable
   int turn = 0;
@@ -73,7 +76,7 @@ abstract class _GameState with Store {
       timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
       log.add([playerOne, playerTwo, word, timeSpent, 0]);
     }
-    else if (state == 'last') {
+    else if (state == 'last' || state == 'verdict') {
       log.add([
         playerOne,
         playerTwo,
@@ -83,7 +86,7 @@ abstract class _GameState with Store {
       ]);
     }
     hat.putWord(word);
-    resetTimer();
+    turn++;
     changeState('lobby');
   }
 
@@ -93,7 +96,7 @@ abstract class _GameState with Store {
       timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
       log.add([playerOne, playerTwo, word, timeSpent, 0, 'guessed']);
     }
-    else if (state == 'last') {
+    else if (state == 'last' || state == 'verdict') {
       log.add([
         playerOne,
         playerTwo,
@@ -103,10 +106,14 @@ abstract class _GameState with Store {
         'guessed'
       ]);
     }
-    if (hat.isEmpty() || state == 'last') {
+    if (hat.isEmpty()) {
       stopwatch.stop();
-      stopwatch.reset();
       changeState('end');
+    }
+    else if (state == 'last' || state == 'verdict') {
+      stopwatch.stop();
+      turn++;
+      changeState('lobby');
     }
     else {
       word = hat.getWord();
@@ -116,12 +123,11 @@ abstract class _GameState with Store {
 
   @action
   void error() {
-    resetTimer();
     if (state == 'main') {
       timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
       log.add([playerOne, playerTwo, word, timeSpent, 0, 'failed']);
     }
-    else if (state == 'last') {
+    else if (state == 'last' || state == 'verdict') {
       log.add([
         playerOne,
         playerTwo,
@@ -133,6 +139,7 @@ abstract class _GameState with Store {
     }
     stopwatch.stop();
     stopwatch.reset();
+    turn++;
     if (hat.isEmpty()) {
       changeState('end');
     }
@@ -146,16 +153,18 @@ abstract class _GameState with Store {
     word = hat.getWord();
     changeState('main');
     timerStart();
-    turn++;
   }
 
   @action
   void timerStart() {
-    timerTicking = true;
     stopwatch.start();
     Timer.periodic(Duration(seconds: 1), (Timer timeout) {
       timerSecondPass();
-      if (timer == 0) {
+      if (state != 'main' && state != 'last') {
+        timeout.cancel();
+        timer = 20;
+      }
+      else if (timer == 0) {
         timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
         stopwatch.reset();
         changeState('last');
@@ -163,16 +172,9 @@ abstract class _GameState with Store {
       else if (timer == -3) {
         changeState('verdict');
         stopwatch.stop();
-        resetTimer();
-      }
-      if (!timerTicking) {
-        timeout.cancel();
       }
     });
   }
-
-  @observable
-  bool timerTicking = false;
 
   @observable
   Hat hat;
@@ -180,11 +182,5 @@ abstract class _GameState with Store {
   @action
   void timerSecondPass() {
     timer--;
-  }
-
-  @action
-  void resetTimer() {
-    timerTicking = false;
-    timer = 20;
   }
 }
