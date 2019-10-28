@@ -10,10 +10,15 @@ part 'game_state.g.dart';
 class GameState = _GameState with _$GameState;
 
 abstract class _GameState with Store {
-  _GameState(final Dictionary dictionary) {
-    hat = Hat(
-        dictionary.getWords(hatSize, matchDifficulty, difficultyDispersion));
+  @observable
+  Dictionary dictionary;
+
+  _GameState(final Dictionary initDictionary) {
+    dictionary = initDictionary;
   }
+
+  @observable
+  int playersNum = 2;
 
   @observable
   String state = 'lobby';
@@ -25,18 +30,18 @@ abstract class _GameState with Store {
   int matchDifficulty = 50;
 
   @observable
-  List players = ['Игрок 1', 'Игрок 2'];
+  List<String> players = ['Игрок 1', 'Игрок 2'];
 
   @observable
   int turn = 0;
 
   @computed
-  int get playerOneID => turn % players.length;
+  int get playerOneID => turn % playersNum;
 
   @computed
   int get playerTwoID =>
-      (1 + (turn ~/ players.length) % (players.length - 1) + turn) %
-          players.length;
+      (1 + (turn ~/ playersNum) % (playersNum - 1) + turn) %
+          playersNum;
 
   @computed
   String get playerOne => players[playerOneID];
@@ -141,7 +146,7 @@ abstract class _GameState with Store {
 
   @action
   bool validateAll() {
-    if (players.length == players
+    if (playersNum == players
         .toSet()
         .length && !players.contains('')) {
       return true;
@@ -186,12 +191,19 @@ abstract class _GameState with Store {
 
   @action
   void addPlayer() {
-    int i = players.length + 1;
-    players.add('Игрок $i');
+    playersNum++;
+    players.add('Игрок $playersNum');
   }
 
   @action
   void removePlayer(int i) {
+    playersNum--;
     players.removeAt(i);
+  }
+
+  @action
+  void createHat() {
+    hat = Hat(
+        dictionary.getWords(hatSize, matchDifficulty, difficultyDispersion));
   }
 }

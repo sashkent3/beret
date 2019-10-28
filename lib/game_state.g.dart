@@ -30,6 +30,40 @@ mixin _$GameState on _GameState, Store {
   String get playerTwo =>
       (_$playerTwoComputed ??= Computed<String>(() => super.playerTwo)).value;
 
+  final _$dictionaryAtom = Atom(name: '_GameState.dictionary');
+
+  @override
+  Dictionary get dictionary {
+    _$dictionaryAtom.context.enforceReadPolicy(_$dictionaryAtom);
+    _$dictionaryAtom.reportObserved();
+    return super.dictionary;
+  }
+
+  @override
+  set dictionary(Dictionary value) {
+    _$dictionaryAtom.context.conditionallyRunInAction(() {
+      super.dictionary = value;
+      _$dictionaryAtom.reportChanged();
+    }, _$dictionaryAtom, name: '${_$dictionaryAtom.name}_set');
+  }
+
+  final _$playersNumAtom = Atom(name: '_GameState.playersNum');
+
+  @override
+  int get playersNum {
+    _$playersNumAtom.context.enforceReadPolicy(_$playersNumAtom);
+    _$playersNumAtom.reportObserved();
+    return super.playersNum;
+  }
+
+  @override
+  set playersNum(int value) {
+    _$playersNumAtom.context.conditionallyRunInAction(() {
+      super.playersNum = value;
+      _$playersNumAtom.reportChanged();
+    }, _$playersNumAtom, name: '${_$playersNumAtom.name}_set');
+  }
+
   final _$stateAtom = Atom(name: '_GameState.state');
 
   @override
@@ -84,14 +118,14 @@ mixin _$GameState on _GameState, Store {
   final _$playersAtom = Atom(name: '_GameState.players');
 
   @override
-  List get players {
+  List<String> get players {
     _$playersAtom.context.enforceReadPolicy(_$playersAtom);
     _$playersAtom.reportObserved();
     return super.players;
   }
 
   @override
-  set players(List value) {
+  set players(List<String> value) {
     _$playersAtom.context.conditionallyRunInAction(() {
       super.players = value;
       _$playersAtom.reportChanged();
@@ -334,6 +368,16 @@ mixin _$GameState on _GameState, Store {
     final _$actionInfo = _$_GameStateActionController.startAction();
     try {
       return super.removePlayer(i);
+    } finally {
+      _$_GameStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void createHat() {
+    final _$actionInfo = _$_GameStateActionController.startAction();
+    try {
+      return super.createHat();
     } finally {
       _$_GameStateActionController.endAction(_$actionInfo);
     }

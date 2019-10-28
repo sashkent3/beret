@@ -22,7 +22,7 @@ class Match extends StatelessWidget {
                   child: Observer(
                       builder: (_) =>
                           ListView.builder(
-                              itemCount: currentGameState.players.length,
+                              itemCount: currentGameState.playersNum,
                               itemBuilder: (context, index) {
                                 return Row(children: <Widget>[
                                   Expanded(
@@ -42,8 +42,7 @@ class Match extends StatelessWidget {
                                   IconButton(
                                       icon: Icon(Icons.close),
                                       onPressed: () {
-                                        if (currentGameState.players.length >
-                                            2) {
+                                        if (currentGameState.playersNum > 2) {
                                           currentGameState.removePlayer(index);
                                         } else {
                                           showDialog<void>(
@@ -76,6 +75,7 @@ class Match extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: RaisedButton(
                     onPressed: () {
+                      currentGameState.createHat();
                       if (currentGameState.validateAll()) {
                         Navigator.push(
                           context,
