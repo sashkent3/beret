@@ -42,10 +42,32 @@ class Match extends StatelessWidget {
                                   IconButton(
                                       icon: Icon(Icons.close),
                                       onPressed: () {
-                                        //playersFormKey.currentGameState.save();
                                         if (currentGameState.players.length >
                                             2) {
                                           currentGameState.removePlayer(index);
+                                        } else {
+                                          showDialog<void>(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                content: Text(
+                                                    'Должно быть хотя бы два игрока!',
+                                                    style: TextStyle(
+                                                        fontSize: 20)),
+                                                actions: <Widget>[
+                                                  FlatButton(
+                                                    child: Text('Закрыть',
+                                                        style: TextStyle(
+                                                            fontSize: 20)),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
                                         }
                                       })
                                 ]);
@@ -58,6 +80,26 @@ class Match extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Turn()),
+                        );
+                      } else {
+                        showDialog<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Text(
+                                  'У всех игроков должны быть разные имена хотя бы из одного символа!',
+                                  style: TextStyle(fontSize: 20)),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('Закрыть',
+                                      style: TextStyle(fontSize: 20)),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
                         );
                       }
                     },
