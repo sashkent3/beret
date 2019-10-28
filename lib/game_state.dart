@@ -10,15 +10,13 @@ part 'game_state.g.dart';
 class GameState = _GameState with _$GameState;
 
 abstract class _GameState with Store {
-  _GameState(final Dictionary dictionary, final int playersNumberInit,
-      final List playersInit) {
-    hat = Hat(dictionary.getWords(hatSize, matchDifficulty, difficultyDispersion));
-    playersNumber = playersNumberInit;
-    players = playersInit;
+  _GameState(final Dictionary dictionary) {
+    hat = Hat(
+        dictionary.getWords(hatSize, matchDifficulty, difficultyDispersion));
   }
 
-  @observable
-  int playersNumber;
+  @computed
+  int get playersNumber => players.length;
 
   @observable
   String state = 'lobby';
@@ -30,23 +28,25 @@ abstract class _GameState with Store {
   int matchDifficulty = 50;
 
   @observable
-  List players;
+  List players = ['Игрок 1', 'Игрок 2'];
 
   @observable
   int turn = 0;
-  
+
   @computed
   int get playerOneID => turn % playersNumber;
 
   @computed
-  int get playerTwoID => (1 + (turn ~/ playersNumber) % (playersNumber - 1) + turn) % playersNumber;
-  
+  int get playerTwoID =>
+      (1 + (turn ~/ playersNumber) % (playersNumber - 1) + turn) %
+          playersNumber;
+
   @computed
   String get playerOne => players[playerOneID];
 
   @computed
   String get playerTwo => players[playerTwoID];
-  
+
   @observable
   int hatSize = 4;
 
@@ -75,8 +75,7 @@ abstract class _GameState with Store {
     if (state == 'main') {
       timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
       log.add([playerOne, playerTwo, word, timeSpent, 0]);
-    }
-    else if (state == 'last' || state == 'verdict') {
+    } else if (state == 'last' || state == 'verdict') {
       log.add([
         playerOne,
         playerTwo,
@@ -95,8 +94,7 @@ abstract class _GameState with Store {
     if (state == 'main') {
       timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
       log.add([playerOne, playerTwo, word, timeSpent, 0, 'guessed']);
-    }
-    else if (state == 'last' || state == 'verdict') {
+    } else if (state == 'last' || state == 'verdict') {
       log.add([
         playerOne,
         playerTwo,
@@ -109,13 +107,11 @@ abstract class _GameState with Store {
     if (hat.isEmpty()) {
       stopwatch.stop();
       changeState('end');
-    }
-    else if (state == 'last' || state == 'verdict') {
+    } else if (state == 'last' || state == 'verdict') {
       stopwatch.stop();
       turn++;
       changeState('lobby');
-    }
-    else {
+    } else {
       word = hat.getWord();
     }
     stopwatch.reset();
@@ -126,8 +122,7 @@ abstract class _GameState with Store {
     if (state == 'main') {
       timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
       log.add([playerOne, playerTwo, word, timeSpent, 0, 'failed']);
-    }
-    else if (state == 'last' || state == 'verdict') {
+    } else if (state == 'last' || state == 'verdict') {
       log.add([
         playerOne,
         playerTwo,
@@ -142,9 +137,19 @@ abstract class _GameState with Store {
     turn++;
     if (hat.isEmpty()) {
       changeState('end');
-    }
-    else {
+    } else {
       changeState('lobby');
+    }
+  }
+
+  @action
+  bool validateAll() {
+    if (players.length == players
+        .toSet()
+        .length && !players.contains('')) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -163,13 +168,11 @@ abstract class _GameState with Store {
       if (state != 'main' && state != 'last') {
         timeout.cancel();
         timer = 20;
-      }
-      else if (timer == 0) {
+      } else if (timer == 0) {
         timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
         stopwatch.reset();
         changeState('last');
-      }
-      else if (timer == -3) {
+      } else if (timer == -3) {
         changeState('verdict');
         stopwatch.stop();
       }
@@ -182,5 +185,15 @@ abstract class _GameState with Store {
   @action
   void timerSecondPass() {
     timer--;
+  }
+
+  @action
+  void addPlayer() {
+    players.add('Игрок $playersNumber');
+  }
+
+  @action
+  void removePlayer(int i) {
+    players.removeAt(i);
   }
 }

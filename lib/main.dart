@@ -6,48 +6,32 @@ import 'package:provider/provider.dart';
 import 'match.dart';
 
 void main() {
-  runApp(
-    Provider<AppState>(
+  runApp(Provider<AppState>(
       builder: (_) => AppState(),
-      child: MaterialApp(
-        title: 'Шляпа',
-        home: MyApp()
-      )
-    )
-  );
+      child: MaterialApp(title: 'Шляпа', home: MyApp())));
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Шляпа')
-      ),
-      body: MainScreen()
-    );
-  }
-}
-
-class MainScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context);
     currentState.loadDictionary();
-
-    return Observer(
-      builder: (_) {
-        if (!currentState.loading) {
-          return Match();
-        }
-        else {
-          return Center(
-              child: CircularProgressIndicator()
-          );
-        }
-      }
-    );
+    return Scaffold(
+        appBar: AppBar(title: Text('Шляпа')),
+        body: Observer(builder: (_) {
+          if (!currentState.loading) {
+            return RaisedButton(
+                onPressed: () {
+                  currentState.newGame();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Match()),
+                  );
+                },
+                child: Text('Быстрая игра', style: TextStyle(fontSize: 20)));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        }));
   }
 }
-
-

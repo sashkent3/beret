@@ -15,8 +15,7 @@ class Hat {
       words[wordIdx] = words.last;
       words.removeLast();
       return swappedWord;
-    }
-    else {
+    } else {
       return '';
     }
   }

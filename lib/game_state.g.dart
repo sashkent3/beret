@@ -9,6 +9,12 @@ part of 'game_state.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$GameState on _GameState, Store {
+  Computed<int> _$playersNumberComputed;
+
+  @override
+  int get playersNumber =>
+      (_$playersNumberComputed ??= Computed<int>(() => super.playersNumber))
+          .value;
   Computed<int> _$playerOneIDComputed;
 
   @override
@@ -29,23 +35,6 @@ mixin _$GameState on _GameState, Store {
   @override
   String get playerTwo =>
       (_$playerTwoComputed ??= Computed<String>(() => super.playerTwo)).value;
-
-  final _$playersNumberAtom = Atom(name: '_GameState.playersNumber');
-
-  @override
-  int get playersNumber {
-    _$playersNumberAtom.context.enforceReadPolicy(_$playersNumberAtom);
-    _$playersNumberAtom.reportObserved();
-    return super.playersNumber;
-  }
-
-  @override
-  set playersNumber(int value) {
-    _$playersNumberAtom.context.conditionallyRunInAction(() {
-      super.playersNumber = value;
-      _$playersNumberAtom.reportChanged();
-    }, _$playersNumberAtom, name: '${_$playersNumberAtom.name}_set');
-  }
 
   final _$stateAtom = Atom(name: '_GameState.state');
 
@@ -167,7 +156,7 @@ mixin _$GameState on _GameState, Store {
   }
 
   final _$difficultyDispersionAtom =
-      Atom(name: '_GameState.difficultyDispersion');
+  Atom(name: '_GameState.difficultyDispersion');
 
   @override
   int get difficultyDispersion {
@@ -321,6 +310,26 @@ mixin _$GameState on _GameState, Store {
     final _$actionInfo = _$_GameStateActionController.startAction();
     try {
       return super.timerSecondPass();
+    } finally {
+      _$_GameStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void addPlayer() {
+    final _$actionInfo = _$_GameStateActionController.startAction();
+    try {
+      return super.addPlayer();
+    } finally {
+      _$_GameStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removePlayer(int i) {
+    final _$actionInfo = _$_GameStateActionController.startAction();
+    try {
+      return super.removePlayer(i);
     } finally {
       _$_GameStateActionController.endAction(_$actionInfo);
     }

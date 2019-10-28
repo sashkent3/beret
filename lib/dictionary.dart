@@ -6,7 +6,6 @@ import 'package:normal/normal.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class Dictionary {
   List words;
 
@@ -36,7 +35,8 @@ class Dictionary {
 
   Future<void> load() async {
     loaded = true;
-    var dictionaryFile = await DefaultCacheManager().getSingleFile('http://the-hat.appspot.com/api/v2/dictionary/ru');
+    var dictionaryFile = await DefaultCacheManager()
+        .getSingleFile('http://the-hat.appspot.com/api/v2/dictionary/ru');
     var dictionaryList = jsonDecode(dictionaryFile.readAsStringSync());
 
     await getDirectories();
@@ -50,15 +50,13 @@ class Dictionary {
     }
   }
 
-  int getUsedWordsIter () {
+  int getUsedWordsIter() {
     final int usedWordsIter = prefs.getInt('usedWordsIter') ?? -1;
 
     if (usedWordsIter == -1) {
       prefs.setInt('usedWordsIter', 0);
       return 0;
-    }
-
-    else {
+    } else {
       return usedWordsIter;
     }
   }
@@ -67,11 +65,10 @@ class Dictionary {
     if (!File('$usedWordsPath/used_words.json').existsSync()) {
       List usedWords = List(1000);
       new File('$usedWordsPath/used_words.json').createSync();
-      File('$usedWordsPath/used_words.json').writeAsStringSync(jsonEncode(usedWords));
+      File('$usedWordsPath/used_words.json')
+          .writeAsStringSync(jsonEncode(usedWords));
       return usedWords;
-    }
-
-    else {
+    } else {
       final file = File('$usedWordsPath/used_words.json').readAsStringSync();
       List usedWords = jsonDecode(file);
       return usedWords;
@@ -85,7 +82,8 @@ class Dictionary {
     int usedWordsIter = getUsedWordsIter();
 
     for (var i = 0; i < size; i++) {
-      int bucketIdx = (bucketsDispersion[i] * difficultyDispersion + difficulty).round();
+      int bucketIdx =
+      (bucketsDispersion[i] * difficultyDispersion + difficulty).round();
       String word = buckets[bucketIdx][bucketsIters[bucketIdx]];
       while (usedWords.contains(word)) {
         word = buckets[bucketIdx][bucketsIters[bucketIdx]];
@@ -103,7 +101,8 @@ class Dictionary {
       }
     }
     prefs.setInt('usedWordsIter', usedWordsIter);
-    File('$usedWordsPath/used_words.json').writeAsStringSync(jsonEncode(usedWords));
+    File('$usedWordsPath/used_words.json')
+        .writeAsStringSync(jsonEncode(usedWords));
     return hatWords;
   }
 }
