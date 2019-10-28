@@ -286,6 +286,16 @@ mixin _$GameState on _GameState, Store {
   }
 
   @override
+  bool validateAll() {
+    final _$actionInfo = _$_GameStateActionController.startAction();
+    try {
+      return super.validateAll();
+    } finally {
+      _$_GameStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void newTurn() {
     final _$actionInfo = _$_GameStateActionController.startAction();
     try {
