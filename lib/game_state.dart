@@ -138,13 +138,14 @@ abstract class _GameState with Store {
 
   @action
   bool validateAll() {
-    if (players.length == players
-        .toSet()
-        .length && !players.contains('')) {
-      return true;
-    } else {
-      return false;
+    for (Player player1 in players) {
+      for (Player player2 in players) {
+        if (player2.name == '' || player2.name == player1.name) {
+          return false;
+        }
+      }
     }
+    return true;
   }
 
   @action
