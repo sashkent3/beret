@@ -9,12 +9,6 @@ part of 'game_state.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$GameState on _GameState, Store {
-  Computed<int> _$playersNumberComputed;
-
-  @override
-  int get playersNumber =>
-      (_$playersNumberComputed ??= Computed<int>(() => super.playersNumber))
-          .value;
   Computed<int> _$playerOneIDComputed;
 
   @override

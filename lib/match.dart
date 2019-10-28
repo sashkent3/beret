@@ -22,7 +22,7 @@ class Match extends StatelessWidget {
                   child: Observer(
                       builder: (_) =>
                           ListView.builder(
-                              itemCount: currentGameState.playersNumber,
+                              itemCount: currentGameState.players.length,
                               itemBuilder: (context, index) {
                                 return Row(children: <Widget>[
                                   Expanded(
@@ -43,7 +43,7 @@ class Match extends StatelessWidget {
                                       icon: Icon(Icons.close),
                                       onPressed: () {
                                         //playersFormKey.currentGameState.save();
-                                        if (currentGameState.playersNumber >
+                                        if (currentGameState.players.length >
                                             2) {
                                           currentGameState.removePlayer(index);
                                         }

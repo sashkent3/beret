@@ -15,9 +15,6 @@ abstract class _GameState with Store {
         dictionary.getWords(hatSize, matchDifficulty, difficultyDispersion));
   }
 
-  @computed
-  int get playersNumber => players.length;
-
   @observable
   String state = 'lobby';
 
@@ -34,12 +31,12 @@ abstract class _GameState with Store {
   int turn = 0;
 
   @computed
-  int get playerOneID => turn % playersNumber;
+  int get playerOneID => turn % players.length;
 
   @computed
   int get playerTwoID =>
-      (1 + (turn ~/ playersNumber) % (playersNumber - 1) + turn) %
-          playersNumber;
+      (1 + (turn ~/ players.length) % (players.length - 1) + turn) %
+          players.length;
 
   @computed
   String get playerOne => players[playerOneID];
@@ -189,7 +186,8 @@ abstract class _GameState with Store {
 
   @action
   void addPlayer() {
-    players.add('Игрок $playersNumber');
+    int i = players.length + 1;
+    players.add('Игрок $i');
   }
 
   @action
