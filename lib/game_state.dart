@@ -4,22 +4,13 @@ import 'package:mobx/mobx.dart';
 
 import 'dictionary.dart';
 import 'hat.dart';
+import 'player.dart';
 
 part 'game_state.g.dart';
 
 class GameState = _GameState with _$GameState;
 
 abstract class _GameState with Store {
-  @observable
-  Dictionary dictionary;
-
-  _GameState(final Dictionary initDictionary) {
-    dictionary = initDictionary;
-  }
-
-  @observable
-  int playersNum = 2;
-
   @observable
   String state = 'lobby';
 
@@ -30,24 +21,25 @@ abstract class _GameState with Store {
   int matchDifficulty = 50;
 
   @observable
-  List<String> players = ['Игрок 1', 'Игрок 2'];
+  ObservableList<Player> players =
+  ObservableList.of([Player('Игрок 1'), Player('Игрок 2')]);
 
   @observable
   int turn = 0;
 
   @computed
-  int get playerOneID => turn % playersNum;
+  int get playerOneID => turn % players.length;
 
   @computed
   int get playerTwoID =>
-      (1 + (turn ~/ playersNum) % (playersNum - 1) + turn) %
-          playersNum;
+      (1 + (turn ~/ players.length) % (players.length - 1) + turn) %
+          players.length;
 
   @computed
-  String get playerOne => players[playerOneID];
+  String get playerOne => players[playerOneID].name;
 
   @computed
-  String get playerTwo => players[playerTwoID];
+  String get playerTwo => players[playerTwoID].name;
 
   @observable
   int hatSize = 4;
@@ -146,7 +138,7 @@ abstract class _GameState with Store {
 
   @action
   bool validateAll() {
-    if (playersNum == players
+    if (players.length == players
         .toSet()
         .length && !players.contains('')) {
       return true;
@@ -191,18 +183,16 @@ abstract class _GameState with Store {
 
   @action
   void addPlayer() {
-    playersNum++;
-    players.add('Игрок $playersNum');
+    players.add(Player('Игрок ${players.length + 1}'));
   }
 
   @action
   void removePlayer(int i) {
-    playersNum--;
     players.removeAt(i);
   }
 
   @action
-  void createHat() {
+  void createHat(Dictionary dictionary) {
     hat = Hat(
         dictionary.getWords(hatSize, matchDifficulty, difficultyDispersion));
   }

@@ -28,6 +28,6 @@ abstract class _AppState with Store {
 
   @action
   void newGame() {
-    gameState = GameState(dictionary);
+    gameState = GameState();
   }
 }

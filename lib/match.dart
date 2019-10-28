@@ -10,6 +10,7 @@ class Match extends StatelessWidget {
     final currentGameState = Provider
         .of<AppState>(context)
         .gameState;
+    final currentAppState = Provider.of<AppState>(context);
     return MaterialApp(
         title: 'Шляпа',
         home: Scaffold(
@@ -22,27 +23,30 @@ class Match extends StatelessWidget {
                   child: Observer(
                       builder: (_) =>
                           ListView.builder(
-                              itemCount: currentGameState.playersNum,
+                              itemCount: currentGameState.players.length,
                               itemBuilder: (context, index) {
                                 return Row(children: <Widget>[
                                   Expanded(
                                       child: TextFormField(
-                                          key: ValueKey(
-                                              currentGameState.players[index]),
+                                          key: currentGameState.players[index]
+                                              .key,
                                           decoration: const InputDecoration(
                                             icon: Icon(Icons.person),
                                             labelText: 'Имя',
                                           ),
                                           initialValue:
-                                          currentGameState.players[index],
+                                          currentGameState.players[index].name,
                                           onChanged: (value) {
-                                            currentGameState.players[index] =
-                                                value;
+                                            currentGameState.players[index]
+                                                .name =
+                                                value.split(RegExp(' +')).join(
+                                                    ' ');
                                           })),
                                   IconButton(
                                       icon: Icon(Icons.close),
                                       onPressed: () {
-                                        if (currentGameState.playersNum > 2) {
+                                        if (currentGameState.players.length >
+                                            2) {
                                           currentGameState.removePlayer(index);
                                         } else {
                                           showDialog<void>(
@@ -75,7 +79,7 @@ class Match extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: RaisedButton(
                     onPressed: () {
-                      currentGameState.createHat();
+                      currentGameState.createHat(currentAppState.dictionary);
                       if (currentGameState.validateAll()) {
                         Navigator.push(
                           context,
