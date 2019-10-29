@@ -19,7 +19,10 @@ abstract class _GameState with Store {
   List log = [];
 
   @observable
-  int roundLength = 20;
+  int mainStateLength = 20;
+
+  @observable
+  int lastStateLength = 3;
 
   @observable
   int matchDifficulty = 50;
@@ -166,12 +169,12 @@ abstract class _GameState with Store {
       timerSecondPass();
       if (state != 'main' && state != 'last') {
         timeout.cancel();
-        timer = roundLength;
+        timer = mainStateLength;
       } else if (timer == 0) {
         timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
         stopwatch.reset();
         changeState('last');
-      } else if (timer == -3) {
+      } else if (timer == -lastStateLength) {
         changeState('verdict');
         stopwatch.stop();
       }

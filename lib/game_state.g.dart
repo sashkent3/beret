@@ -69,21 +69,38 @@ mixin _$GameState on _GameState, Store {
     }, _$logAtom, name: '${_$logAtom.name}_set');
   }
 
-  final _$roundLengthAtom = Atom(name: '_GameState.roundLength');
+  final _$mainStateLengthAtom = Atom(name: '_GameState.mainStateLength');
 
   @override
-  int get roundLength {
-    _$roundLengthAtom.context.enforceReadPolicy(_$roundLengthAtom);
-    _$roundLengthAtom.reportObserved();
-    return super.roundLength;
+  int get mainStateLength {
+    _$mainStateLengthAtom.context.enforceReadPolicy(_$mainStateLengthAtom);
+    _$mainStateLengthAtom.reportObserved();
+    return super.mainStateLength;
   }
 
   @override
-  set roundLength(int value) {
-    _$roundLengthAtom.context.conditionallyRunInAction(() {
-      super.roundLength = value;
-      _$roundLengthAtom.reportChanged();
-    }, _$roundLengthAtom, name: '${_$roundLengthAtom.name}_set');
+  set mainStateLength(int value) {
+    _$mainStateLengthAtom.context.conditionallyRunInAction(() {
+      super.mainStateLength = value;
+      _$mainStateLengthAtom.reportChanged();
+    }, _$mainStateLengthAtom, name: '${_$mainStateLengthAtom.name}_set');
+  }
+
+  final _$lastStateLengthAtom = Atom(name: '_GameState.lastStateLength');
+
+  @override
+  int get lastStateLength {
+    _$lastStateLengthAtom.context.enforceReadPolicy(_$lastStateLengthAtom);
+    _$lastStateLengthAtom.reportObserved();
+    return super.lastStateLength;
+  }
+
+  @override
+  set lastStateLength(int value) {
+    _$lastStateLengthAtom.context.conditionallyRunInAction(() {
+      super.lastStateLength = value;
+      _$lastStateLengthAtom.reportChanged();
+    }, _$lastStateLengthAtom, name: '${_$lastStateLengthAtom.name}_set');
   }
 
   final _$matchDifficultyAtom = Atom(name: '_GameState.matchDifficulty');
