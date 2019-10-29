@@ -13,226 +13,245 @@ class Match extends StatelessWidget {
         .gameState;
     final currentAppState = Provider.of<AppState>(context);
     final ScrollController scrollController = ScrollController();
-    final settingsKey = GlobalKey<FormState>();
-    return MaterialApp(
-        title: 'Шляпа',
-        home: Scaffold(
-            appBar: AppBar(
-              title: Text('Шляпа'),
-            ),
-            body: Stack(children: <Widget>[
-              Align(
-                  alignment: Alignment.topCenter,
-                  child: Observer(builder: (_) {
-                    List<Widget> listView = [];
-                    for (int index = 0;
-                    index < currentGameState.players.length;
-                    index++) {
-                      listView.add(Row(children: <Widget>[
-                        Expanded(
-                            child: TextFormField(
-                                key: currentGameState.players[index].key,
-                                decoration: const InputDecoration(
-                                  icon: Icon(Icons.person),
-                                  labelText: 'Имя',
-                                ),
-                                initialValue:
-                                currentGameState.players[index].name,
-                                onChanged: (value) {
-                                  currentGameState.players[index].name = value
-                                      .replaceAll(RegExp(r"^\s+|\s+$"), '')
-                                      .replaceAll(RegExp(r"\s+"), ' ');
-                                })),
-                        IconButton(
-                            icon: Icon(Icons.close),
-                            onPressed: () {
-                              if (currentGameState.players.length > 2) {
-                                currentGameState.removePlayer(index);
-                              } else {
-                                showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      content: Text(
-                                          'Должно быть хотя бы два игрока!',
-                                          style: TextStyle(fontSize: 20)),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text('Закрыть',
-                                              style: TextStyle(fontSize: 20)),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            })
-                      ]));
-                    }
-                    SchedulerBinding.instance.addPostFrameCallback((_) {
-                      scrollController.animateTo(
-                        scrollController.position.maxScrollExtent,
-                        duration: const Duration(milliseconds: 10),
-                        curve: Curves.easeOut,
-                      );
-                    });
-                    return Container(
-                        child: ListView(
-                            children: listView, controller: scrollController),
-                        padding: EdgeInsets.only(bottom: 50));
-                  })),
-              Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        IconButton(
-                            onPressed: currentGameState.addPlayer,
-                            icon: Icon(Icons.add)),
-                        IconButton(
-                            onPressed: currentGameState.players.shuffle,
-                            icon: Icon(Icons.shuffle)),
-                        IconButton(
-                            icon: Icon(Icons.settings),
-                            onPressed: () {
-                              showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Настройки'),
-                                      content: Form(
-                                          key: settingsKey,
-                                          child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                TextFormField(
-                                                  keyboardType:
-                                                  TextInputType.number,
-                                                  initialValue: '10',
-                                                  decoration:
-                                                  const InputDecoration(
-                                                    labelText:
-                                                    'Кол-во слов на игрока',
-                                                  ),
-                                                  validator: (value) {
-                                                    if (int.tryParse(value) ==
-                                                        null) {
-                                                      return 'Должно быть натуральным числом';
-                                                    } else {
-                                                      return null;
-                                                    }
-                                                  },
-                                                  onSaved: (value) {
+    return Observer(builder: (_) {
+      if (currentGameState.state == 'start') {
+        List<Widget> listView = [];
+        for (int index = 0; index < currentGameState.players.length; index++) {
+          listView.add(Row(children: <Widget>[
+            Expanded(
+                child: TextFormField(
+                    key: currentGameState.players[index].key,
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.person),
+                      labelText: 'Имя',
+                    ),
+                    initialValue: currentGameState.players[index].name,
+                    onChanged: (value) {
+                      currentGameState.players[index].name = value
+                          .replaceAll(RegExp(r"^\s+|\s+$"), '')
+                          .replaceAll(RegExp(r"\s+"), ' ');
+                    })),
+            IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  if (currentGameState.players.length > 2) {
+                    currentGameState.removePlayer(index);
+                  } else {
+                    showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: Text('Должно быть хотя бы два игрока!',
+                              style: TextStyle(fontSize: 20)),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('Закрыть',
+                                  style: TextStyle(fontSize: 20)),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                })
+          ]));
+        }
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          scrollController.animateTo(
+            scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 10),
+            curve: Curves.easeOut,
+          );
+        });
+        return MaterialApp(
+            title: 'Шляпа',
+            home: Scaffold(
+                appBar: AppBar(
+                  title: Text('Шляпа'),
+                ),
+                body: Stack(children: <Widget>[
+                  Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                          child: ListView(
+                              children: listView, controller: scrollController),
+                          padding: EdgeInsets.only(bottom: 50))),
+                  Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            IconButton(
+                                onPressed: currentGameState.addPlayer,
+                                icon: Icon(Icons.add)),
+                            IconButton(
+                                onPressed: currentGameState.players.shuffle,
+                                icon: Icon(Icons.shuffle)),
+                            IconButton(
+                                icon: Icon(Icons.settings),
+                                onPressed: () {
+                                  GlobalKey<FormState> settingsKey =
+                                  GlobalKey<FormState>();
+                                  showDialog<void>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        Widget settingsForm = Form(
+                                            key: settingsKey,
+                                            child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  TextFormField(
+                                                    keyboardType:
+                                                    TextInputType.number,
+                                                    initialValue:
                                                     currentGameState
-                                                        .wordsPerPlayer =
-                                                        int.parse(value);
-                                                  },
-                                                ),
-                                                TextFormField(
-                                                  keyboardType:
-                                                  TextInputType.number,
-                                                  initialValue: '20',
-                                                  decoration:
-                                                  const InputDecoration(
-                                                    labelText:
-                                                    'Длительность раунда',
+                                                        .wordsPerPlayer
+                                                        .toString(),
+                                                    decoration:
+                                                    const InputDecoration(
+                                                      labelText:
+                                                      'Кол-во слов на игрока',
+                                                    ),
+                                                    validator: (value) {
+                                                      if (int.tryParse(value) ==
+                                                          null) {
+                                                        return 'Должно быть натуральным числом';
+                                                      } else if (int.parse(
+                                                          value) <
+                                                          1) {
+                                                        return 'Должно быть натуральным числом';
+                                                      } else {
+                                                        return null;
+                                                      }
+                                                    },
+                                                    onSaved: (value) {
+                                                      currentGameState
+                                                          .wordsPerPlayer =
+                                                          int.parse(value);
+                                                    },
                                                   ),
-                                                  validator: (value) {
-                                                    if (int.tryParse(value) ==
-                                                        null) {
-                                                      return 'Должно быть натуральным числом';
-                                                    } else {
-                                                      return null;
-                                                    }
-                                                  },
-                                                  onSaved: (value) {
+                                                  TextFormField(
+                                                    keyboardType:
+                                                    TextInputType.number,
+                                                    initialValue:
                                                     currentGameState
-                                                        .mainStateLength =
-                                                        int.parse(value);
-                                                  },
-                                                ),
-                                                TextFormField(
-                                                  keyboardType:
-                                                  TextInputType.number,
-                                                  initialValue: '3',
-                                                  decoration:
-                                                  const InputDecoration(
-                                                    labelText:
-                                                    'Добавочное время',
+                                                        .mainStateLength
+                                                        .toString(),
+                                                    decoration:
+                                                    const InputDecoration(
+                                                      labelText:
+                                                      'Длительность раунда',
+                                                    ),
+                                                    validator: (value) {
+                                                      if (int.tryParse(value) ==
+                                                          null) {
+                                                        return 'Должно быть натуральным числом';
+                                                      } else if (int.parse(
+                                                          value) <
+                                                          1) {
+                                                        return 'Должно быть натуральным числом';
+                                                      } else {
+                                                        return null;
+                                                      }
+                                                    },
+                                                    onSaved: (value) {
+                                                      currentGameState
+                                                          .mainStateLength =
+                                                          int.parse(value);
+                                                    },
                                                   ),
-                                                  validator: (value) {
-                                                    if (int.tryParse(value) ==
-                                                        null) {
-                                                      return 'Должно быть натуральным числом';
-                                                    } else
-                                                    if (int.parse(value) < 1) {
-                                                      return 'Должно быть натуральным числом';
-                                                    } else {
-                                                      return null;
-                                                    }
-                                                  },
-                                                  onSaved: (value) {
+                                                  TextFormField(
+                                                    keyboardType:
+                                                    TextInputType.number,
+                                                    initialValue:
                                                     currentGameState
-                                                        .lastStateLength =
-                                                        int.parse(value);
-                                                  },
-                                                ),
-                                              ])),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text('Готово',
+                                                        .lastStateLength
+                                                        .toString(),
+                                                    decoration:
+                                                    const InputDecoration(
+                                                      labelText:
+                                                      'Добавочное время',
+                                                    ),
+                                                    validator: (value) {
+                                                      if (int.tryParse(value) ==
+                                                          null) {
+                                                        return 'Должно быть натуральным числом';
+                                                      } else if (int.parse(
+                                                          value) <
+                                                          1) {
+                                                        return 'Должно быть натуральным числом';
+                                                      } else {
+                                                        return null;
+                                                      }
+                                                    },
+                                                    onSaved: (value) {
+                                                      currentGameState
+                                                          .lastStateLength =
+                                                          int.parse(value);
+                                                    },
+                                                  ),
+                                                ]));
+                                        return AlertDialog(
+                                          title: Text('Настройки'),
+                                          content: settingsForm,
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text('Готово',
+                                                  style:
+                                                  TextStyle(fontSize: 20)),
+                                              onPressed: () {
+                                                if (settingsKey.currentState
+                                                    .validate()) {
+                                                  settingsKey.currentState
+                                                      .save();
+                                                  Navigator.of(context).pop();
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                }),
+                            IconButton(
+                                onPressed: () {
+                                  currentGameState
+                                      .createHat(currentAppState.dictionary);
+                                  if (currentGameState.validateAll()) {
+                                    currentGameState.timer =
+                                        currentGameState.mainStateLength;
+                                    currentGameState.changeState('lobby');
+                                  } else {
+                                    showDialog<void>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: Text(
+                                              'У всех игроков должны быть разные имена хотя бы из одного символа!',
                                               style: TextStyle(fontSize: 20)),
-                                          onPressed: () {
-                                            if (settingsKey.currentState
-                                                .validate()) {
-                                              settingsKey.currentState.save();
-                                              Navigator.of(context).pop();
-                                            }
-                                          },
-                                        ),
-                                      ],
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text('Закрыть',
+                                                  style:
+                                                  TextStyle(fontSize: 20)),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
                                     );
-                                  });
-                            }),
-                        IconButton(
-                            onPressed: () {
-                              currentGameState
-                                  .createHat(currentAppState.dictionary);
-                              if (currentGameState.validateAll()) {
-                                currentGameState.timer =
-                                    currentGameState.mainStateLength;
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Turn()),
-                                );
-                              } else {
-                                showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      content: Text(
-                                          'У всех игроков должны быть разные имена хотя бы из одного символа!',
-                                          style: TextStyle(fontSize: 20)),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text('Закрыть',
-                                              style: TextStyle(fontSize: 20)),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                            icon: Icon(Icons.play_arrow))
-                      ]))
-            ])));
+                                  }
+                                },
+                                icon: Icon(Icons.play_arrow))
+                          ]))
+                ])));
+      } else {
+        return Turn();
+      }
+    });
   }
 }

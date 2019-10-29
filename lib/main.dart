@@ -20,15 +20,19 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(title: Text('Шляпа')),
         body: Observer(builder: (_) {
           if (!currentState.loading) {
-            return RaisedButton(
-                onPressed: () {
-                  currentState.newGame();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Match()),
-                  );
-                },
-                child: Text('Быстрая игра', style: TextStyle(fontSize: 20)));
+            return Center(
+                child: Column(children: <Widget>[
+                  RaisedButton(
+                      onPressed: () {
+                        currentState.newGame();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Match()),
+                        );
+                      },
+                      child: Text(
+                          'Быстрая игра', style: TextStyle(fontSize: 20)))
+                ]));
           } else {
             return Center(child: CircularProgressIndicator());
           }

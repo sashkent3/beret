@@ -20,7 +20,6 @@ class EndGame extends StatelessWidget {
               RaisedButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    Navigator.pop(context);
                   },
                   child: Text('Закончить игру', style: TextStyle(fontSize: 20)))
                     ]))));

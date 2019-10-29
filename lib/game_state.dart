@@ -13,7 +13,7 @@ class GameState = _GameState with _$GameState;
 
 abstract class _GameState with Store {
   @observable
-  String state = 'lobby';
+  String state = 'start';
 
   @observable
   List log = [];

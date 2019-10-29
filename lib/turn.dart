@@ -45,7 +45,9 @@ class Turn extends StatelessWidget {
                 body: Stack(children: <Widget>[
                   Align(
                       alignment: Alignment.topRight,
-                      child: Text((currentState.timer + 3).toString(),
+                      child: Text(
+                          (currentState.timer + currentState.lastStateLength)
+                              .toString(),
                           style: TextStyle(fontSize: 30, color: Colors.red))),
                   Align(
                       alignment: Alignment.bottomRight,
