@@ -13,6 +13,7 @@ class Match extends StatelessWidget {
         .gameState;
     final currentAppState = Provider.of<AppState>(context);
     final ScrollController scrollController = ScrollController();
+    final settingsKey = GlobalKey<FormState>();
     return MaterialApp(
         title: 'Шляпа',
         home: Scaffold(
@@ -95,10 +96,83 @@ class Match extends StatelessWidget {
                             onPressed: currentGameState.players.shuffle,
                             icon: Icon(Icons.shuffle)),
                         IconButton(
+                            icon: Icon(Icons.settings),
+                            onPressed: () {
+                              showDialog<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Настройки'),
+                                      content: Form(
+                                          key: settingsKey,
+                                          child: Column(children: [
+                                            TextFormField(
+                                              keyboardType:
+                                              TextInputType.number,
+                                              initialValue: '10',
+                                              decoration: const InputDecoration(
+                                                labelText:
+                                                'Кол-во слов на игрока',
+                                              ),
+                                              validator: (value) {
+                                                if (int.tryParse(value) ==
+                                                    null) {
+                                                  return 'Должно быть натуральным числом';
+                                                } else {
+                                                  return null;
+                                                }
+                                              },
+                                              onSaved: (value) {
+                                                currentGameState
+                                                    .wordsPerPlayer =
+                                                    int.parse(value);
+                                              },
+                                            ),
+                                            TextFormField(
+                                              keyboardType:
+                                              TextInputType.number,
+                                              initialValue: '20',
+                                              decoration: const InputDecoration(
+                                                labelText:
+                                                'Длительность раунда',
+                                              ),
+                                              validator: (value) {
+                                                if (int.tryParse(value) ==
+                                                    null) {
+                                                  return 'Должно быть натуральным числом';
+                                                } else {
+                                                  return null;
+                                                }
+                                              },
+                                              onSaved: (value) {
+                                                currentGameState.roundLength =
+                                                    int.parse(value);
+                                              },
+                                            )
+                                          ])),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Готово',
+                                              style: TextStyle(fontSize: 20)),
+                                          onPressed: () {
+                                            if (settingsKey.currentState
+                                                .validate()) {
+                                              settingsKey.currentState.save();
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            }),
+                        IconButton(
                             onPressed: () {
                               currentGameState
                                   .createHat(currentAppState.dictionary);
                               if (currentGameState.validateAll()) {
+                                currentGameState.timer =
+                                    currentGameState.roundLength;
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

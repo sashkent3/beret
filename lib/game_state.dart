@@ -19,6 +19,9 @@ abstract class _GameState with Store {
   List log = [];
 
   @observable
+  int roundLength = 20;
+
+  @observable
   int matchDifficulty = 50;
 
   @observable
@@ -43,10 +46,13 @@ abstract class _GameState with Store {
   String get playerTwo => players[playerTwoID].name;
 
   @observable
-  int hatSize = 4;
+  int wordsPerPlayer = 10;
+
+  @computed
+  int get hatSize => wordsPerPlayer * players.length;
 
   @observable
-  int timer = 20;
+  int timer;
 
   @observable
   int difficultyDispersion = 5;
@@ -160,7 +166,7 @@ abstract class _GameState with Store {
       timerSecondPass();
       if (state != 'main' && state != 'last') {
         timeout.cancel();
-        timer = 20;
+        timer = roundLength;
       } else if (timer == 0) {
         timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
         stopwatch.reset();

@@ -29,6 +29,11 @@ mixin _$GameState on _GameState, Store {
   @override
   String get playerTwo =>
       (_$playerTwoComputed ??= Computed<String>(() => super.playerTwo)).value;
+  Computed<int> _$hatSizeComputed;
+
+  @override
+  int get hatSize =>
+      (_$hatSizeComputed ??= Computed<int>(() => super.hatSize)).value;
 
   final _$stateAtom = Atom(name: '_GameState.state');
 
@@ -62,6 +67,23 @@ mixin _$GameState on _GameState, Store {
       super.log = value;
       _$logAtom.reportChanged();
     }, _$logAtom, name: '${_$logAtom.name}_set');
+  }
+
+  final _$roundLengthAtom = Atom(name: '_GameState.roundLength');
+
+  @override
+  int get roundLength {
+    _$roundLengthAtom.context.enforceReadPolicy(_$roundLengthAtom);
+    _$roundLengthAtom.reportObserved();
+    return super.roundLength;
+  }
+
+  @override
+  set roundLength(int value) {
+    _$roundLengthAtom.context.conditionallyRunInAction(() {
+      super.roundLength = value;
+      _$roundLengthAtom.reportChanged();
+    }, _$roundLengthAtom, name: '${_$roundLengthAtom.name}_set');
   }
 
   final _$matchDifficultyAtom = Atom(name: '_GameState.matchDifficulty');
@@ -115,21 +137,21 @@ mixin _$GameState on _GameState, Store {
     }, _$turnAtom, name: '${_$turnAtom.name}_set');
   }
 
-  final _$hatSizeAtom = Atom(name: '_GameState.hatSize');
+  final _$wordsPerPlayerAtom = Atom(name: '_GameState.wordsPerPlayer');
 
   @override
-  int get hatSize {
-    _$hatSizeAtom.context.enforceReadPolicy(_$hatSizeAtom);
-    _$hatSizeAtom.reportObserved();
-    return super.hatSize;
+  int get wordsPerPlayer {
+    _$wordsPerPlayerAtom.context.enforceReadPolicy(_$wordsPerPlayerAtom);
+    _$wordsPerPlayerAtom.reportObserved();
+    return super.wordsPerPlayer;
   }
 
   @override
-  set hatSize(int value) {
-    _$hatSizeAtom.context.conditionallyRunInAction(() {
-      super.hatSize = value;
-      _$hatSizeAtom.reportChanged();
-    }, _$hatSizeAtom, name: '${_$hatSizeAtom.name}_set');
+  set wordsPerPlayer(int value) {
+    _$wordsPerPlayerAtom.context.conditionallyRunInAction(() {
+      super.wordsPerPlayer = value;
+      _$wordsPerPlayerAtom.reportChanged();
+    }, _$wordsPerPlayerAtom, name: '${_$wordsPerPlayerAtom.name}_set');
   }
 
   final _$timerAtom = Atom(name: '_GameState.timer');
