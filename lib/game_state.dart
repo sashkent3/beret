@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:mobx/mobx.dart';
 
@@ -138,12 +139,9 @@ abstract class _GameState with Store {
 
   @action
   bool validateAll() {
-    for (Player player1 in players) {
-      for (Player player2 in players) {
-        if (player2.name == '' || player2.name == player1.name) {
-          return false;
-        }
-      }
+    HashSet validationSet = HashSet.of(players.map((player) => player.name));
+    if (validationSet.contains('') || validationSet.length != players.length) {
+      return false;
     }
     return true;
   }

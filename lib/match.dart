@@ -38,8 +38,9 @@ class Match extends StatelessWidget {
                                 initialValue:
                                 currentGameState.players[index].name,
                                 onChanged: (value) {
-                                  currentGameState.players[index].name =
-                                      value.split(RegExp(' +')).join(' ');
+                                  currentGameState.players[index].name = value
+                                      .replaceAll(RegExp(r"^\s+|\s+$"), '')
+                                      .replaceAll(RegExp(r"\s+"), ' ');
                                 })),
                         IconButton(
                             icon: Icon(Icons.close),
@@ -70,10 +71,6 @@ class Match extends StatelessWidget {
                             })
                       ]));
                     }
-                    listView.add(RaisedButton(
-                        onPressed: currentGameState.addPlayer,
-                        child: Text('Добавить игрока',
-                            style: TextStyle(fontSize: 20))));
                     SchedulerBinding.instance.addPostFrameCallback((_) {
                       scrollController.animateTo(
                         scrollController.position.maxScrollExtent,
@@ -88,45 +85,49 @@ class Match extends StatelessWidget {
                   })),
               Align(
                   alignment: Alignment.bottomCenter,
-                  child: Row(children: [
-                    RaisedButton(
-                        onPressed: () {
-                          currentGameState
-                              .createHat(currentAppState.dictionary);
-                          if (currentGameState.validateAll()) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Turn()),
-                            );
-                          } else {
-                            showDialog<void>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  content: Text(
-                                      'У всех игроков должны быть разные имена хотя бы из одного символа!',
-                                      style: TextStyle(fontSize: 20)),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text('Закрыть',
-                                          style: TextStyle(fontSize: 20)),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        IconButton(
+                            onPressed: currentGameState.addPlayer,
+                            icon: Icon(Icons.add)),
+                        IconButton(
+                            onPressed: currentGameState.players.shuffle,
+                            icon: Icon(Icons.shuffle)),
+                        IconButton(
+                            onPressed: () {
+                              currentGameState
+                                  .createHat(currentAppState.dictionary);
+                              if (currentGameState.validateAll()) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Turn()),
                                 );
-                              },
-                            );
-                          }
-                        },
-                        child: Text('Начать игру',
-                            style: TextStyle(fontSize: 20))),
-                    RaisedButton(
-                        onPressed: currentGameState.players.shuffle,
-                        child: Text('Перемешать игроков',
-                            style: TextStyle(fontSize: 20))),
-                  ]))
+                              } else {
+                                showDialog<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      content: Text(
+                                          'У всех игроков должны быть разные имена хотя бы из одного символа!',
+                                          style: TextStyle(fontSize: 20)),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Закрыть',
+                                              style: TextStyle(fontSize: 20)),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            icon: Icon(Icons.play_arrow))
+                      ]))
             ])));
   }
 }
