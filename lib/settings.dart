@@ -5,9 +5,10 @@ import 'package:provider/provider.dart';
 import 'app_state.dart';
 
 class Settings extends StatelessWidget {
+  static GlobalKey<FormState> settingsKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> settingsKey = GlobalKey<FormState>();
     final currentState = Provider.of<AppState>(context);
     return MaterialApp(
         title: 'Шляпа',
@@ -15,7 +16,7 @@ class Settings extends StatelessWidget {
             appBar: AppBar(
               title: Text('Шляпа'),
             ),
-            body: Form(
+            body: Stack(children: [Form(
                 key: settingsKey,
                 child: Container(
                     width: double.maxFinite,
@@ -116,18 +117,32 @@ class Settings extends StatelessWidget {
                                   color: Colors.black.withOpacity(0.5)))),
                       Observer(
                           builder: (_) => Slider(
-                                min: 0,
-                                max: 100,
-                                divisions: 100,
-                                label: currentState.currentSetDifficulty
-                                    .toString(),
-                                value: currentState.currentSetDifficulty
-                                    .toDouble(),
-                                onChanged: (value) {
-                                  currentState
-                                      .setCurrentDifficulty(value.toInt());
-                                },
-                              ))
-                    ])))));
+                            min: 0,
+                            max: 100,
+                            divisions: 100,
+                            label: currentState.currentSetDifficulty
+                                .toString(),
+                            value: currentState.currentSetDifficulty
+                                .toDouble(),
+                            onChanged: (value) {
+                              currentState
+                                  .setCurrentDifficulty(value.toInt());
+                            },
+                          ))
+                    ]))),
+              Align(alignment: Alignment.bottomCenter,
+                  child: Row(children: <Widget>[
+                    IconButton(icon: Icon(Icons.cached),
+                        onPressed: currentState.restoreDefaultSettings),
+                    IconButton(icon: Icon(Icons.save), onPressed: () {
+                      if (settingsKey.currentState.validate()) {
+                        settingsKey.currentState.save();
+                        currentState.prefs.setInt('matchDifficulty',
+                            currentState.currentSetDifficulty);
+                        Navigator.of(context).pop();
+                      }
+                    })
+                  ], mainAxisAlignment: MainAxisAlignment.spaceEvenly,))
+            ])));
   }
 }
