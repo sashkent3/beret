@@ -86,7 +86,7 @@ class Match extends StatelessWidget {
                           children: <Widget>[
                             IconButton(
                                 onPressed: currentGameState.addPlayer,
-                                icon: Icon(Icons.add)),
+                                icon: Icon(Icons.person_add)),
                             IconButton(
                                 onPressed: currentGameState.players.shuffle,
                                 icon: Icon(Icons.shuffle)),
