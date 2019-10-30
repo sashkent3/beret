@@ -84,6 +84,12 @@ class Dictionary {
     for (var i = 0; i < size; i++) {
       int bucketIdx =
       (bucketsDispersion[i] * difficultyDispersion + difficulty).round();
+      if (bucketIdx < 0) {
+        bucketIdx = 0;
+      }
+      if (bucketIdx > 100) {
+        bucketIdx = 100;
+      }
       String word = buckets[bucketIdx][bucketsIters[bucketIdx]];
       while (usedWords.contains(word)) {
         word = buckets[bucketIdx][bucketsIters[bucketIdx]];

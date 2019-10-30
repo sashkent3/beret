@@ -100,100 +100,172 @@ class Match extends StatelessWidget {
                                       builder: (BuildContext context) {
                                         Widget settingsForm = Form(
                                             key: settingsKey,
-                                            child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  TextFormField(
-                                                    keyboardType:
-                                                    TextInputType.number,
-                                                    initialValue:
-                                                    currentGameState
-                                                        .wordsPerPlayer
-                                                        .toString(),
-                                                    decoration:
-                                                    const InputDecoration(
-                                                      labelText:
-                                                      'Кол-во слов на игрока',
-                                                    ),
-                                                    validator: (value) {
-                                                      if (int.tryParse(value) ==
-                                                          null) {
-                                                        return 'Должно быть натуральным числом';
-                                                      } else if (int.parse(
-                                                          value) <
-                                                          1) {
-                                                        return 'Должно быть натуральным числом';
-                                                      } else {
-                                                        return null;
-                                                      }
-                                                    },
-                                                    onSaved: (value) {
-                                                      currentGameState
-                                                          .wordsPerPlayer =
-                                                          int.parse(value);
-                                                    },
-                                                  ),
-                                                  TextFormField(
-                                                    keyboardType:
-                                                    TextInputType.number,
-                                                    initialValue:
-                                                    currentGameState
-                                                        .mainStateLength
-                                                        .toString(),
-                                                    decoration:
-                                                    const InputDecoration(
-                                                      labelText:
-                                                      'Длительность раунда',
-                                                    ),
-                                                    validator: (value) {
-                                                      if (int.tryParse(value) ==
-                                                          null) {
-                                                        return 'Должно быть натуральным числом';
-                                                      } else if (int.parse(
-                                                          value) <
-                                                          1) {
-                                                        return 'Должно быть натуральным числом';
-                                                      } else {
-                                                        return null;
-                                                      }
-                                                    },
-                                                    onSaved: (value) {
-                                                      currentGameState
-                                                          .mainStateLength =
-                                                          int.parse(value);
-                                                    },
-                                                  ),
-                                                  TextFormField(
-                                                    keyboardType:
-                                                    TextInputType.number,
-                                                    initialValue:
-                                                    currentGameState
-                                                        .lastStateLength
-                                                        .toString(),
-                                                    decoration:
-                                                    const InputDecoration(
-                                                      labelText:
-                                                      'Добавочное время',
-                                                    ),
-                                                    validator: (value) {
-                                                      if (int.tryParse(value) ==
-                                                          null) {
-                                                        return 'Должно быть натуральным числом';
-                                                      } else if (int.parse(
-                                                          value) <
-                                                          1) {
-                                                        return 'Должно быть натуральным числом';
-                                                      } else {
-                                                        return null;
-                                                      }
-                                                    },
-                                                    onSaved: (value) {
-                                                      currentGameState
-                                                          .lastStateLength =
-                                                          int.parse(value);
-                                                    },
-                                                  ),
-                                                ]));
+                                            child: Container(
+                                                width: double.maxFinite,
+                                                child: ListView(
+                                                    shrinkWrap: true,
+                                                    children: [
+                                                      TextFormField(
+                                                        keyboardType:
+                                                        TextInputType
+                                                            .number,
+                                                        initialValue:
+                                                        currentGameState
+                                                            .wordsPerPlayer
+                                                            .toString(),
+                                                        decoration:
+                                                        const InputDecoration(
+                                                          labelText:
+                                                          'Кол-во слов на игрока',
+                                                        ),
+                                                        validator: (value) {
+                                                          if (int.tryParse(
+                                                              value) ==
+                                                              null) {
+                                                            return 'Должно быть натуральным числом';
+                                                          } else if (int.parse(
+                                                              value) <
+                                                              1) {
+                                                            return 'Должно быть натуральным числом';
+                                                          } else {
+                                                            return null;
+                                                          }
+                                                        },
+                                                        onSaved: (value) {
+                                                          currentGameState
+                                                              .wordsPerPlayer =
+                                                              int.parse(value);
+                                                        },
+                                                      ),
+                                                      TextFormField(
+                                                        keyboardType:
+                                                        TextInputType
+                                                            .number,
+                                                        initialValue:
+                                                        currentGameState
+                                                            .mainStateLength
+                                                            .toString(),
+                                                        decoration:
+                                                        const InputDecoration(
+                                                          labelText:
+                                                          'Длительность раунда',
+                                                        ),
+                                                        validator: (value) {
+                                                          if (int.tryParse(
+                                                              value) ==
+                                                              null) {
+                                                            return 'Должно быть натуральным числом';
+                                                          } else if (int.parse(
+                                                              value) <
+                                                              1) {
+                                                            return 'Должно быть натуральным числом';
+                                                          } else {
+                                                            return null;
+                                                          }
+                                                        },
+                                                        onSaved: (value) {
+                                                          currentGameState
+                                                              .mainStateLength =
+                                                              int.parse(value);
+                                                        },
+                                                      ),
+                                                      TextFormField(
+                                                        keyboardType:
+                                                        TextInputType
+                                                            .number,
+                                                        initialValue:
+                                                        currentGameState
+                                                            .lastStateLength
+                                                            .toString(),
+                                                        decoration:
+                                                        const InputDecoration(
+                                                          labelText:
+                                                          'Добавочное время',
+                                                        ),
+                                                        validator: (value) {
+                                                          if (int.tryParse(
+                                                              value) ==
+                                                              null) {
+                                                            return 'Должно быть натуральным числом';
+                                                          } else if (int.parse(
+                                                              value) <
+                                                              0) {
+                                                            return 'Должно быть натуральным числом';
+                                                          } else {
+                                                            return null;
+                                                          }
+                                                        },
+                                                        onSaved: (value) {
+                                                          currentGameState
+                                                              .lastStateLength =
+                                                              int.parse(value);
+                                                        },
+                                                      ),
+                                                      TextFormField(
+                                                        keyboardType:
+                                                        TextInputType
+                                                            .number,
+                                                        initialValue:
+                                                        currentGameState
+                                                            .matchDifficulty
+                                                            .toString(),
+                                                        decoration:
+                                                        const InputDecoration(
+                                                          labelText:
+                                                          'Сложность (от 0 до 100)',
+                                                        ),
+                                                        validator: (value) {
+                                                          if (int.tryParse(
+                                                              value) ==
+                                                              null) {
+                                                            return 'Должно быть целым неотрицательным числом';
+                                                          } else if (int.parse(
+                                                              value) <
+                                                              0) {
+                                                            return 'Должно быть целым неотрицательным числом';
+                                                          } else {
+                                                            return null;
+                                                          }
+                                                        },
+                                                        onSaved: (value) {
+                                                          currentGameState
+                                                              .matchDifficulty =
+                                                              int.parse(value);
+                                                        },
+                                                      ),
+                                                      TextFormField(
+                                                        keyboardType:
+                                                        TextInputType
+                                                            .number,
+                                                        initialValue:
+                                                        currentGameState
+                                                            .difficultyDispersion
+                                                            .toString(),
+                                                        decoration:
+                                                        const InputDecoration(
+                                                          labelText:
+                                                          'Разброс сложности',
+                                                        ),
+                                                        validator: (value) {
+                                                          if (int.tryParse(
+                                                              value) ==
+                                                              null) {
+                                                            return 'Должно быть целым неотрицательным числом';
+                                                          } else if (int.parse(
+                                                              value) <
+                                                              0) {
+                                                            return 'Должно быть целым неотрицательным числом';
+                                                          } else {
+                                                            return null;
+                                                          }
+                                                        },
+                                                        onSaved: (value) {
+                                                          currentGameState
+                                                              .difficultyDispersion =
+                                                              int.parse(value);
+                                                        },
+                                                      ),
+                                                    ])));
                                         return AlertDialog(
                                           title: Text('Настройки'),
                                           content: settingsForm,

@@ -9,17 +9,17 @@ class Turn extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState;
 
-    return Observer(builder: (_) {
-      if (currentState.state == 'end') {
-        return EndGame();
-      } else if (currentState.state == 'main') {
-        return MaterialApp(
-            title: 'Шляпа',
-            home: Scaffold(
-                appBar: AppBar(
-                  title: Text('Шляпа'),
-                ),
-                body: Stack(children: <Widget>[
+    return MaterialApp(
+        title: 'Шляпа',
+        home: Scaffold(
+            appBar: AppBar(
+              title: Text('Шляпа'),
+            ),
+            body: Observer(builder: (_) {
+              if (currentState.state == 'end') {
+                return EndGame();
+              } else if (currentState.state == 'main') {
+                return Stack(children: <Widget>[
                   Align(
                       alignment: Alignment.topRight,
                       child: Text(
@@ -27,22 +27,18 @@ class Turn extends StatelessWidget {
                         style: TextStyle(fontSize: 30),
                       )),
                   Align(
-                      alignment: Alignment.bottomRight,
-                      child: GuessedRightButton()),
-                  Align(
                       alignment: Alignment.bottomCenter,
-                      child: ConcedeButton()),
-                  Align(alignment: Alignment.bottomLeft, child: ErrorButton()),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            ErrorButton(),
+                            ConcedeButton(),
+                            GuessedRightButton()
+                          ])),
                   Center(child: CurrentWord())
-                ])));
-      } else if (currentState.state == 'last') {
-        return MaterialApp(
-            title: 'Шляпа',
-            home: Scaffold(
-                appBar: AppBar(
-                  title: Text('Шляпа'),
-                ),
-                body: Stack(children: <Widget>[
+                ]);
+              } else if (currentState.state == 'last') {
+                return Stack(children: <Widget>[
                   Align(
                       alignment: Alignment.topRight,
                       child: Text(
@@ -50,37 +46,35 @@ class Turn extends StatelessWidget {
                               .toString(),
                           style: TextStyle(fontSize: 30, color: Colors.red))),
                   Align(
-                      alignment: Alignment.bottomRight,
-                      child: GuessedRightButton()),
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            ErrorButton(),
+                            GuessedWrongButton(),
+                            GuessedRightButton()
+                          ])),
+                  Center(child: CurrentWord())
+                ]);
+              } else if (currentState.state == 'verdict') {
+                return Stack(children: <Widget>[
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: Text('0',
+                          style: TextStyle(fontSize: 30, color: Colors.red))),
                   Align(
                       alignment: Alignment.bottomCenter,
-                      child: GuessedWrongButton()),
-                  Align(alignment: Alignment.bottomLeft, child: ErrorButton()),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            ErrorButton(),
+                            GuessedWrongButton(),
+                            GuessedRightButton()
+                          ])),
                   Center(child: CurrentWord())
-                ])));
-      } else if (currentState.state == 'verdict') {
-        return MaterialApp(
-            title: 'Шляпа',
-            home: Scaffold(
-                appBar: AppBar(
-                  title: Text('Шляпа'),
-                ),
-                body: Stack(children: <Widget>[
-                  Align(
-                      alignment: Alignment.bottomRight,
-                      child: GuessedRightButton()),
-                  Align(
-                      alignment: Alignment.bottomCenter,
-                      child: GuessedWrongButton()),
-                  Align(alignment: Alignment.bottomLeft, child: ErrorButton()),
-                  Center(child: CurrentWord())
-                ])));
-      } else {
-        return MaterialApp(
-            title: 'Шляпа',
-            home: Scaffold(
-                appBar: AppBar(title: Text('Шляпа')),
-                body: Stack(children: <Widget>[
+                ]);
+              } else {
+                return Stack(children: <Widget>[
                   Center(
                       child: SizedBox(
                           width: 200.0,
@@ -90,9 +84,9 @@ class Turn extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: GameStartButton(),
                   )
-                ])));
-      }
-    });
+                ]);
+              }
+            })));
   }
 }
 

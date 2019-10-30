@@ -174,7 +174,8 @@ abstract class _GameState with Store {
         timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
         stopwatch.reset();
         changeState('last');
-      } else if (timer == -lastStateLength) {
+      }
+      if (timer == -lastStateLength) {
         changeState('verdict');
         stopwatch.stop();
       }
