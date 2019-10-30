@@ -21,7 +21,7 @@ class Dictionary {
 
   bool loaded;
 
-  Dictionary() {
+  Dictionary(this.prefs) {
     buckets = List.filled(101, List());
     bucketsIters = List.filled(101, 0);
     loaded = false;
@@ -30,7 +30,6 @@ class Dictionary {
   Future<void> getDirectories() async {
     final directory = await getApplicationDocumentsDirectory();
     usedWordsPath = directory.path;
-    prefs = await SharedPreferences.getInstance();
   }
 
   Future<void> load() async {

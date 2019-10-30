@@ -95,6 +95,8 @@ class Match extends StatelessWidget {
                                 onPressed: () {
                                   GlobalKey<FormState> settingsKey =
                                   GlobalKey<FormState>();
+                                  currentAppState.currentSetDifficulty =
+                                      currentGameState.matchDifficulty;
                                   showDialog<void>(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -186,11 +188,11 @@ class Match extends StatelessWidget {
                                                           if (int.tryParse(
                                                               value) ==
                                                               null) {
-                                                            return 'Должно быть натуральным числом';
+                                                            return 'Должно быть целым неотрицательным числом';
                                                           } else if (int.parse(
                                                               value) <
                                                               0) {
-                                                            return 'Должно быть натуральным числом';
+                                                            return 'Должно быть целым неотрицательным числом';
                                                           } else {
                                                             return null;
                                                           }
@@ -198,38 +200,6 @@ class Match extends StatelessWidget {
                                                         onSaved: (value) {
                                                           currentGameState
                                                               .lastStateLength =
-                                                              int.parse(value);
-                                                        },
-                                                      ),
-                                                      TextFormField(
-                                                        keyboardType:
-                                                        TextInputType
-                                                            .number,
-                                                        initialValue:
-                                                        currentGameState
-                                                            .matchDifficulty
-                                                            .toString(),
-                                                        decoration:
-                                                        const InputDecoration(
-                                                          labelText:
-                                                          'Сложность (от 0 до 100)',
-                                                        ),
-                                                        validator: (value) {
-                                                          if (int.tryParse(
-                                                              value) ==
-                                                              null) {
-                                                            return 'Должно быть целым неотрицательным числом';
-                                                          } else if (int.parse(
-                                                              value) <
-                                                              0) {
-                                                            return 'Должно быть целым неотрицательным числом';
-                                                          } else {
-                                                            return null;
-                                                          }
-                                                        },
-                                                        onSaved: (value) {
-                                                          currentGameState
-                                                              .matchDifficulty =
                                                               int.parse(value);
                                                         },
                                                       ),
@@ -265,6 +235,40 @@ class Match extends StatelessWidget {
                                                               int.parse(value);
                                                         },
                                                       ),
+                                                      Padding(
+                                                          padding:
+                                                          EdgeInsets.only(
+                                                              top: 10),
+                                                          child: Text(
+                                                              'Сложность',
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                      0.5)))),
+                                                      Observer(
+                                                          builder:
+                                                              (_) =>
+                                                              Slider(
+                                                                min: 0,
+                                                                max: 100,
+                                                                divisions:
+                                                                100,
+                                                                label: currentAppState
+                                                                    .currentSetDifficulty
+                                                                    .toString(),
+                                                                value: currentAppState
+                                                                    .currentSetDifficulty
+                                                                    .toDouble(),
+                                                                onChanged:
+                                                                    (value) {
+                                                                  currentAppState
+                                                                      .setCurrentDifficulty(
+                                                                      value
+                                                                          .toInt());
+                                                                },
+                                                              ))
                                                     ])));
                                         return AlertDialog(
                                           title: Text('Настройки'),
@@ -277,6 +281,10 @@ class Match extends StatelessWidget {
                                               onPressed: () {
                                                 if (settingsKey.currentState
                                                     .validate()) {
+                                                  currentGameState
+                                                      .matchDifficulty =
+                                                      currentAppState
+                                                          .currentSetDifficulty;
                                                   settingsKey.currentState
                                                       .save();
                                                   Navigator.of(context).pop();

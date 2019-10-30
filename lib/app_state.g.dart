@@ -26,6 +26,23 @@ mixin _$AppState on _AppState, Store {
     }, _$loadingAtom, name: '${_$loadingAtom.name}_set');
   }
 
+  final _$prefsAtom = Atom(name: '_AppState.prefs');
+
+  @override
+  SharedPreferences get prefs {
+    _$prefsAtom.context.enforceReadPolicy(_$prefsAtom);
+    _$prefsAtom.reportObserved();
+    return super.prefs;
+  }
+
+  @override
+  set prefs(SharedPreferences value) {
+    _$prefsAtom.context.conditionallyRunInAction(() {
+      super.prefs = value;
+      _$prefsAtom.reportChanged();
+    }, _$prefsAtom, name: '${_$prefsAtom.name}_set');
+  }
+
   final _$dictionaryAtom = Atom(name: '_AppState.dictionary');
 
   @override
@@ -41,6 +58,26 @@ mixin _$AppState on _AppState, Store {
       super.dictionary = value;
       _$dictionaryAtom.reportChanged();
     }, _$dictionaryAtom, name: '${_$dictionaryAtom.name}_set');
+  }
+
+  final _$currentSetDifficultyAtom =
+  Atom(name: '_AppState.currentSetDifficulty');
+
+  @override
+  int get currentSetDifficulty {
+    _$currentSetDifficultyAtom.context
+        .enforceReadPolicy(_$currentSetDifficultyAtom);
+    _$currentSetDifficultyAtom.reportObserved();
+    return super.currentSetDifficulty;
+  }
+
+  @override
+  set currentSetDifficulty(int value) {
+    _$currentSetDifficultyAtom.context.conditionallyRunInAction(() {
+      super.currentSetDifficulty = value;
+      _$currentSetDifficultyAtom.reportChanged();
+    }, _$currentSetDifficultyAtom,
+        name: '${_$currentSetDifficultyAtom.name}_set');
   }
 
   final _$gameStateAtom = Atom(name: '_AppState.gameState');
@@ -60,14 +97,34 @@ mixin _$AppState on _AppState, Store {
     }, _$gameStateAtom, name: '${_$gameStateAtom.name}_set');
   }
 
-  final _$loadDictionaryAsyncAction = AsyncAction('loadDictionary');
+  final _$loadAppAsyncAction = AsyncAction('loadApp');
 
   @override
-  Future<void> loadDictionary() {
-    return _$loadDictionaryAsyncAction.run(() => super.loadDictionary());
+  Future<void> loadApp() {
+    return _$loadAppAsyncAction.run(() => super.loadApp());
   }
 
   final _$_AppStateActionController = ActionController(name: '_AppState');
+
+  @override
+  void setCurrentDifficulty(int newDifficulty) {
+    final _$actionInfo = _$_AppStateActionController.startAction();
+    try {
+      return super.setCurrentDifficulty(newDifficulty);
+    } finally {
+      _$_AppStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void restoreDefaultSettings() {
+    final _$actionInfo = _$_AppStateActionController.startAction();
+    try {
+      return super.restoreDefaultSettings();
+    } finally {
+      _$_AppStateActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void newGame() {

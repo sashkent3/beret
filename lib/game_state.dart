@@ -12,6 +12,14 @@ part 'game_state.g.dart';
 class GameState = _GameState with _$GameState;
 
 abstract class _GameState with Store {
+  _GameState(prefs) {
+    matchDifficulty = prefs.getInt('matchDifficulty');
+    wordsPerPlayer = prefs.getInt('wordsPerPlayer');
+    difficultyDispersion = prefs.getInt('difficultyDispersion');
+    lastStateLength = prefs.getInt('lastStateLength');
+    mainStateLength = prefs.getInt('mainStateLength');
+  }
+
   @observable
   String state = 'start';
 
