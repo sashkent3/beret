@@ -18,14 +18,6 @@ abstract class _AppState with Store {
   @observable
   Dictionary dictionary;
 
-  @observable
-  int currentSetDifficulty;
-
-  @action
-  void setCurrentDifficulty(int newDifficulty) {
-    currentSetDifficulty = newDifficulty;
-  }
-
   @action
   Future<void> loadApp() async {
     if (prefs == null && !loading) {

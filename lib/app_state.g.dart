@@ -60,26 +60,6 @@ mixin _$AppState on _AppState, Store {
     }, _$dictionaryAtom, name: '${_$dictionaryAtom.name}_set');
   }
 
-  final _$currentSetDifficultyAtom =
-  Atom(name: '_AppState.currentSetDifficulty');
-
-  @override
-  int get currentSetDifficulty {
-    _$currentSetDifficultyAtom.context
-        .enforceReadPolicy(_$currentSetDifficultyAtom);
-    _$currentSetDifficultyAtom.reportObserved();
-    return super.currentSetDifficulty;
-  }
-
-  @override
-  set currentSetDifficulty(int value) {
-    _$currentSetDifficultyAtom.context.conditionallyRunInAction(() {
-      super.currentSetDifficulty = value;
-      _$currentSetDifficultyAtom.reportChanged();
-    }, _$currentSetDifficultyAtom,
-        name: '${_$currentSetDifficultyAtom.name}_set');
-  }
-
   final _$gameStateAtom = Atom(name: '_AppState.gameState');
 
   @override
@@ -105,16 +85,6 @@ mixin _$AppState on _AppState, Store {
   }
 
   final _$_AppStateActionController = ActionController(name: '_AppState');
-
-  @override
-  void setCurrentDifficulty(int newDifficulty) {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.setCurrentDifficulty(newDifficulty);
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   void restoreDefaultSettings() {
