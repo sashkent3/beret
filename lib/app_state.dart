@@ -13,6 +13,9 @@ abstract class _AppState with Store {
   bool loading = false;
 
   @observable
+  GameState gameState;
+
+  @observable
   SharedPreferences prefs;
 
   @observable
@@ -43,9 +46,6 @@ abstract class _AppState with Store {
     prefs.setInt('lastStateLength', 3);
     prefs.setInt('mainStateLength', 20);
   }
-
-  @observable
-  GameState gameState;
 
   @action
   void newGame() {

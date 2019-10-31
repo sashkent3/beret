@@ -29,11 +29,6 @@ mixin _$GameState on _GameState, Store {
   @override
   String get playerTwo =>
       (_$playerTwoComputed ??= Computed<String>(() => super.playerTwo)).value;
-  Computed<int> _$hatSizeComputed;
-
-  @override
-  int get hatSize =>
-      (_$hatSizeComputed ??= Computed<int>(() => super.hatSize)).value;
 
   final _$stateAtom = Atom(name: '_GameState.state');
 
@@ -55,16 +50,16 @@ mixin _$GameState on _GameState, Store {
   final _$logAtom = Atom(name: '_GameState.log');
 
   @override
-  List get log {
+  List get turnLog {
     _$logAtom.context.enforceReadPolicy(_$logAtom);
     _$logAtom.reportObserved();
-    return super.log;
+    return super.turnLog;
   }
 
   @override
-  set log(List value) {
+  set turnLog(List value) {
     _$logAtom.context.conditionallyRunInAction(() {
-      super.log = value;
+      super.turnLog = value;
       _$logAtom.reportChanged();
     }, _$logAtom, name: '${_$logAtom.name}_set');
   }
@@ -339,10 +334,10 @@ mixin _$GameState on _GameState, Store {
   }
 
   @override
-  void timerStart() {
+  void turnStart() {
     final _$actionInfo = _$_GameStateActionController.startAction();
     try {
-      return super.timerStart();
+      return super.turnStart();
     } finally {
       _$_GameStateActionController.endAction(_$actionInfo);
     }

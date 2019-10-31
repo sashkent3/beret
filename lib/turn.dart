@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
-import 'end_game.dart';
-
 class Turn extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState;
@@ -192,5 +190,24 @@ class CurrentWord extends StatelessWidget {
     return Observer(
         builder: (_) =>
             Text(currentState.word, style: TextStyle(fontSize: 40)));
+  }
+}
+
+class EndGame extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final currentState = Provider
+        .of<AppState>(context)
+        .gameState;
+
+    return Center(
+        child: Column(children: <Widget>[
+          Text(currentState.log.toString()),
+          RaisedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Закончить игру', style: TextStyle(fontSize: 20)))
+        ]));
   }
 }

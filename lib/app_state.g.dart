@@ -26,6 +26,23 @@ mixin _$AppState on _AppState, Store {
     }, _$loadingAtom, name: '${_$loadingAtom.name}_set');
   }
 
+  final _$gameStateAtom = Atom(name: '_AppState.gameState');
+
+  @override
+  GameState get gameState {
+    _$gameStateAtom.context.enforceReadPolicy(_$gameStateAtom);
+    _$gameStateAtom.reportObserved();
+    return super.gameState;
+  }
+
+  @override
+  set gameState(GameState value) {
+    _$gameStateAtom.context.conditionallyRunInAction(() {
+      super.gameState = value;
+      _$gameStateAtom.reportChanged();
+    }, _$gameStateAtom, name: '${_$gameStateAtom.name}_set');
+  }
+
   final _$prefsAtom = Atom(name: '_AppState.prefs');
 
   @override
@@ -58,23 +75,6 @@ mixin _$AppState on _AppState, Store {
       super.dictionary = value;
       _$dictionaryAtom.reportChanged();
     }, _$dictionaryAtom, name: '${_$dictionaryAtom.name}_set');
-  }
-
-  final _$gameStateAtom = Atom(name: '_AppState.gameState');
-
-  @override
-  GameState get gameState {
-    _$gameStateAtom.context.enforceReadPolicy(_$gameStateAtom);
-    _$gameStateAtom.reportObserved();
-    return super.gameState;
-  }
-
-  @override
-  set gameState(GameState value) {
-    _$gameStateAtom.context.conditionallyRunInAction(() {
-      super.gameState = value;
-      _$gameStateAtom.reportChanged();
-    }, _$gameStateAtom, name: '${_$gameStateAtom.name}_set');
   }
 
   final _$loadAppAsyncAction = AsyncAction('loadApp');

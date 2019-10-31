@@ -27,6 +27,9 @@ abstract class _GameState with Store {
   List log = [];
 
   @observable
+  List turnLog = [];
+
+  @observable
   int mainStateLength = 20;
 
   @observable
@@ -59,9 +62,6 @@ abstract class _GameState with Store {
   @observable
   int wordsPerPlayer = 10;
 
-  @computed
-  int get hatSize => wordsPerPlayer * players.length;
-
   @observable
   int timer;
 
@@ -86,9 +86,9 @@ abstract class _GameState with Store {
   void concede() {
     if (state == 'main') {
       timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
-      log.add([playerOne, playerTwo, word, timeSpent, 0]);
+      turnLog.add([playerOne, playerTwo, word, timeSpent, 0]);
     } else if (state == 'last' || state == 'verdict') {
-      log.add([
+      turnLog.add([
         playerOne,
         playerTwo,
         word,
@@ -105,9 +105,9 @@ abstract class _GameState with Store {
   void guessedRight() {
     if (state == 'main') {
       timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
-      log.add([playerOne, playerTwo, word, timeSpent, 0, 'guessed']);
+      turnLog.add([playerOne, playerTwo, word, timeSpent, 0, 'guessed']);
     } else if (state == 'last' || state == 'verdict') {
-      log.add([
+      turnLog.add([
         playerOne,
         playerTwo,
         word,
@@ -133,9 +133,9 @@ abstract class _GameState with Store {
   void error() {
     if (state == 'main') {
       timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
-      log.add([playerOne, playerTwo, word, timeSpent, 0, 'failed']);
+      turnLog.add([playerOne, playerTwo, word, timeSpent, 0, 'failed']);
     } else if (state == 'last' || state == 'verdict') {
-      log.add([
+      turnLog.add([
         playerOne,
         playerTwo,
         word,
@@ -167,12 +167,13 @@ abstract class _GameState with Store {
   void newTurn() {
     word = hat.getWord();
     changeState('main');
-    timerStart();
+    turnStart();
   }
 
   @action
-  void timerStart() {
+  void turnStart() {
     stopwatch.start();
+    turnLog = [];
     Timer.periodic(Duration(seconds: 1), (Timer timeout) {
       timerSecondPass();
       if (state != 'main' && state != 'last') {
@@ -210,7 +211,7 @@ abstract class _GameState with Store {
 
   @action
   void createHat(Dictionary dictionary) {
-    hat = Hat(
-        dictionary.getWords(hatSize, matchDifficulty, difficultyDispersion));
+    hat = Hat(dictionary.getWords(wordsPerPlayer * players.length,
+        matchDifficulty, difficultyDispersion));
   }
 }
