@@ -164,8 +164,8 @@ class _SettingsState extends State<Settings> {
                           onPressed: () {
                             if (settingsKey.currentState.validate()) {
                               settingsKey.currentState.save();
-                              currentState.prefs.setInt('matchDifficulty',
-                                  currentSetDifficulty);
+                              currentState.prefs.setInt(
+                                  'matchDifficulty', currentSetDifficulty);
                             }
                           })
                     ],

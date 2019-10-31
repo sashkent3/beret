@@ -77,7 +77,9 @@ class Match extends StatelessWidget {
                       alignment: Alignment.topCenter,
                       child: Container(
                           child: ListView(
-                              children: listView, controller: scrollController),
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              children: listView,
+                              controller: scrollController),
                           padding: EdgeInsets.only(bottom: 50))),
                   Align(
                       alignment: Alignment.bottomCenter,
@@ -93,207 +95,13 @@ class Match extends StatelessWidget {
                             IconButton(
                                 icon: Icon(Icons.settings),
                                 onPressed: () {
-                                  GlobalKey<FormState> settingsKey =
-                                  GlobalKey<FormState>();
-                                  currentAppState.currentSetDifficulty =
-                                      currentGameState.matchDifficulty;
                                   showDialog<void>(
                                       context: context,
-                                      builder: (BuildContext context) {
-                                        Widget settingsForm = Form(
-                                            key: settingsKey,
-                                            child: Container(
-                                                width: double.maxFinite,
-                                                child: ListView(
-                                                    shrinkWrap: true,
-                                                    children: [
-                                                      TextFormField(
-                                                        keyboardType:
-                                                        TextInputType
-                                                            .number,
-                                                        initialValue:
-                                                        currentGameState
-                                                            .wordsPerPlayer
-                                                            .toString(),
-                                                        decoration:
-                                                        const InputDecoration(
-                                                          labelText:
-                                                          'Кол-во слов на игрока',
-                                                        ),
-                                                        validator: (value) {
-                                                          if (int.tryParse(
-                                                              value) ==
-                                                              null) {
-                                                            return 'Должно быть натуральным числом';
-                                                          } else if (int.parse(
-                                                              value) <
-                                                              1) {
-                                                            return 'Должно быть натуральным числом';
-                                                          } else {
-                                                            return null;
-                                                          }
-                                                        },
-                                                        onSaved: (value) {
-                                                          currentGameState
-                                                              .wordsPerPlayer =
-                                                              int.parse(value);
-                                                        },
-                                                      ),
-                                                      TextFormField(
-                                                        keyboardType:
-                                                        TextInputType
-                                                            .number,
-                                                        initialValue:
-                                                        currentGameState
-                                                            .mainStateLength
-                                                            .toString(),
-                                                        decoration:
-                                                        const InputDecoration(
-                                                          labelText:
-                                                          'Длительность раунда',
-                                                        ),
-                                                        validator: (value) {
-                                                          if (int.tryParse(
-                                                              value) ==
-                                                              null) {
-                                                            return 'Должно быть натуральным числом';
-                                                          } else if (int.parse(
-                                                              value) <
-                                                              1) {
-                                                            return 'Должно быть натуральным числом';
-                                                          } else {
-                                                            return null;
-                                                          }
-                                                        },
-                                                        onSaved: (value) {
-                                                          currentGameState
-                                                              .mainStateLength =
-                                                              int.parse(value);
-                                                        },
-                                                      ),
-                                                      TextFormField(
-                                                        keyboardType:
-                                                        TextInputType
-                                                            .number,
-                                                        initialValue:
-                                                        currentGameState
-                                                            .lastStateLength
-                                                            .toString(),
-                                                        decoration:
-                                                        const InputDecoration(
-                                                          labelText:
-                                                          'Добавочное время',
-                                                        ),
-                                                        validator: (value) {
-                                                          if (int.tryParse(
-                                                              value) ==
-                                                              null) {
-                                                            return 'Должно быть целым неотрицательным числом';
-                                                          } else if (int.parse(
-                                                              value) <
-                                                              0) {
-                                                            return 'Должно быть целым неотрицательным числом';
-                                                          } else {
-                                                            return null;
-                                                          }
-                                                        },
-                                                        onSaved: (value) {
-                                                          currentGameState
-                                                              .lastStateLength =
-                                                              int.parse(value);
-                                                        },
-                                                      ),
-                                                      TextFormField(
-                                                        keyboardType:
-                                                        TextInputType
-                                                            .number,
-                                                        initialValue:
-                                                        currentGameState
-                                                            .difficultyDispersion
-                                                            .toString(),
-                                                        decoration:
-                                                        const InputDecoration(
-                                                          labelText:
-                                                          'Разброс сложности',
-                                                        ),
-                                                        validator: (value) {
-                                                          if (int.tryParse(
-                                                              value) ==
-                                                              null) {
-                                                            return 'Должно быть целым неотрицательным числом';
-                                                          } else if (int.parse(
-                                                              value) <
-                                                              0) {
-                                                            return 'Должно быть целым неотрицательным числом';
-                                                          } else {
-                                                            return null;
-                                                          }
-                                                        },
-                                                        onSaved: (value) {
-                                                          currentGameState
-                                                              .difficultyDispersion =
-                                                              int.parse(value);
-                                                        },
-                                                      ),
-                                                      Padding(
-                                                          padding:
-                                                          EdgeInsets.only(
-                                                              top: 10),
-                                                          child: Text(
-                                                              'Сложность',
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .black
-                                                                      .withOpacity(
-                                                                      0.5)))),
-                                                      Observer(
-                                                          builder:
-                                                              (_) =>
-                                                              Slider(
-                                                                min: 0,
-                                                                max: 100,
-                                                                divisions:
-                                                                100,
-                                                                label: currentAppState
-                                                                    .currentSetDifficulty
-                                                                    .toString(),
-                                                                value: currentAppState
-                                                                    .currentSetDifficulty
-                                                                    .toDouble(),
-                                                                onChanged:
-                                                                    (value) {
-                                                                  currentAppState
-                                                                      .setCurrentDifficulty(
-                                                                      value
-                                                                          .toInt());
-                                                                },
-                                                              ))
-                                                    ])));
-                                        return AlertDialog(
-                                          title: Text('Настройки'),
-                                          content: settingsForm,
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              child: Text('Готово',
-                                                  style:
-                                                  TextStyle(fontSize: 20)),
-                                              onPressed: () {
-                                                if (settingsKey.currentState
-                                                    .validate()) {
-                                                  currentGameState
-                                                      .matchDifficulty =
-                                                      currentAppState
-                                                          .currentSetDifficulty;
-                                                  settingsKey.currentState
-                                                      .save();
-                                                  Navigator.of(context).pop();
-                                                }
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      });
+                                      builder: (BuildContext context) =>
+                                          SettingsDialog(
+                                              currentSetDifficulty:
+                                              currentGameState
+                                                  .matchDifficulty));
                                 }),
                             IconButton(
                                 onPressed: () {
@@ -333,5 +141,140 @@ class Match extends StatelessWidget {
         return Turn();
       }
     });
+  }
+}
+
+class SettingsDialog extends StatefulWidget {
+  final int currentSetDifficulty;
+
+  const SettingsDialog({Key key, this.currentSetDifficulty}) : super(key: key);
+
+  @override
+  _SettingsDialogState createState() => _SettingsDialogState();
+}
+
+class _SettingsDialogState extends State<SettingsDialog> {
+  static GlobalKey<FormState> settingsKey = GlobalKey<FormState>();
+  int currentSetDifficulty;
+
+  @override
+  void initState() {
+    currentSetDifficulty = widget.currentSetDifficulty;
+    super.initState();
+  }
+
+  @override
+  build(BuildContext context) {
+    final currentGameState = Provider
+        .of<AppState>(context)
+        .gameState;
+    return AlertDialog(
+      title: Text('Настройки'),
+      content: Form(
+          key: settingsKey,
+          child: Container(
+              width: double.maxFinite,
+              child: ListView(shrinkWrap: true, children: [
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  initialValue: currentGameState.wordsPerPlayer.toString(),
+                  decoration: const InputDecoration(
+                    labelText: 'Кол-во слов на игрока',
+                  ),
+                  validator: (value) {
+                    if (int.tryParse(value) == null || int.parse(value) < 1) {
+                      return 'Должно быть натуральным числом';
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) {
+                    currentGameState.wordsPerPlayer = int.parse(value);
+                  },
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  initialValue: currentGameState.mainStateLength.toString(),
+                  decoration: const InputDecoration(
+                    labelText: 'Длительность раунда',
+                  ),
+                  validator: (value) {
+                    if (int.tryParse(value) == null || int.parse(value) < 1) {
+                      return 'Должно быть натуральным числом';
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) {
+                    currentGameState.mainStateLength = int.parse(value);
+                  },
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  initialValue: currentGameState.lastStateLength.toString(),
+                  decoration: const InputDecoration(
+                    labelText: 'Добавочное время',
+                  ),
+                  validator: (value) {
+                    if (int.tryParse(value) == null || int.parse(value) < 0) {
+                      return 'Должно быть целым неотрицательным числом';
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) {
+                    currentGameState.lastStateLength = int.parse(value);
+                  },
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  initialValue:
+                  currentGameState.difficultyDispersion.toString(),
+                  decoration: const InputDecoration(
+                    labelText: 'Разброс сложности',
+                  ),
+                  validator: (value) {
+                    if (int.tryParse(value) == null || int.parse(value) < 0) {
+                      return 'Должно быть целым неотрицательным числом';
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) {
+                    currentGameState.difficultyDispersion = int.parse(value);
+                  },
+                ),
+                Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text('Сложность',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.5)))),
+                Slider(
+                  min: 0,
+                  max: 100,
+                  divisions: 100,
+                  label: currentSetDifficulty.toString(),
+                  value: currentSetDifficulty.toDouble(),
+                  onChanged: (value) {
+                    setState(() {
+                      currentSetDifficulty = value.toInt();
+                    });
+                  },
+                )
+              ]))),
+      actions: <Widget>[
+        FlatButton(
+          child: Text('Готово', style: TextStyle(fontSize: 20)),
+          onPressed: () {
+            if (settingsKey.currentState.validate()) {
+              currentGameState.matchDifficulty = currentSetDifficulty;
+              settingsKey.currentState.save();
+              Navigator.of(context).pop();
+            }
+          },
+        ),
+      ],
+    );
   }
 }

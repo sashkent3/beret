@@ -36,12 +36,13 @@ class MyApp extends StatelessWidget {
                   RaisedButton(
                       onPressed: () {
                         int _currentSetDifficulty =
-                            currentState.prefs.getInt('matchDifficulty');
+                        currentState.prefs.getInt('matchDifficulty');
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) =>
-                              Settings(
-                                  currentSetDifficulty: _currentSetDifficulty)),
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Settings(
+                                      currentSetDifficulty: _currentSetDifficulty)),
                         );
                       },
                       child: Text('Настройки', style: TextStyle(fontSize: 20)))
