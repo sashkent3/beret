@@ -66,9 +66,7 @@ class Match extends StatelessWidget {
             curve: Curves.easeOut,
           );
         });
-        return MaterialApp(
-            title: 'Шляпа',
-            home: Scaffold(
+        return Scaffold(
                 appBar: AppBar(
                   title: Text('Шляпа'),
                 ),
@@ -136,7 +134,7 @@ class Match extends StatelessWidget {
                                 },
                                 icon: Icon(Icons.play_arrow))
                           ]))
-                ])));
+                ]));
       } else {
         return Turn();
       }

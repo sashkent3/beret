@@ -7,9 +7,7 @@ class Turn extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState;
 
-    return MaterialApp(
-        title: 'Шляпа',
-        home: Scaffold(
+    return Scaffold(
             appBar: AppBar(
               title: Text('Шляпа'),
             ),
@@ -84,7 +82,7 @@ class Turn extends StatelessWidget {
                   )
                 ]);
               }
-            })));
+            }));
   }
 }
 
@@ -195,19 +193,13 @@ class CurrentWord extends StatelessWidget {
 
 class EndGame extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    final currentState = Provider
-        .of<AppState>(context)
-        .gameState;
-
-    return Center(
+  Widget build(BuildContext context) =>
+      Center(
         child: Column(children: <Widget>[
-          Text(currentState.log.toString()),
           RaisedButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.of(context).pop();
               },
               child: Text('Закончить игру', style: TextStyle(fontSize: 20)))
         ]));
-  }
 }
