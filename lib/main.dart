@@ -35,14 +35,17 @@ class MyApp extends StatelessWidget {
                           'Быстрая игра', style: TextStyle(fontSize: 20))),
                   RaisedButton(
                       onPressed: () {
-                        int _currentSetDifficulty =
-                        currentState.prefs.getInt('matchDifficulty');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
                                   Settings(
-                                      currentSetDifficulty: _currentSetDifficulty)),
+                                      currentSetDifficulty:
+                                      currentState.prefs.getInt(
+                                          'matchDifficulty'),
+                                      currentSetDifficultyDispersion: currentState
+                                          .prefs
+                                          .getInt('difficultyDispersion'))),
                         );
                       },
                       child: Text('Настройки', style: TextStyle(fontSize: 20)))

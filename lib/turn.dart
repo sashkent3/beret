@@ -8,81 +8,79 @@ class Turn extends StatelessWidget {
     final currentState = Provider.of<AppState>(context).gameState;
 
     return Scaffold(
-            appBar: AppBar(
-              title: Text('Шляпа'),
-            ),
-            body: Observer(builder: (_) {
-              if (currentState.state == 'end') {
-                return EndGame();
-              } else if (currentState.state == 'main') {
-                return Stack(children: <Widget>[
-                  Align(
-                      alignment: Alignment.topRight,
-                      child: Text(
-                        currentState.timer.toString(),
-                        style: TextStyle(fontSize: 30),
-                      )),
-                  Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            ErrorButton(),
-                            ConcedeButton(),
-                            GuessedRightButton()
-                          ])),
-                  Center(child: CurrentWord())
-                ]);
-              } else if (currentState.state == 'last') {
-                return Stack(children: <Widget>[
-                  Align(
-                      alignment: Alignment.topRight,
-                      child: Text(
-                          (currentState.timer + currentState.lastStateLength)
-                              .toString(),
-                          style: TextStyle(fontSize: 30, color: Colors.red))),
-                  Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            ErrorButton(),
-                            GuessedWrongButton(),
-                            GuessedRightButton()
-                          ])),
-                  Center(child: CurrentWord())
-                ]);
-              } else if (currentState.state == 'verdict') {
-                return Stack(children: <Widget>[
-                  Align(
-                      alignment: Alignment.topRight,
-                      child: Text('0',
-                          style: TextStyle(fontSize: 30, color: Colors.red))),
-                  Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            ErrorButton(),
-                            GuessedWrongButton(),
-                            GuessedRightButton()
-                          ])),
-                  Center(child: CurrentWord())
-                ]);
-              } else {
-                return Stack(children: <Widget>[
-                  Center(
-                      child: SizedBox(
-                          width: 200.0,
-                          height: 100.0,
-                          child: PlayersDisplay())),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: GameStartButton(),
-                  )
-                ]);
-              }
-            }));
+        appBar: AppBar(
+          title: Text('Шляпа'),
+        ),
+        body: Observer(builder: (_) {
+          if (currentState.state == 'end') {
+            return EndGame();
+          } else if (currentState.state == 'main') {
+            return Stack(children: <Widget>[
+              Align(
+                  alignment: Alignment.topRight,
+                  child: Text(
+                    currentState.timer.toString(),
+                    style: TextStyle(fontSize: 30),
+                  )),
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        ErrorButton(),
+                        ConcedeButton(),
+                        GuessedRightButton()
+                      ])),
+              Center(child: CurrentWord())
+            ]);
+          } else if (currentState.state == 'last') {
+            return Stack(children: <Widget>[
+              Align(
+                  alignment: Alignment.topRight,
+                  child: Text(
+                      (currentState.timer + currentState.lastStateLength)
+                          .toString(),
+                      style: TextStyle(fontSize: 30, color: Colors.red))),
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        ErrorButton(),
+                        GuessedWrongButton(),
+                        GuessedRightButton()
+                      ])),
+              Center(child: CurrentWord())
+            ]);
+          } else if (currentState.state == 'verdict') {
+            return Stack(children: <Widget>[
+              Align(
+                  alignment: Alignment.topRight,
+                  child: Text('0',
+                      style: TextStyle(fontSize: 30, color: Colors.red))),
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        ErrorButton(),
+                        GuessedWrongButton(),
+                        GuessedRightButton()
+                      ])),
+              Center(child: CurrentWord())
+            ]);
+          } else {
+            return Stack(children: <Widget>[
+              Center(
+                  child: SizedBox(
+                      width: 200.0, height: 100.0, child: PlayersDisplay())),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: GameStartButton(),
+              )
+            ]);
+          }
+        }));
   }
 }
 
@@ -195,11 +193,11 @@ class EndGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       Center(
-        child: Column(children: <Widget>[
-          RaisedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Закончить игру', style: TextStyle(fontSize: 20)))
-        ]));
+          child: Column(children: <Widget>[
+            RaisedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Закончить игру', style: TextStyle(fontSize: 20)))
+          ]));
 }

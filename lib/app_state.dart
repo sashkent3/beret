@@ -42,7 +42,7 @@ abstract class _AppState with Store {
   void restoreDefaultSettings() {
     prefs.setInt('matchDifficulty', 30);
     prefs.setInt('wordsPerPlayer', 10);
-    prefs.setInt('difficultyDispersion', 5);
+    prefs.setInt('difficultyDispersion', 15);
     prefs.setInt('lastStateLength', 3);
     prefs.setInt('mainStateLength', 20);
   }

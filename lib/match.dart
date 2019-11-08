@@ -32,6 +32,7 @@ class Match extends StatelessWidget {
                           .replaceAll(RegExp(r"\s+"), ' ');
                     })),
             IconButton(
+                tooltip: 'Удалить игрока',
                 icon: Icon(Icons.close),
                 onPressed: () {
                   if (currentGameState.players.length > 2) {
@@ -67,74 +68,78 @@ class Match extends StatelessWidget {
           );
         });
         return Scaffold(
-                appBar: AppBar(
-                  title: Text('Шляпа'),
-                ),
-                body: Stack(children: <Widget>[
-                  Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                          child: ListView(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              children: listView,
-                              controller: scrollController),
-                          padding: EdgeInsets.only(bottom: 50))),
-                  Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            IconButton(
-                                onPressed: currentGameState.addPlayer,
-                                icon: Icon(Icons.person_add)),
-                            IconButton(
-                                onPressed: currentGameState.players.shuffle,
-                                icon: Icon(Icons.shuffle)),
-                            IconButton(
-                                icon: Icon(Icons.settings),
-                                onPressed: () {
-                                  showDialog<void>(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          SettingsDialog(
-                                              currentSetDifficulty:
-                                              currentGameState
-                                                  .matchDifficulty));
-                                }),
-                            IconButton(
-                                onPressed: () {
-                                  currentGameState
-                                      .createHat(currentAppState.dictionary);
-                                  if (currentGameState.validateAll()) {
-                                    currentGameState.timer =
-                                        currentGameState.mainStateLength;
-                                    currentGameState.changeState('lobby');
-                                  } else {
-                                    showDialog<void>(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          content: Text(
-                                              'У всех игроков должны быть разные имена хотя бы из одного символа!',
+            appBar: AppBar(
+              title: Text('Шляпа'),
+            ),
+            body: Stack(children: <Widget>[
+              Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                      child: ListView(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          children: listView,
+                          controller: scrollController),
+                      padding: EdgeInsets.only(bottom: 50))),
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        IconButton(
+                            tooltip: 'Добавить игрока',
+                            onPressed: currentGameState.addPlayer,
+                            icon: Icon(Icons.person_add)),
+                        IconButton(
+                            tooltip: 'Перемешать игроков',
+                            onPressed: currentGameState.players.shuffle,
+                            icon: Icon(Icons.shuffle)),
+                        IconButton(
+                            tooltip: 'Настройки матча',
+                            icon: Icon(Icons.settings),
+                            onPressed: () {
+                              showDialog<void>(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      SettingsDialog(
+                                          currentSetDifficulty: currentGameState
+                                              .matchDifficulty,
+                                          currentSetDifficultyDispersion: currentGameState
+                                              .difficultyDispersion));
+                            }),
+                        IconButton(
+                            tooltip: 'Начать игру',
+                            onPressed: () {
+                              currentGameState
+                                  .createHat(currentAppState.dictionary);
+                              if (currentGameState.validateAll()) {
+                                currentGameState.timer =
+                                    currentGameState.mainStateLength;
+                                currentGameState.changeState('lobby');
+                              } else {
+                                showDialog<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      content: Text(
+                                          'У всех игроков должны быть разные имена хотя бы из одного символа!',
+                                          style: TextStyle(fontSize: 20)),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Закрыть',
                                               style: TextStyle(fontSize: 20)),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              child: Text('Закрыть',
-                                                  style:
-                                                  TextStyle(fontSize: 20)),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
                                     );
-                                  }
-                                },
-                                icon: Icon(Icons.play_arrow))
-                          ]))
-                ]));
+                                  },
+                                );
+                              }
+                            },
+                            icon: Icon(Icons.play_arrow))
+                      ]))
+            ]));
       } else {
         return Turn();
       }
@@ -144,8 +149,11 @@ class Match extends StatelessWidget {
 
 class SettingsDialog extends StatefulWidget {
   final int currentSetDifficulty;
+  final int currentSetDifficultyDispersion;
 
-  const SettingsDialog({Key key, this.currentSetDifficulty}) : super(key: key);
+  const SettingsDialog(
+      {Key key, this.currentSetDifficulty, this.currentSetDifficultyDispersion})
+      : super(key: key);
 
   @override
   _SettingsDialogState createState() => _SettingsDialogState();
@@ -154,10 +162,12 @@ class SettingsDialog extends StatefulWidget {
 class _SettingsDialogState extends State<SettingsDialog> {
   static GlobalKey<FormState> settingsKey = GlobalKey<FormState>();
   int currentSetDifficulty;
+  int currentSetDifficultyDispersion;
 
   @override
   void initState() {
     currentSetDifficulty = widget.currentSetDifficulty;
+    currentSetDifficultyDispersion = widget.currentSetDifficultyDispersion;
     super.initState();
   }
 
@@ -224,22 +234,22 @@ class _SettingsDialogState extends State<SettingsDialog> {
                     currentGameState.lastStateLength = int.parse(value);
                   },
                 ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  initialValue:
-                  currentGameState.difficultyDispersion.toString(),
-                  decoration: const InputDecoration(
-                    labelText: 'Разброс сложности',
-                  ),
-                  validator: (value) {
-                    if (int.tryParse(value) == null || int.parse(value) < 0) {
-                      return 'Должно быть целым неотрицательным числом';
-                    } else {
-                      return null;
-                    }
-                  },
-                  onSaved: (value) {
-                    currentGameState.difficultyDispersion = int.parse(value);
+                Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text('Разброс сложности',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.5)))),
+                Slider.adaptive(
+                  min: 0,
+                  max: 50,
+                  divisions: 50,
+                  label: currentSetDifficultyDispersion.toString(),
+                  value: currentSetDifficultyDispersion.toDouble(),
+                  onChanged: (value) {
+                    setState(() {
+                      currentSetDifficultyDispersion = value.toInt();
+                    });
                   },
                 ),
                 Padding(
@@ -267,6 +277,8 @@ class _SettingsDialogState extends State<SettingsDialog> {
           onPressed: () {
             if (settingsKey.currentState.validate()) {
               currentGameState.matchDifficulty = currentSetDifficulty;
+              currentGameState.difficultyDispersion =
+                  currentSetDifficultyDispersion;
               settingsKey.currentState.save();
               Navigator.of(context).pop();
             }
