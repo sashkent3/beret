@@ -34,6 +34,42 @@ class _SettingsState extends State<Settings> {
         appBar: AppBar(
           title: Text('Шляпа'),
         ),
+        floatingActionButtonLocation:
+        FloatingActionButtonLocation.endDocked,
+        floatingActionButton: FloatingActionButton(
+          tooltip: 'Сохранить настройки',
+          backgroundColor: Colors.cyan,
+          child: Icon(Icons.save),
+          onPressed: () {
+            if (settingsKey.currentState.validate()) {
+              settingsKey.currentState.save();
+              currentState.prefs
+                  .setInt('matchDifficulty', currentSetDifficulty);
+              currentState.prefs.setInt('difficultyDispersion',
+                  currentSetDifficultyDispersion);
+            }
+          },
+        ),
+        bottomNavigationBar: BottomAppBar(
+            color: Colors.blue,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [FlatButton.icon(
+                    label: Text('СБРОСИТЬ НАСТРОЙКИ',
+                      style: TextStyle(color: Colors.white),),
+                    icon: Icon(
+                        Icons.settings_backup_restore, color: Colors.white),
+                    onPressed: () {
+                      currentState.restoreDefaultSettings();
+                      currentSetDifficulty =
+                          currentState.prefs.getInt('matchDifficulty');
+                      currentSetDifficultyDispersion =
+                          currentState.prefs.getInt('difficultyDispersion');
+                      setState(() {
+                        settingsKey = GlobalKey<FormState>();
+                      });
+                    })
+                ])),
         body: Stack(children: [
           Form(
               key: settingsKey,
@@ -142,38 +178,6 @@ class _SettingsState extends State<Settings> {
                       },
                     )
                   ])),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: Row(
-                children: <Widget>[
-                  IconButton(
-                      tooltip: 'Восстановить стандартные настройки',
-                      icon: Icon(Icons.settings_backup_restore),
-                      onPressed: () {
-                        currentState.restoreDefaultSettings();
-                        currentSetDifficulty =
-                            currentState.prefs.getInt('matchDifficulty');
-                        currentSetDifficultyDispersion =
-                            currentState.prefs.getInt('difficultyDispersion');
-                        setState(() {
-                          settingsKey = GlobalKey<FormState>();
-                        });
-                      }),
-                  IconButton(
-                      tooltip: 'Сохранить настройки',
-                      icon: Icon(Icons.save),
-                      onPressed: () {
-                        if (settingsKey.currentState.validate()) {
-                          settingsKey.currentState.save();
-                          currentState.prefs
-                              .setInt('matchDifficulty', currentSetDifficulty);
-                          currentState.prefs.setInt('difficultyDispersion',
-                              currentSetDifficultyDispersion);
-                        }
-                      })
-                ],
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              ))
         ]));
   }
 }

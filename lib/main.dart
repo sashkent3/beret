@@ -19,45 +19,85 @@ class MyApp extends StatelessWidget {
     currentState.loadApp();
     return Scaffold(
         appBar: AppBar(title: Text('Шляпа')),
-        body: Observer(builder: (_) {
-          if (!currentState.loading) {
-            return Center(
-                child: Column(children: <Widget>[
-                  RaisedButton(
-                      color: Colors.blue,
-                      onPressed: () {
-                        currentState.newGame();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Match()),
-                        );
-                      },
-                      child: Text(
-                        'БЫСТРАЯ ИГРА',
-                        style: TextStyle(color: Colors.white),
-                      )),
-                  RaisedButton(
-                      color: Colors.blue,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  Settings(
-                                      currentSetDifficulty:
-                                      currentState.prefs.getInt(
-                                          'matchDifficulty'),
-                                      currentSetDifficultyDispersion: currentState
-                                          .prefs
-                                          .getInt('difficultyDispersion'))),
-                        );
-                      },
-                      child:
-                      Text('НАСТРОЙКИ', style: TextStyle(color: Colors.white)))
+        body: Padding(
+            padding: EdgeInsets.all(12),
+            child: Observer(builder: (_) {
+              if (!currentState.loading) {
+                return Center(
+                    child: Table(children: [
+                      TableRow(children: [
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 6, 6),
+                            child: AspectRatio(
+                                aspectRatio: 1,
+                                child: RaisedButton(
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      currentState.newGame();
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Match()),
+                                      );
+                                    },
+                                    child: Text(
+                                      'Быстрая игра',
+                                      style: TextStyle(
+                                          color: Colors.blue, fontSize: 25),
+                                    )))),
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(6, 0, 0, 6),
+                            child: AspectRatio(
+                                aspectRatio: 1,
+                                child: RaisedButton(
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Settings(
+                                                    currentSetDifficulty: currentState
+                                                        .prefs
+                                                        .getInt(
+                                                        'matchDifficulty'),
+                                                    currentSetDifficultyDispersion:
+                                                    currentState.prefs.getInt(
+                                                        'difficultyDispersion'))),
+                                      );
+                                    },
+                                    child: Text('Настройки',
+                                        style: TextStyle(color: Colors.blue,
+                                            fontSize: 25)))))
+                      ]),
+                      TableRow(children: [
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(0, 6, 6, 0),
+                            child: AspectRatio(
+                                aspectRatio: 1,
+                                child: RaisedButton(
+                                    color: Colors.white,
+                                    onPressed: () {},
+                                    child: Text(
+                                      'История игр',
+                                      style: TextStyle(
+                                          color: Colors.blue, fontSize: 25),
+                                    )))),
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(6, 6, 0, 0),
+                            child: AspectRatio(
+                                aspectRatio: 1,
+                                child: RaisedButton(
+                                    color: Colors.white,
+                                    onPressed: () {},
+                                    child: Text('Правила',
+                                        style: TextStyle(color: Colors.blue,
+                                            fontSize: 25)))))
+                      ])
                 ]));
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        }));
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            })));
   }
 }
