@@ -50,18 +50,35 @@ mixin _$GameState on _GameState, Store {
   final _$logAtom = Atom(name: '_GameState.log');
 
   @override
-  List get turnLog {
+  List get log {
     _$logAtom.context.enforceReadPolicy(_$logAtom);
     _$logAtom.reportObserved();
+    return super.log;
+  }
+
+  @override
+  set log(List value) {
+    _$logAtom.context.conditionallyRunInAction(() {
+      super.log = value;
+      _$logAtom.reportChanged();
+    }, _$logAtom, name: '${_$logAtom.name}_set');
+  }
+
+  final _$turnLogAtom = Atom(name: '_GameState.turnLog');
+
+  @override
+  List get turnLog {
+    _$turnLogAtom.context.enforceReadPolicy(_$turnLogAtom);
+    _$turnLogAtom.reportObserved();
     return super.turnLog;
   }
 
   @override
   set turnLog(List value) {
-    _$logAtom.context.conditionallyRunInAction(() {
+    _$turnLogAtom.context.conditionallyRunInAction(() {
       super.turnLog = value;
-      _$logAtom.reportChanged();
-    }, _$logAtom, name: '${_$logAtom.name}_set');
+      _$turnLogAtom.reportChanged();
+    }, _$turnLogAtom, name: '${_$turnLogAtom.name}_set');
   }
 
   final _$mainStateLengthAtom = Atom(name: '_GameState.mainStateLength');

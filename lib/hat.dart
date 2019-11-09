@@ -27,4 +27,8 @@ class Hat {
   bool isEmpty() {
     return words.isEmpty;
   }
+
+  void removeWord(String word) {
+    words.remove(word);
+  }
 }

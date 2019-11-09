@@ -21,7 +21,7 @@ abstract class _GameState with Store {
   }
 
   @observable
-  String state = 'start';
+  String state = 'lobby';
 
   @observable
   List log = [];
@@ -98,7 +98,7 @@ abstract class _GameState with Store {
     }
     hat.putWord(word);
     turn++;
-    changeState('lobby');
+    changeState('verdict');
   }
 
   @action
@@ -106,7 +106,7 @@ abstract class _GameState with Store {
     if (state == 'main') {
       timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
       turnLog.add([playerOne, playerTwo, word, timeSpent, 0, 'guessed']);
-    } else if (state == 'last' || state == 'verdict') {
+    } else if (state == 'last') {
       turnLog.add([
         playerOne,
         playerTwo,
@@ -118,11 +118,11 @@ abstract class _GameState with Store {
     }
     if (hat.isEmpty()) {
       stopwatch.stop();
-      changeState('end');
-    } else if (state == 'last' || state == 'verdict') {
+      changeState('verdict');
+    } else if (state == 'last') {
       stopwatch.stop();
       turn++;
-      changeState('lobby');
+      changeState('verdict');
     } else {
       word = hat.getWord();
     }
@@ -134,7 +134,7 @@ abstract class _GameState with Store {
     if (state == 'main') {
       timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
       turnLog.add([playerOne, playerTwo, word, timeSpent, 0, 'failed']);
-    } else if (state == 'last' || state == 'verdict') {
+    } else if (state == 'last') {
       turnLog.add([
         playerOne,
         playerTwo,
@@ -147,11 +147,7 @@ abstract class _GameState with Store {
     stopwatch.stop();
     stopwatch.reset();
     turn++;
-    if (hat.isEmpty()) {
-      changeState('end');
-    } else {
-      changeState('lobby');
-    }
+    changeState('verdict');
   }
 
   @action
@@ -185,6 +181,7 @@ abstract class _GameState with Store {
         changeState('last');
       }
       if (timer == -lastStateLength) {
+        turnLog.add([playerOne, playerTwo, word, timeSpent, 0]);
         changeState('verdict');
         stopwatch.stop();
       }
