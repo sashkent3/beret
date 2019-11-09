@@ -11,87 +11,115 @@ class Turn extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState;
 
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Шляпа'),
-        ),
-        body: Observer(builder: (_) {
-          if (currentState.state == 'end') {
-            return EndGame();
-          } else if (currentState.state == 'main') {
-            return Stack(children: <Widget>[
-              Align(
-                  alignment: Alignment.topRight,
-                  child: Text(
-                    currentState.timer.toString(),
-                    style: TextStyle(fontSize: 30),
-                  )),
-              Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        ErrorButton(),
-                        ConcedeButton(),
-                        GuessedRightButton()
-                      ])),
-              Center(child: CurrentWord())
-            ]);
-          } else if (currentState.state == 'last') {
-            return Stack(children: <Widget>[
-              Align(
-                  alignment: Alignment.topRight,
-                  child: Text(
-                      (currentState.timer + currentState.lastStateLength)
-                          .toString(),
-                      style: TextStyle(fontSize: 30, color: Colors.red))),
-              Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        ErrorButton(),
-                        GuessedWrongButton(),
-                        GuessedRightButton()
-                      ])),
-              Center(child: CurrentWord())
-            ]);
-          } else if (currentState.state == 'verdict') {
-            return Stack(children: <Widget>[
-              Padding(
-                  child: RoundEditing(),
-                  padding: EdgeInsets.only(top: 10, bottom: 50)),
-              Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RaisedButton(
-                            child: Text('Закончить игру',
-                                style: TextStyle(fontSize: 20)),
-                            onPressed: () {
-                              currentState.changeState('end');
-                            }),
-                        RaisedButton(
-                            child:
-                            Text('Готово', style: TextStyle(fontSize: 20)),
-                            onPressed: () {
-                              currentState.changeState('lobby');
-                            })
-                      ]))
-            ]);
-          } else {
-            return Stack(children: <Widget>[
-              Center(
+    return Observer(builder: (_) {
+      if (currentState.state == 'end') {
+        return Scaffold(
+            appBar: AppBar(
+              title: Text('Шляпа'),
+            ),
+            body: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: EndGame()));
+      } else if (currentState.state == 'main') {
+        return Scaffold(
+            appBar: AppBar(
+              title: Text('Шляпа'),
+            ),
+            floatingActionButtonLocation:
+            FloatingActionButtonLocation.endDocked,
+            floatingActionButton: GuessedRightButton(),
+            bottomNavigationBar: BottomAppBar(
+                color: Colors.blue,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [ErrorButton(), ConcedeButton()])),
+            body: Padding(
+                padding: EdgeInsets.all(12),
+                child: Stack(children: <Widget>[
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: Text(
+                        currentState.timer.toString(),
+                        style: TextStyle(fontSize: 30),
+                      )),
+                  Center(child: CurrentWord())
+                ])));
+      } else if (currentState.state == 'last') {
+        return Scaffold(
+            appBar: AppBar(
+              title: Text('Шляпа'),
+            ),
+            floatingActionButtonLocation:
+            FloatingActionButtonLocation.endDocked,
+            floatingActionButton: GuessedRightButton(),
+            bottomNavigationBar: BottomAppBar(
+                color: Colors.blue,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [ErrorButton(), GuessedWrongButton()])),
+            body: Padding(
+                padding: EdgeInsets.all(12),
+                child: Stack(children: <Widget>[
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: Text(
+                          (currentState.timer + currentState.lastStateLength)
+                              .toString(),
+                          style: TextStyle(fontSize: 30, color: Colors.red))),
+                  Center(child: CurrentWord())
+                ])));
+      } else if (currentState.state == 'verdict') {
+        return Scaffold(
+            appBar: AppBar(
+              title: Text('Шляпа'),
+            ),
+            bottomNavigationBar: BottomAppBar(
+                color: Colors.blue,
+                child:
+                Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  FlatButton(
+                      child: Text(
+                        'ЗАКОНЧИТЬ ИГРУ',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        currentState.changeState('end');
+                      })
+                ])),
+            floatingActionButtonLocation:
+            FloatingActionButtonLocation.endDocked,
+            floatingActionButton: FloatingActionButton(
+                backgroundColor: Colors.cyan,
+                child: Icon(Icons.arrow_forward),
+                onPressed: () {
+                  if (currentState.hat.isEmpty()) {
+                    currentState.changeState('end');
+                  } else {
+                    currentState.changeState('lobby');
+                  }
+                }),
+            body: Padding(
+                child: RoundEditing(),
+                padding: EdgeInsets.symmetric(vertical: 12)));
+      } else {
+        return Scaffold(
+            appBar: AppBar(
+              title: Text('Шляпа'),
+            ),
+            floatingActionButton: FloatingActionButton(
+                backgroundColor: Colors.cyan,
+                child: Icon(Icons.play_arrow),
+                onPressed: () {
+                  currentState.newTurn();
+                }),
+            body: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Center(
                   child: SizedBox(
                       width: 200.0, height: 100.0, child: PlayersDisplay())),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: GameStartButton(),
-              )
-            ]);
-          }
-        }));
+            ));
+      }
+    });
   }
 }
 
@@ -114,29 +142,22 @@ class PlayersDisplay extends StatelessWidget {
   }
 }
 
-class GameStartButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final currentState = Provider.of<AppState>(context).gameState;
-
-    return RaisedButton(
-        onPressed: () {
-          currentState.newTurn();
-        },
-        child: Text('Поехали', style: TextStyle(fontSize: 20)));
-  }
-}
-
 class GuessedRightButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState;
 
-    return RaisedButton(
-      onPressed: () {
-        currentState.guessedRight();
-      },
-      child: Text('Угадано', style: TextStyle(fontSize: 20)),
+    return FloatingActionButton.extended(
+      backgroundColor: Colors.cyan,
+      onPressed: currentState.guessedRight,
+      label: Text(
+        'Угадано',
+        style: TextStyle(color: Colors.white),
+      ),
+      icon: Icon(
+        Icons.thumb_up,
+        color: Colors.white,
+      ),
     );
   }
 }
@@ -148,11 +169,12 @@ class GuessedWrongButton extends StatelessWidget {
         .of<AppState>(context)
         .gameState;
 
-    return RaisedButton(
+    return FlatButton.icon(
+      icon: Icon(Icons.thumb_down, color: Colors.white),
       onPressed: () {
         currentState.concede();
       },
-      child: Text('Не угадано', style: TextStyle(fontSize: 20)),
+      label: Text('НЕ УГАДАНО', style: TextStyle(color: Colors.white)),
     );
   }
 }
@@ -164,11 +186,12 @@ class ConcedeButton extends StatelessWidget {
         .of<AppState>(context)
         .gameState;
 
-    return RaisedButton(
+    return FlatButton.icon(
+      icon: Icon(Icons.thumb_down, color: Colors.white),
       onPressed: () {
         currentState.concede();
       },
-      child: Text('Сдаться', style: TextStyle(fontSize: 20)),
+      label: Text('СДАТЬСЯ', style: TextStyle(color: Colors.white)),
     );
   }
 }
@@ -180,11 +203,12 @@ class ErrorButton extends StatelessWidget {
         .of<AppState>(context)
         .gameState;
 
-    return RaisedButton(
+    return FlatButton.icon(
+      icon: Icon(Icons.error, color: Colors.red),
       onPressed: () {
         currentState.error();
       },
-      child: Text('Ошибка', style: TextStyle(fontSize: 20, color: Colors.red)),
+      label: Text('ОШИБКА', style: TextStyle(color: Colors.red)),
     );
   }
 }
@@ -206,6 +230,7 @@ class EndGame extends StatelessWidget {
       Center(
           child: Column(children: <Widget>[
             RaisedButton(
+                color: Colors.blue,
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
                       context,
@@ -213,7 +238,8 @@ class EndGame extends StatelessWidget {
                           builder: (BuildContext context) => MyApp()),
                           (Route<dynamic> route) => false);
                 },
-                child: Text('Закончить игру', style: TextStyle(fontSize: 20)))
+                child:
+                Text('ЗАКОНЧИТЬ ИГРУ', style: TextStyle(color: Colors.white)))
           ]));
 }
 

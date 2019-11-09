@@ -41,12 +41,12 @@ class Match extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        content: Text('Должно быть хотя бы два игрока!',
-                            style: TextStyle(fontSize: 20)),
+                        content: Text(
+                          'Должно быть хотя бы два игрока!',
+                        ),
                         actions: <Widget>[
                           FlatButton(
-                            child:
-                            Text('Закрыть', style: TextStyle(fontSize: 20)),
+                            child: Text('Закрыть'),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
@@ -67,84 +67,83 @@ class Match extends StatelessWidget {
         );
       });
       return Scaffold(
+          bottomNavigationBar: BottomAppBar(
+              color: Colors.blue,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    IconButton(
+                        color: Colors.white,
+                        tooltip: 'Добавить игрока',
+                        onPressed: currentGameState.addPlayer,
+                        icon: Icon(Icons.person_add)),
+                    IconButton(
+                        color: Colors.white,
+                        tooltip: 'Перемешать игроков',
+                        onPressed: currentGameState.players.shuffle,
+                        icon: Icon(Icons.shuffle)),
+                    IconButton(
+                        color: Colors.white,
+                        tooltip: 'Настройки матча',
+                        icon: Icon(Icons.settings),
+                        onPressed: () {
+                          showDialog<void>(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  SettingsDialog(
+                                      currentSetDifficulty:
+                                      currentGameState.matchDifficulty,
+                                      currentSetDifficultyDispersion:
+                                      currentGameState.difficultyDispersion));
+                        })
+                  ])),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.cyan,
+            child: Icon(Icons.play_arrow),
+            onPressed: () {
+              if (currentGameState.validateAll()) {
+                currentGameState.createHat(currentAppState.dictionary);
+                currentGameState.timer = currentGameState.mainStateLength;
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => Turn()),
+                        (Route<dynamic> route) => false);
+              } else {
+                showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: Text(
+                        'У всех игроков должны быть разные имена хотя бы из одного символа!',
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text(
+                            'Закрыть',
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+          ),
           appBar: AppBar(
             title: Text('Шляпа'),
           ),
-          body: Stack(children: <Widget>[
-            Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                    child: ListView(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        children: listView,
-                        controller: scrollController),
-                    padding: EdgeInsets.only(bottom: 50))),
-            Align(
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      IconButton(
-                          tooltip: 'Добавить игрока',
-                          onPressed: currentGameState.addPlayer,
-                          icon: Icon(Icons.person_add)),
-                      IconButton(
-                          tooltip: 'Перемешать игроков',
-                          onPressed: currentGameState.players.shuffle,
-                          icon: Icon(Icons.shuffle)),
-                      IconButton(
-                          tooltip: 'Настройки матча',
-                          icon: Icon(Icons.settings),
-                          onPressed: () {
-                            showDialog<void>(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    SettingsDialog(
-                                        currentSetDifficulty:
-                                        currentGameState.matchDifficulty,
-                                        currentSetDifficultyDispersion:
-                                        currentGameState
-                                            .difficultyDispersion));
-                          }),
-                      IconButton(
-                          tooltip: 'Начать игру',
-                          onPressed: () {
-                            if (currentGameState.validateAll()) {
-                              currentGameState
-                                  .createHat(currentAppState.dictionary);
-                              currentGameState.timer =
-                                  currentGameState.mainStateLength;
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          Turn()),
-                                      (Route<dynamic> route) => false);
-                            } else {
-                              showDialog<void>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    content: Text(
-                                        'У всех игроков должны быть разные имена хотя бы из одного символа!',
-                                        style: TextStyle(fontSize: 20)),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text('Закрыть',
-                                            style: TextStyle(fontSize: 20)),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                          },
-                          icon: Icon(Icons.play_arrow))
-                    ]))
-          ]));
+          body: Align(
+            alignment: Alignment.topCenter,
+            child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                children: listView,
+                controller: scrollController),
+          ));
     });
   }
 }
@@ -275,7 +274,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
               ]))),
       actions: <Widget>[
         FlatButton(
-          child: Text('Готово', style: TextStyle(fontSize: 20)),
+          child: Text('Готово'),
           onPressed: () {
             if (settingsKey.currentState.validate()) {
               currentGameState.matchDifficulty = currentSetDifficulty;

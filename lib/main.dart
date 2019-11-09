@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
             return Center(
                 child: Column(children: <Widget>[
                   RaisedButton(
+                      color: Colors.blue,
                       onPressed: () {
                         currentState.newGame();
                         Navigator.push(
@@ -32,8 +33,11 @@ class MyApp extends StatelessWidget {
                         );
                       },
                       child: Text(
-                          'Быстрая игра', style: TextStyle(fontSize: 20))),
+                        'БЫСТРАЯ ИГРА',
+                        style: TextStyle(color: Colors.white),
+                      )),
                   RaisedButton(
+                      color: Colors.blue,
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -48,7 +52,8 @@ class MyApp extends StatelessWidget {
                                           .getInt('difficultyDispersion'))),
                         );
                       },
-                      child: Text('Настройки', style: TextStyle(fontSize: 20)))
+                      child:
+                      Text('НАСТРОЙКИ', style: TextStyle(color: Colors.white)))
                 ]));
           } else {
             return Center(child: CircularProgressIndicator());
