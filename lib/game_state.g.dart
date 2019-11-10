@@ -30,6 +30,23 @@ mixin _$GameState on _GameState, Store {
   String get playerTwo =>
       (_$playerTwoComputed ??= Computed<String>(() => super.playerTwo)).value;
 
+  final _$newTurnTimerCntAtom = Atom(name: '_GameState.newTurnTimerCnt');
+
+  @override
+  int get newTurnTimerCnt {
+    _$newTurnTimerCntAtom.context.enforceReadPolicy(_$newTurnTimerCntAtom);
+    _$newTurnTimerCntAtom.reportObserved();
+    return super.newTurnTimerCnt;
+  }
+
+  @override
+  set newTurnTimerCnt(int value) {
+    _$newTurnTimerCntAtom.context.conditionallyRunInAction(() {
+      super.newTurnTimerCnt = value;
+      _$newTurnTimerCntAtom.reportChanged();
+    }, _$newTurnTimerCntAtom, name: '${_$newTurnTimerCntAtom.name}_set');
+  }
+
   final _$stateAtom = Atom(name: '_GameState.state');
 
   @override
@@ -79,6 +96,23 @@ mixin _$GameState on _GameState, Store {
       super.turnLog = value;
       _$turnLogAtom.reportChanged();
     }, _$turnLogAtom, name: '${_$turnLogAtom.name}_set');
+  }
+
+  final _$gameLogAtom = Atom(name: '_GameState.gameLog');
+
+  @override
+  List get gameLog {
+    _$gameLogAtom.context.enforceReadPolicy(_$gameLogAtom);
+    _$gameLogAtom.reportObserved();
+    return super.gameLog;
+  }
+
+  @override
+  set gameLog(List value) {
+    _$gameLogAtom.context.conditionallyRunInAction(() {
+      super.gameLog = value;
+      _$gameLogAtom.reportChanged();
+    }, _$gameLogAtom, name: '${_$gameLogAtom.name}_set');
   }
 
   final _$mainStateLengthAtom = Atom(name: '_GameState.mainStateLength');
@@ -271,6 +305,23 @@ mixin _$GameState on _GameState, Store {
     }, _$stopwatchAtom, name: '${_$stopwatchAtom.name}_set');
   }
 
+  final _$newTurnTimerAtom = Atom(name: '_GameState.newTurnTimer');
+
+  @override
+  Timer get newTurnTimer {
+    _$newTurnTimerAtom.context.enforceReadPolicy(_$newTurnTimerAtom);
+    _$newTurnTimerAtom.reportObserved();
+    return super.newTurnTimer;
+  }
+
+  @override
+  set newTurnTimer(Timer value) {
+    _$newTurnTimerAtom.context.conditionallyRunInAction(() {
+      super.newTurnTimer = value;
+      _$newTurnTimerAtom.reportChanged();
+    }, _$newTurnTimerAtom, name: '${_$newTurnTimerAtom.name}_set');
+  }
+
   final _$hatAtom = Atom(name: '_GameState.hat');
 
   @override
@@ -345,6 +396,26 @@ mixin _$GameState on _GameState, Store {
     final _$actionInfo = _$_GameStateActionController.startAction();
     try {
       return super.newTurn();
+    } finally {
+      _$_GameStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void newTurnTimerSecondPass() {
+    final _$actionInfo = _$_GameStateActionController.startAction();
+    try {
+      return super.newTurnTimerSecondPass();
+    } finally {
+      _$_GameStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void newTurnTimerStart() {
+    final _$actionInfo = _$_GameStateActionController.startAction();
+    try {
+      return super.newTurnTimerStart();
     } finally {
       _$_GameStateActionController.endAction(_$actionInfo);
     }

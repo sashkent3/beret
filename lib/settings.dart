@@ -34,8 +34,7 @@ class _SettingsState extends State<Settings> {
         appBar: AppBar(
           title: Text('Шляпа'),
         ),
-        floatingActionButtonLocation:
-        FloatingActionButtonLocation.endDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: FloatingActionButton(
           tooltip: 'Сохранить настройки',
           backgroundColor: Colors.cyan,
@@ -45,31 +44,59 @@ class _SettingsState extends State<Settings> {
               settingsKey.currentState.save();
               currentState.prefs
                   .setInt('matchDifficulty', currentSetDifficulty);
-              currentState.prefs.setInt('difficultyDispersion',
-                  currentSetDifficultyDispersion);
+              currentState.prefs.setInt(
+                  'difficultyDispersion', currentSetDifficultyDispersion);
             }
           },
         ),
         bottomNavigationBar: BottomAppBar(
             color: Colors.blue,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [FlatButton.icon(
-                    label: Text('СБРОСИТЬ НАСТРОЙКИ',
-                      style: TextStyle(color: Colors.white),),
-                    icon: Icon(
-                        Icons.settings_backup_restore, color: Colors.white),
-                    onPressed: () {
-                      currentState.restoreDefaultSettings();
-                      currentSetDifficulty =
-                          currentState.prefs.getInt('matchDifficulty');
-                      currentSetDifficultyDispersion =
-                          currentState.prefs.getInt('difficultyDispersion');
-                      setState(() {
-                        settingsKey = GlobalKey<FormState>();
-                      });
-                    })
-                ])),
+            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              FlatButton.icon(
+                  label: Text(
+                    'СБРОСИТЬ НАСТРОЙКИ',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  icon:
+                  Icon(Icons.settings_backup_restore, color: Colors.white),
+                  onPressed: () {
+                    showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Text(
+                              'Вы уверены, что вы хотите сбросить настройки до стандартных значений?',
+                            ),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text(
+                                  'Нет',
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              FlatButton(
+                                  child: Text(
+                                    'Да',
+                                  ),
+                                  onPressed: () {
+                                    currentState.restoreDefaultSettings();
+                                    currentSetDifficulty = currentState.prefs
+                                        .getInt('matchDifficulty');
+                                    currentSetDifficultyDispersion =
+                                        currentState.prefs
+                                            .getInt('difficultyDispersion');
+                                    setState(() {
+                                      settingsKey = GlobalKey<FormState>();
+                                      Navigator.of(context).pop();
+                                    });
+                                  })
+                            ],
+                          );
+                        });
+                  })
+            ])),
         body: Stack(children: [
           Form(
               key: settingsKey,

@@ -16,48 +16,27 @@ class Match extends StatelessWidget {
     return Observer(builder: (_) {
       List<Widget> listView = [];
       for (int index = 0; index < currentGameState.players.length; index++) {
-        listView.add(Row(children: <Widget>[
-          Expanded(
-              child: TextFormField(
-                  key: currentGameState.players[index].key,
-                  decoration: const InputDecoration(
-                    icon: Icon(Icons.person),
-                    labelText: 'Имя',
-                  ),
-                  initialValue: currentGameState.players[index].name,
-                  onChanged: (value) {
-                    currentGameState.players[index].name = value
-                        .replaceAll(RegExp(r"^\s+|\s+$"), '')
-                        .replaceAll(RegExp(r"\s+"), ' ');
-                  })),
-          IconButton(
-              tooltip: 'Удалить игрока',
-              icon: Icon(Icons.close),
-              onPressed: () {
-                if (currentGameState.players.length > 2) {
-                  currentGameState.removePlayer(index);
-                } else {
-                  showDialog<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: Text(
-                          'Должно быть хотя бы два игрока!',
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('Закрыть'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              })
-        ]));
+        listView.add(ListTile(
+            title: TextFormField(
+                key: currentGameState.players[index].key,
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.person, color: Colors.blue),
+                  labelText: 'Имя',
+                ),
+                initialValue: currentGameState.players[index].name,
+                onChanged: (value) {
+                  currentGameState.players[index].name = value
+                      .replaceAll(RegExp(r"^\s+|\s+$"), '')
+                      .replaceAll(RegExp(r"\s+"), ' ');
+                }),
+            trailing: Visibility(
+                visible: currentGameState.players.length > 2,
+                child: IconButton(
+                    tooltip: 'Удалить игрока',
+                    icon: Icon(Icons.close, color: Colors.blue),
+                    onPressed: () {
+                      currentGameState.removePlayer(index);
+                    }))));
       }
       SchedulerBinding.instance.addPostFrameCallback((_) {
         scrollController.animateTo(
@@ -139,10 +118,7 @@ class Match extends StatelessWidget {
           ),
           body: Align(
             alignment: Alignment.topCenter,
-            child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                children: listView,
-                controller: scrollController),
+            child: ListView(children: listView, controller: scrollController),
           ));
     });
   }
@@ -253,12 +229,10 @@ class _SettingsDialogState extends State<SettingsDialog> {
                     });
                   },
                 ),
-                Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text('Сложность',
+                Text('Сложность',
                         style: TextStyle(
                             fontSize: 12,
-                            color: Colors.black.withOpacity(0.5)))),
+                            color: Colors.black.withOpacity(0.5))),
                 Slider(
                   min: 0,
                   max: 100,

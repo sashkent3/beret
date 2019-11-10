@@ -33,7 +33,6 @@ class Dictionary {
   }
 
   Future<void> load() async {
-    loaded = true;
     var dictionaryFile = await DefaultCacheManager()
         .getSingleFile('http://the-hat.appspot.com/api/v2/dictionary/ru');
     var dictionaryList = jsonDecode(dictionaryFile.readAsStringSync());
@@ -47,6 +46,7 @@ class Dictionary {
       buckets[i].shuffle();
       bucketsIters[i] = 0;
     }
+    loaded = true;
   }
 
   int getUsedWordsIter() {

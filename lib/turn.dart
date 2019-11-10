@@ -17,9 +17,19 @@ class Turn extends StatelessWidget {
             appBar: AppBar(
               title: Text('Шляпа'),
             ),
-            body: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: EndGame()));
+            floatingActionButton: FloatingActionButton(
+              tooltip: 'Закончить игру',
+              backgroundColor: Colors.cyan,
+              child: Icon(Icons.arrow_forward),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MyApp()),
+                        (Route<dynamic> route) => false);
+              },
+            ),
+            body: ScoreBoard());
       } else if (currentState.state == 'main') {
         return Scaffold(
             appBar: AppBar(
@@ -92,6 +102,7 @@ class Turn extends StatelessWidget {
                 backgroundColor: Colors.cyan,
                 child: Icon(Icons.arrow_forward),
                 onPressed: () {
+                  currentState.gameLog += currentState.turnLog;
                   if (currentState.hat.isEmpty()) {
                     currentState.changeState('end');
                   } else {
@@ -101,6 +112,21 @@ class Turn extends StatelessWidget {
             body: Padding(
                 child: RoundEditing(),
                 padding: EdgeInsets.symmetric(vertical: 12)));
+      } else if (currentState.state == 'countdown') {
+        return WillPopScope(
+            onWillPop: () async {
+              currentState.changeState('lobby');
+              currentState.newTurnTimer.cancel();
+              return false;
+            },
+            child: Scaffold(
+                appBar: AppBar(
+                  title: Text('Шляпа'),
+                ),
+                body: Center(child: Text(
+                    currentState.newTurnTimerCnt.toString(),
+                    style: TextStyle(fontSize: 157))))
+        );
       } else {
         return Scaffold(
             appBar: AppBar(
@@ -110,16 +136,57 @@ class Turn extends StatelessWidget {
                 backgroundColor: Colors.cyan,
                 child: Icon(Icons.play_arrow),
                 onPressed: () {
-                  currentState.newTurn();
+                  currentState.changeState('countdown');
+                  currentState.newTurnTimerStart();
                 }),
             body: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Center(
                   child: SizedBox(
-                      width: 200.0, height: 100.0, child: PlayersDisplay())),
+                      width: 300.0, height: 150.0, child: PlayersDisplay())),
             ));
       }
     });
+  }
+}
+
+class ScoreBoard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final currentState = Provider
+        .of<AppState>(context)
+        .gameState;
+    currentState.players.sort((player1, player2) =>
+    player2.guessedRightCnt +
+        player2.explainedRightCnt -
+        player1.guessedRightCnt -
+        player1.explainedRightCnt);
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: currentState.players.length + 1,
+        itemBuilder: (BuildContext context, int idx) {
+          if (idx > 0) {
+            idx -= 1;
+            return ListTile(
+                leading: Icon(Icons.person, color: Colors.blue),
+                title: Text(currentState.players[idx].name),
+                trailing: Text(
+                    currentState.players[idx].explainedRightCnt.toString() +
+                        '/' +
+                        currentState.players[idx].guessedRightCnt.toString() +
+                        '/' +
+                        (currentState.players[idx].explainedRightCnt +
+                            currentState.players[idx].guessedRightCnt)
+                            .toString()));
+          } else {
+            return ListTile(
+                leading: Visibility(child: Icon(Icons.person), visible: false),
+                title: Text('Имя игрока',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                trailing: Text('Объяснено/Угадано/Сумма',
+                    style: TextStyle(fontWeight: FontWeight.bold)));
+          }
+        });
   }
 }
 
@@ -133,10 +200,12 @@ class PlayersDisplay extends StatelessWidget {
             Stack(children: <Widget>[
               Align(
                   alignment: Alignment.bottomRight,
-                  child: Text(currentState.playerTwo)),
+                  child: Text(currentState.playerTwo,
+                      style: TextStyle(fontSize: 20))),
               Align(
                 alignment: Alignment.topLeft,
-                child: Text(currentState.playerOne),
+                child: Text(currentState.playerOne,
+                    style: TextStyle(fontSize: 20)),
               )
             ]));
   }
@@ -224,25 +293,6 @@ class CurrentWord extends StatelessWidget {
   }
 }
 
-class EndGame extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) =>
-      Center(
-          child: Column(children: <Widget>[
-            RaisedButton(
-                color: Colors.blue,
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => MyApp()),
-                          (Route<dynamic> route) => false);
-                },
-                child:
-                Text('ЗАКОНЧИТЬ ИГРУ', style: TextStyle(color: Colors.white)))
-          ]));
-}
-
 class RoundEditing extends StatefulWidget {
   @override
   _RoundEditingState createState() => _RoundEditingState();
@@ -273,6 +323,10 @@ class _RoundEditingState extends State<RoundEditing> {
                             setState(() {
                               if (value == 'Угадано') {
                                 currentState.turnLog[idx].add('guessed');
+                                currentState.players[currentState.playerOneID]
+                                    .explainedRight();
+                                currentState.players[currentState.playerTwoID]
+                                    .guessedRight();
                               } else if (value == 'Ошибка') {
                                 currentState.turnLog[idx].add('error');
                                 currentState.hat
@@ -310,6 +364,10 @@ class _RoundEditingState extends State<RoundEditing> {
                         value: 'Угадано',
                         onChanged: (value) {
                           setState(() {
+                            currentState.players[currentState.playerOneID]
+                                .explainedWrong();
+                            currentState.players[currentState.playerTwoID]
+                                .guessedWrong();
                             if (value == 'Не угадано') {
                               currentState.turnLog[idx].removeAt(5);
                             } else if (value == 'Ошибка') {
@@ -337,6 +395,10 @@ class _RoundEditingState extends State<RoundEditing> {
                           setState(() {
                             if (value == 'Угадано') {
                               currentState.turnLog[idx][5] = 'guessed';
+                              currentState.players[currentState.playerOneID]
+                                  .explainedRight();
+                              currentState.players[currentState.playerTwoID]
+                                  .guessedRight();
                             } else if (value == 'Не угадано') {
                               currentState.turnLog[idx].removeAt(5);
                             }

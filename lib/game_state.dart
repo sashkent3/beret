@@ -21,6 +21,9 @@ abstract class _GameState with Store {
   }
 
   @observable
+  int newTurnTimerCnt = 3;
+
+  @observable
   String state = 'lobby';
 
   @observable
@@ -28,6 +31,9 @@ abstract class _GameState with Store {
 
   @observable
   List turnLog = [];
+
+  @observable
+  List gameLog = [];
 
   @observable
   int mainStateLength = 20;
@@ -103,6 +109,8 @@ abstract class _GameState with Store {
 
   @action
   void guessedRight() {
+    players[playerOneID].explainedRight();
+    players[playerTwoID].guessedRight();
     if (state == 'main') {
       timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
       turnLog.add([playerOne, playerTwo, word, timeSpent, 0, 'guessed']);
@@ -167,13 +175,33 @@ abstract class _GameState with Store {
   }
 
   @action
+  void newTurnTimerSecondPass() {
+    newTurnTimerCnt -= 1;
+  }
+
+  @observable
+  Timer newTurnTimer;
+
+  @action
+  void newTurnTimerStart() {
+    newTurnTimerCnt = 3;
+    newTurnTimer = Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
+      newTurnTimerSecondPass();
+      if (newTurnTimerCnt == 0) {
+        _timeout.cancel();
+        newTurn();
+      }
+    });
+  }
+
+  @action
   void turnStart() {
     stopwatch.start();
     turnLog = [];
-    Timer.periodic(Duration(seconds: 1), (Timer timeout) {
+    Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
       timerSecondPass();
       if (state != 'main' && state != 'last') {
-        timeout.cancel();
+        _timeout.cancel();
         timer = mainStateLength;
       } else if (timer == 0) {
         timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
