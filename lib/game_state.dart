@@ -103,7 +103,6 @@ abstract class _GameState with Store {
       ]);
     }
     hat.putWord(word);
-    turn++;
     changeState('verdict');
   }
 
@@ -129,7 +128,6 @@ abstract class _GameState with Store {
       changeState('verdict');
     } else if (state == 'last') {
       stopwatch.stop();
-      turn++;
       changeState('verdict');
     } else {
       word = hat.getWord();
@@ -154,7 +152,6 @@ abstract class _GameState with Store {
     }
     stopwatch.stop();
     stopwatch.reset();
-    turn++;
     changeState('verdict');
   }
 
@@ -169,6 +166,7 @@ abstract class _GameState with Store {
 
   @action
   void newTurn() {
+    turn++;
     word = hat.getWord();
     changeState('main');
     turnStart();

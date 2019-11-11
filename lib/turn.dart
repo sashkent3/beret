@@ -364,16 +364,20 @@ class _RoundEditingState extends State<RoundEditing> {
                         value: 'Угадано',
                         onChanged: (value) {
                           setState(() {
-                            currentState.players[currentState.playerOneID]
-                                .explainedWrong();
-                            currentState.players[currentState.playerTwoID]
-                                .guessedWrong();
                             if (value == 'Не угадано') {
                               currentState.turnLog[idx].removeAt(5);
+                              currentState.players[currentState.playerOneID]
+                                  .explainedWrong();
+                              currentState.players[currentState.playerTwoID]
+                                  .guessedWrong();
                             } else if (value == 'Ошибка') {
                               currentState.turnLog[idx][5] = 'error';
                               currentState.hat
                                   .removeWord(currentState.turnLog[idx][2]);
+                              currentState.players[currentState.playerOneID]
+                                  .explainedWrong();
+                              currentState.players[currentState.playerTwoID]
+                                  .guessedWrong();
                             }
                           });
                         },
