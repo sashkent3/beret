@@ -37,7 +37,7 @@ class _SettingsState extends State<Settings> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: FloatingActionButton(
           tooltip: 'Сохранить настройки',
-          backgroundColor: Colors.cyan,
+          backgroundColor: Color(0xFFDEA90C),
           child: Icon(Icons.save),
           onPressed: () {
             if (settingsKey.currentState.validate()) {
@@ -46,6 +46,7 @@ class _SettingsState extends State<Settings> {
                   .setInt('matchDifficulty', currentSetDifficulty);
               currentState.prefs.setInt(
                   'difficultyDispersion', currentSetDifficultyDispersion);
+              Navigator.of(context).pop();
             }
           },
         ),

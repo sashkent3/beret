@@ -78,7 +78,7 @@ class Match extends StatelessWidget {
                   ])),
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
           floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.cyan,
+            backgroundColor: Color(0xFFDEA90C),
             child: Icon(Icons.play_arrow),
             onPressed: () {
               if (currentGameState.validateAll()) {

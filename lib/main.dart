@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import 'app_state.dart';
+import 'info.dart';
 import 'match.dart';
 import 'settings.dart';
 
@@ -89,8 +90,13 @@ class MyApp extends StatelessWidget {
                                 aspectRatio: 1,
                                 child: RaisedButton(
                                     color: Colors.white,
-                                    onPressed: () {},
-                                    child: Text('Правила',
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Info()));
+                                    },
+                                    child: Text('Правила и доп. информация',
                                         style: TextStyle(color: Colors.blue,
                                             fontSize: 25)))))
                       ])

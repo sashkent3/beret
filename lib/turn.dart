@@ -19,7 +19,7 @@ class Turn extends StatelessWidget {
             ),
             floatingActionButton: FloatingActionButton(
               tooltip: 'Закончить игру',
-              backgroundColor: Colors.cyan,
+              backgroundColor: Color(0xFFDEA90C),
               child: Icon(Icons.arrow_forward),
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
@@ -99,7 +99,7 @@ class Turn extends StatelessWidget {
             floatingActionButtonLocation:
             FloatingActionButtonLocation.endDocked,
             floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.cyan,
+                backgroundColor: Color(0xFFDEA90C),
                 child: Icon(Icons.arrow_forward),
                 onPressed: () {
                   currentState.gameLog += currentState.turnLog;
@@ -133,7 +133,7 @@ class Turn extends StatelessWidget {
               title: Text('Шляпа'),
             ),
             floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.cyan,
+                backgroundColor: Color(0xFFDEA90C),
                 child: Icon(Icons.play_arrow),
                 onPressed: () {
                   currentState.changeState('countdown');
@@ -217,7 +217,7 @@ class GuessedRightButton extends StatelessWidget {
     final currentState = Provider.of<AppState>(context).gameState;
 
     return FloatingActionButton.extended(
-      backgroundColor: Colors.cyan,
+      backgroundColor: Color(0xFFDEA90C),
       onPressed: currentState.guessedRight,
       label: Text(
         'Угадано',
