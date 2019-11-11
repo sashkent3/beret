@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
+import 'package:soundpool/soundpool.dart';
 
 import 'dictionary.dart';
 import 'hat.dart';
@@ -18,6 +20,7 @@ abstract class _GameState with Store {
     difficultyDispersion = prefs.getInt('difficultyDispersion');
     lastStateLength = prefs.getInt('lastStateLength');
     mainStateLength = prefs.getInt('mainStateLength');
+    initSounds();
   }
 
   @observable
@@ -50,6 +53,9 @@ abstract class _GameState with Store {
 
   @observable
   int turn = 0;
+
+  @observable
+  Soundpool soundpool = Soundpool();
 
   @computed
   int get playerOneID => turn % players.length;
@@ -102,6 +108,7 @@ abstract class _GameState with Store {
         (stopwatch.elapsedMilliseconds / 100).round()
       ]);
     }
+    soundpool.play(sounds['wordOutcomeTimeout']);
     hat.putWord(word);
     changeState('verdict');
   }
@@ -132,6 +139,7 @@ abstract class _GameState with Store {
     } else {
       word = hat.getWord();
     }
+    soundpool.play(sounds['wordOutcomeOK']);
     stopwatch.reset();
   }
 
@@ -150,6 +158,7 @@ abstract class _GameState with Store {
         'failed'
       ]);
     }
+    soundpool.play(sounds['wordOutcomeFail']);
     stopwatch.stop();
     stopwatch.reset();
     changeState('verdict');
@@ -180,14 +189,38 @@ abstract class _GameState with Store {
   @observable
   Timer newTurnTimer;
 
+  @observable
+  HashMap sounds;
+
+  @action
+  Future<void> initSounds() async {
+    sounds = HashMap.of({
+      'roundStartTimer': await soundpool
+          .load(await rootBundle.load('static/round_start_timer_tick.wav')),
+      'roundStartTimeout': await soundpool
+          .load(await rootBundle.load('static/round_start_timer_timeout.wav')),
+      'roundTimerTimeout': await soundpool
+          .load(await rootBundle.load('static/round_timer_timeout.wav')),
+      'wordOutcomeOK': await soundpool
+          .load(await rootBundle.load('static/word_outcome_ok.wav')),
+      'wordOutcomeFail': await soundpool
+          .load(await rootBundle.load('static/word_outcome_fail.wav')),
+      'wordOutcomeTimeout': await soundpool
+          .load(await rootBundle.load('static/word_outcome_timeout.wav'))
+    });
+  }
+
   @action
   void newTurnTimerStart() {
     newTurnTimerCnt = 3;
     newTurnTimer = Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
       newTurnTimerSecondPass();
       if (newTurnTimerCnt == 0) {
+        soundpool.play(sounds['roundStartTimeout']);
         _timeout.cancel();
         newTurn();
+      } else {
+        soundpool.play(sounds['roundStartTimer']);
       }
     });
   }
@@ -203,11 +236,15 @@ abstract class _GameState with Store {
         timer = mainStateLength;
       } else if (timer == 0) {
         timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
+        if (lastStateLength != 0) {
+          soundpool.play(sounds['roundTimerTimeout']);
+        }
         stopwatch.reset();
         changeState('last');
       }
       if (timer == -lastStateLength) {
-        turnLog.add([playerOne, playerTwo, word, timeSpent, 0]);
+        turnLog.add([playerOne, playerTwo, word, timeSpent, lastStateLength]);
+        soundpool.play(sounds['roundStartTimeout']);
         changeState('verdict');
         stopwatch.stop();
       }

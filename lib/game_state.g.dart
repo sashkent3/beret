@@ -200,6 +200,23 @@ mixin _$GameState on _GameState, Store {
     }, _$turnAtom, name: '${_$turnAtom.name}_set');
   }
 
+  final _$soundpoolAtom = Atom(name: '_GameState.soundpool');
+
+  @override
+  Soundpool get soundpool {
+    _$soundpoolAtom.context.enforceReadPolicy(_$soundpoolAtom);
+    _$soundpoolAtom.reportObserved();
+    return super.soundpool;
+  }
+
+  @override
+  set soundpool(Soundpool value) {
+    _$soundpoolAtom.context.conditionallyRunInAction(() {
+      super.soundpool = value;
+      _$soundpoolAtom.reportChanged();
+    }, _$soundpoolAtom, name: '${_$soundpoolAtom.name}_set');
+  }
+
   final _$wordsPerPlayerAtom = Atom(name: '_GameState.wordsPerPlayer');
 
   @override
@@ -322,6 +339,23 @@ mixin _$GameState on _GameState, Store {
     }, _$newTurnTimerAtom, name: '${_$newTurnTimerAtom.name}_set');
   }
 
+  final _$soundsAtom = Atom(name: '_GameState.sounds');
+
+  @override
+  HashMap get sounds {
+    _$soundsAtom.context.enforceReadPolicy(_$soundsAtom);
+    _$soundsAtom.reportObserved();
+    return super.sounds;
+  }
+
+  @override
+  set sounds(HashMap value) {
+    _$soundsAtom.context.conditionallyRunInAction(() {
+      super.sounds = value;
+      _$soundsAtom.reportChanged();
+    }, _$soundsAtom, name: '${_$soundsAtom.name}_set');
+  }
+
   final _$hatAtom = Atom(name: '_GameState.hat');
 
   @override
@@ -337,6 +371,13 @@ mixin _$GameState on _GameState, Store {
       super.hat = value;
       _$hatAtom.reportChanged();
     }, _$hatAtom, name: '${_$hatAtom.name}_set');
+  }
+
+  final _$initSoundsAsyncAction = AsyncAction('initSounds');
+
+  @override
+  Future<void> initSounds() {
+    return _$initSoundsAsyncAction.run(() => super.initSounds());
   }
 
   final _$_GameStateActionController = ActionController(name: '_GameState');
