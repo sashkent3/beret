@@ -24,15 +24,18 @@ abstract class _AppState with Store {
   @action
   Future<void> loadApp() async {
     if (!loading) {
-      loading = true;
       if (prefs == null) {
+        loading = true;
         prefs = await SharedPreferences.getInstance();
         if (prefs.getInt('matchDifficulty') == null) {
           restoreDefaultSettings();
         }
       }
-      dictionary = Dictionary(prefs);
+      if (dictionary == null) {
+        dictionary = Dictionary(prefs);
+      }
       if (!dictionary.loaded) {
+        loading = true;
         await dictionary.load();
       }
       loading = false;

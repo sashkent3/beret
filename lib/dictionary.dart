@@ -22,7 +22,7 @@ class Dictionary {
   bool loaded;
 
   Dictionary(this.prefs) {
-    buckets = List.filled(101, List());
+    buckets = List.generate(101, (_) => List());
     bucketsIters = List.filled(101, 0);
     loaded = false;
   }
@@ -41,7 +41,6 @@ class Dictionary {
     for (int i = 0; i < dictionaryList.length; i++) {
       buckets[dictionaryList[i]['diff']].add(dictionaryList[i]['word']);
     }
-
     for (int i = 0; i < 101; i++) {
       buckets[i].shuffle();
       bucketsIters[i] = 0;
@@ -79,10 +78,9 @@ class Dictionary {
     List bucketsDispersion = Normal.generate(size);
     List usedWords = getUsedWords();
     int usedWordsIter = getUsedWordsIter();
-
     for (var i = 0; i < size; i++) {
       int bucketIdx =
-      (bucketsDispersion[i] * difficultyDispersion + difficulty).round();
+      (bucketsDispersion[i] / 3 * difficultyDispersion + difficulty).round();
       if (bucketIdx < 0) {
         bucketIdx = 0;
       }
