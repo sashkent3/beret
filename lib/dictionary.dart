@@ -75,17 +75,15 @@ class Dictionary {
 
   List getWords(int size, int difficulty, int difficultyDispersion) {
     List hatWords = List();
-    List bucketsDispersion = Normal.generate(size);
     List usedWords = getUsedWords();
     int usedWordsIter = getUsedWordsIter();
     for (var i = 0; i < size; i++) {
-      int bucketIdx =
-      (bucketsDispersion[i] / 3 * difficultyDispersion + difficulty).round();
-      if (bucketIdx < 0) {
-        bucketIdx = 0;
-      }
-      if (bucketIdx > 100) {
-        bucketIdx = 100;
+      int bucketIdx = (Normal.generate(1)[0] / 3 * difficultyDispersion +
+          difficulty).round();
+      while (bucketIdx < 0 || bucketIdx > 100) {
+        bucketIdx =
+            (Normal.generate(1)[0] / 3 * difficultyDispersion + difficulty)
+                .round();
       }
       String word = buckets[bucketIdx][bucketsIters[bucketIdx]];
       while (usedWords.contains(word)) {
