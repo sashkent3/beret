@@ -166,6 +166,23 @@ mixin _$GameState on _GameState, Store {
     }, _$matchDifficultyAtom, name: '${_$matchDifficultyAtom.name}_set');
   }
 
+  final _$fixTeamsAtom = Atom(name: '_GameState.fixTeams');
+
+  @override
+  bool get fixTeams {
+    _$fixTeamsAtom.context.enforceReadPolicy(_$fixTeamsAtom);
+    _$fixTeamsAtom.reportObserved();
+    return super.fixTeams;
+  }
+
+  @override
+  set fixTeams(bool value) {
+    _$fixTeamsAtom.context.conditionallyRunInAction(() {
+      super.fixTeams = value;
+      _$fixTeamsAtom.reportChanged();
+    }, _$fixTeamsAtom, name: '${_$fixTeamsAtom.name}_set');
+  }
+
   final _$playersAtom = Atom(name: '_GameState.players');
 
   @override

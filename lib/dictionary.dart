@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:normal/normal.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Dictionary {
@@ -21,15 +20,10 @@ class Dictionary {
 
   bool loaded;
 
-  Dictionary(this.prefs) {
+  Dictionary(this.prefs, this.usedWordsPath) {
     buckets = List.generate(101, (_) => List());
     bucketsIters = List.filled(101, 0);
     loaded = false;
-  }
-
-  Future<void> getDirectories() async {
-    final directory = await getApplicationDocumentsDirectory();
-    usedWordsPath = directory.path;
   }
 
   Future<void> load() async {
@@ -37,7 +31,6 @@ class Dictionary {
         .getSingleFile('http://the-hat.appspot.com/api/v2/dictionary/ru');
     var dictionaryList = jsonDecode(dictionaryFile.readAsStringSync());
 
-    await getDirectories();
     for (int i = 0; i < dictionaryList.length; i++) {
       buckets[dictionaryList[i]['diff']].add(dictionaryList[i]['word']);
     }

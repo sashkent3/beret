@@ -20,6 +20,7 @@ abstract class _GameState with Store {
     difficultyDispersion = prefs.getInt('difficultyDispersion');
     lastStateLength = prefs.getInt('lastStateLength');
     mainStateLength = prefs.getInt('mainStateLength');
+    fixTeams = prefs.getBool('fixTeams');
     initSounds();
   }
 
@@ -39,13 +40,16 @@ abstract class _GameState with Store {
   List gameLog = [];
 
   @observable
-  int mainStateLength = 20;
+  int mainStateLength;
 
   @observable
-  int lastStateLength = 3;
+  int lastStateLength;
 
   @observable
-  int matchDifficulty = 50;
+  int matchDifficulty;
+
+  @observable
+  bool fixTeams;
 
   @observable
   ObservableList<Player> players =

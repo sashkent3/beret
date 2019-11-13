@@ -77,6 +77,37 @@ mixin _$AppState on _AppState, Store {
     }, _$dictionaryAtom, name: '${_$dictionaryAtom.name}_set');
   }
 
+  final _$documentsPathAtom = Atom(name: '_AppState.documentsPath');
+
+  @override
+  String get documentsPath {
+    _$documentsPathAtom.context.enforceReadPolicy(_$documentsPathAtom);
+    _$documentsPathAtom.reportObserved();
+    return super.documentsPath;
+  }
+
+  @override
+  set documentsPath(String value) {
+    _$documentsPathAtom.context.conditionallyRunInAction(() {
+      super.documentsPath = value;
+      _$documentsPathAtom.reportChanged();
+    }, _$documentsPathAtom, name: '${_$documentsPathAtom.name}_set');
+  }
+
+  final _$sendGameLogAsyncAction = AsyncAction('sendGameLog');
+
+  @override
+  Future sendGameLog(dynamic gameLog) {
+    return _$sendGameLogAsyncAction.run(() => super.sendGameLog(gameLog));
+  }
+
+  final _$sendSavedGameLogsAsyncAction = AsyncAction('sendSavedGameLogs');
+
+  @override
+  Future<void> sendSavedGameLogs() {
+    return _$sendSavedGameLogsAsyncAction.run(() => super.sendSavedGameLogs());
+  }
+
   final _$loadAppAsyncAction = AsyncAction('loadApp');
 
   @override
@@ -85,6 +116,16 @@ mixin _$AppState on _AppState, Store {
   }
 
   final _$_AppStateActionController = ActionController(name: '_AppState');
+
+  @override
+  void saveGameLog(dynamic gameLog) {
+    final _$actionInfo = _$_AppStateActionController.startAction();
+    try {
+      return super.saveGameLog(gameLog);
+    } finally {
+      _$_AppStateActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void restoreDefaultSettings() {

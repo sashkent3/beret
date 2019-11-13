@@ -73,7 +73,9 @@ class Match extends StatelessWidget {
                                       currentSetDifficulty:
                                       currentGameState.matchDifficulty,
                                       currentSetDifficultyDispersion:
-                                      currentGameState.difficultyDispersion));
+                                      currentGameState.difficultyDispersion,
+                                      currentSetFixTeams:
+                                      currentGameState.fixTeams));
                         })
                   ])),
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -127,9 +129,12 @@ class Match extends StatelessWidget {
 class SettingsDialog extends StatefulWidget {
   final int currentSetDifficulty;
   final int currentSetDifficultyDispersion;
+  final bool currentSetFixTeams;
 
-  const SettingsDialog(
-      {Key key, this.currentSetDifficulty, this.currentSetDifficultyDispersion})
+  const SettingsDialog({Key key,
+    this.currentSetDifficulty,
+    this.currentSetDifficultyDispersion,
+    this.currentSetFixTeams})
       : super(key: key);
 
   @override
@@ -140,11 +145,13 @@ class _SettingsDialogState extends State<SettingsDialog> {
   static GlobalKey<FormState> settingsKey = GlobalKey<FormState>();
   int currentSetDifficulty;
   int currentSetDifficultyDispersion;
+  bool currentSetFixTeams;
 
   @override
   void initState() {
     currentSetDifficulty = widget.currentSetDifficulty;
     currentSetDifficultyDispersion = widget.currentSetDifficultyDispersion;
+    currentSetFixTeams = widget.currentSetFixTeams;
     super.initState();
   }
 
@@ -230,9 +237,8 @@ class _SettingsDialogState extends State<SettingsDialog> {
                   },
                 ),
                 Text('Сложность',
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black.withOpacity(0.5))),
+                    style: TextStyle(
+                        fontSize: 12, color: Colors.black.withOpacity(0.5))),
                 Slider(
                   min: 0,
                   max: 100,
@@ -244,7 +250,19 @@ class _SettingsDialogState extends State<SettingsDialog> {
                       currentSetDifficulty = value.toInt();
                     });
                   },
-                )
+                ),
+                Row(children: [
+                  Checkbox(
+                      value: currentSetFixTeams,
+                      onChanged: (value) {
+                        setState(() {
+                          currentSetFixTeams = value;
+                        });
+                      }),
+                  Text('Фиксировать команды',
+                      style: TextStyle(
+                          fontSize: 12, color: Colors.black.withOpacity(0.5)))
+                ])
               ]))),
       actions: <Widget>[
         FlatButton(
@@ -254,6 +272,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
               currentGameState.matchDifficulty = currentSetDifficulty;
               currentGameState.difficultyDispersion =
                   currentSetDifficultyDispersion;
+              currentGameState.fixTeams = currentSetFixTeams;
               settingsKey.currentState.save();
               Navigator.of(context).pop();
             }

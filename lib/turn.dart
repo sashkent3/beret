@@ -9,6 +9,7 @@ import 'main.dart';
 
 class Turn extends StatelessWidget {
   Widget build(BuildContext context) {
+    final currentAppState = Provider.of<AppState>(context);
     final currentState = Provider.of<AppState>(context).gameState;
 
     return Observer(builder: (_) {
@@ -22,6 +23,7 @@ class Turn extends StatelessWidget {
               backgroundColor: Color(0xFFDEA90C),
               child: Icon(Icons.arrow_forward),
               onPressed: () {
+                currentAppState.saveGameLog(currentState.gameLog);
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
