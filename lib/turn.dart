@@ -23,6 +23,9 @@ class Turn extends StatelessWidget {
               backgroundColor: Color(0xFFDEA90C),
               child: Icon(Icons.arrow_forward),
               onPressed: () {
+                currentState.gameLog['end_timestamp'] = DateTime
+                    .now()
+                    .millisecondsSinceEpoch;
                 currentAppState.saveGameLog(currentState.gameLog);
                 Navigator.pushAndRemoveUntil(
                     context,
@@ -104,7 +107,7 @@ class Turn extends StatelessWidget {
                 backgroundColor: Color(0xFFDEA90C),
                 child: Icon(Icons.arrow_forward),
                 onPressed: () {
-                  currentState.gameLog += currentState.turnLog;
+                  currentState.gameLog['attempts'] += currentState.turnLog;
                   if (currentState.hat.isEmpty()) {
                     currentState.changeState('end');
                   } else {

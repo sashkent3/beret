@@ -101,14 +101,14 @@ mixin _$GameState on _GameState, Store {
   final _$gameLogAtom = Atom(name: '_GameState.gameLog');
 
   @override
-  List get gameLog {
+  Map get gameLog {
     _$gameLogAtom.context.enforceReadPolicy(_$gameLogAtom);
     _$gameLogAtom.reportObserved();
     return super.gameLog;
   }
 
   @override
-  set gameLog(List value) {
+  set gameLog(Map value) {
     _$gameLogAtom.context.conditionallyRunInAction(() {
       super.gameLog = value;
       _$gameLogAtom.reportChanged();

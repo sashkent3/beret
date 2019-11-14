@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         body: Padding(
             padding: EdgeInsets.all(12),
             child: Observer(builder: (_) {
-              if (!currentState.loading) {
+              if (currentState.loaded) {
                 return Center(
                     child: Table(children: [
                       TableRow(children: [

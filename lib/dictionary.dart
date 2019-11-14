@@ -18,12 +18,9 @@ class Dictionary {
 
   SharedPreferences prefs;
 
-  bool loaded;
-
   Dictionary(this.prefs, this.usedWordsPath) {
     buckets = List.generate(101, (_) => List());
     bucketsIters = List.filled(101, 0);
-    loaded = false;
   }
 
   Future<void> load() async {
@@ -38,7 +35,6 @@ class Dictionary {
       buckets[i].shuffle();
       bucketsIters[i] = 0;
     }
-    loaded = true;
   }
 
   int getUsedWordsIter() {

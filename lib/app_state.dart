@@ -15,7 +15,7 @@ class AppState = _AppState with _$AppState;
 
 abstract class _AppState with Store {
   @observable
-  bool loading = false;
+  bool loaded = false;
 
   @action
   void saveGameLog(gameLog) {
@@ -73,28 +73,17 @@ abstract class _AppState with Store {
 
   @action
   Future<void> loadApp() async {
-    if (!loading) {
-      loading = true;
-      if (prefs == null) {
-        prefs = await SharedPreferences.getInstance();
-        if (prefs.getInt('matchDifficulty') == null) {
-          restoreDefaultSettings();
-        }
+    if (!loaded) {
+      prefs = await SharedPreferences.getInstance();
+      if (prefs.getInt('matchDifficulty') == null) {
+        restoreDefaultSettings();
       }
-      if (documentsPath == null) {
-        loading = true;
-        final directory = await getApplicationDocumentsDirectory();
-        documentsPath = directory.path;
-      }
+      final directory = await getApplicationDocumentsDirectory();
+      documentsPath = directory.path;
       await sendSavedGameLogs();
-      if (dictionary == null) {
-        dictionary = Dictionary(prefs, documentsPath);
-      }
-      if (!dictionary.loaded) {
-        loading = true;
-        await dictionary.load();
-      }
-      loading = false;
+      dictionary = Dictionary(prefs, documentsPath);
+      await dictionary.load();
+      loaded = true;
     }
   }
 

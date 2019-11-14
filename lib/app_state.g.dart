@@ -9,21 +9,21 @@ part of 'app_state.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$AppState on _AppState, Store {
-  final _$loadingAtom = Atom(name: '_AppState.loading');
+  final _$loadedAtom = Atom(name: '_AppState.loaded');
 
   @override
-  bool get loading {
-    _$loadingAtom.context.enforceReadPolicy(_$loadingAtom);
-    _$loadingAtom.reportObserved();
-    return super.loading;
+  bool get loaded {
+    _$loadedAtom.context.enforceReadPolicy(_$loadedAtom);
+    _$loadedAtom.reportObserved();
+    return super.loaded;
   }
 
   @override
-  set loading(bool value) {
-    _$loadingAtom.context.conditionallyRunInAction(() {
-      super.loading = value;
-      _$loadingAtom.reportChanged();
-    }, _$loadingAtom, name: '${_$loadingAtom.name}_set');
+  set loaded(bool value) {
+    _$loadedAtom.context.conditionallyRunInAction(() {
+      super.loaded = value;
+      _$loadedAtom.reportChanged();
+    }, _$loadedAtom, name: '${_$loadedAtom.name}_set');
   }
 
   final _$gameStateAtom = Atom(name: '_AppState.gameState');

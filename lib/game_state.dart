@@ -37,7 +37,7 @@ abstract class _GameState with Store {
   List turnLog = [];
 
   @observable
-  List gameLog = [];
+  Map gameLog = {'version': '2.0', 'attempts': []};
 
   @observable
   int mainStateLength;
