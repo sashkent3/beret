@@ -37,7 +37,10 @@ abstract class _GameState with Store {
   List turnLog = [];
 
   @observable
-  Map gameLog = {'version': '2.0', 'attempts': []};
+  Map gameLog = {'version': '2.0', 'time_zone_offset': DateTime
+      .now()
+      .timeZoneOffset
+      .inMilliseconds, 'attempts': []};
 
   @observable
   int mainStateLength;
