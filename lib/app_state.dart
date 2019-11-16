@@ -47,7 +47,6 @@ abstract class _AppState with Store {
       Set sentLogs = Set();
       for (var gameLog in gameLogs) {
         var response = await sendGameLog(gameLog);
-        print(gameLog);
         if (response.statusCode == 202) {
           sentLogs.add(gameLog);
         }
