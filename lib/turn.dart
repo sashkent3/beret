@@ -98,6 +98,8 @@ class Turn extends StatelessWidget {
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
+                        currentState.gameLog['attempts'] +=
+                            currentState.turnLog;
                         currentState.changeState('end');
                       })
                 ])),
@@ -316,26 +318,28 @@ class _RoundEditingState extends State<RoundEditing> {
         padding: EdgeInsets.symmetric(horizontal: 16),
         shrinkWrap: true,
         itemBuilder: (BuildContext context, int idx) {
-          if (currentState.turnLog[idx].length == 5) {
+          if (!currentState.turnLog[idx].containsKey('outcome')) {
             if (shownNotGuessedIdx.contains(idx)) {
               return Card(
                   child: ListTile(
                       leading: Icon(Icons.thumb_down),
-                      title: Text(currentState.turnLog[idx][2]),
+                      title: Text(currentState.turnLog[idx]['word']),
                       trailing: DropdownButton<String>(
                           value: 'Не угадано',
                           onChanged: (value) {
                             setState(() {
                               if (value == 'Угадано') {
-                                currentState.turnLog[idx].add('guessed');
+                                currentState.turnLog[idx]['outcome'] =
+                                'guessed';
                                 currentState.players[currentState.playerOneID]
                                     .explainedRight();
                                 currentState.players[currentState.playerTwoID]
                                     .guessedRight();
                               } else if (value == 'Ошибка') {
-                                currentState.turnLog[idx].add('error');
+                                currentState.turnLog[idx]['outcome'] = 'failed';
                                 currentState.hat
-                                    .removeWord(currentState.turnLog[idx][2]);
+                                    .removeWord(
+                                    currentState.turnLog[idx]['word']);
                               }
                             });
                           },
@@ -360,25 +364,26 @@ class _RoundEditingState extends State<RoundEditing> {
                         },
                       )));
             }
-          } else if (currentState.turnLog[idx][5] == 'guessed') {
+          } else if (currentState.turnLog[idx]['outcome'] == 'guessed') {
             return Card(
                 child: ListTile(
                     leading: Icon(Icons.thumb_up, color: Colors.green),
-                    title: Text(currentState.turnLog[idx][2]),
+                    title: Text(currentState.turnLog[idx]['word']),
                     trailing: DropdownButton<String>(
                         value: 'Угадано',
                         onChanged: (value) {
                           setState(() {
                             if (value == 'Не угадано') {
-                              currentState.turnLog[idx].removeAt(5);
+                              currentState.turnLog[idx].remove('outcome');
                               currentState.players[currentState.playerOneID]
                                   .explainedWrong();
                               currentState.players[currentState.playerTwoID]
                                   .guessedWrong();
                             } else if (value == 'Ошибка') {
-                              currentState.turnLog[idx][5] = 'error';
+                              currentState.turnLog[idx]['outcome'] = 'failed';
                               currentState.hat
-                                  .removeWord(currentState.turnLog[idx][2]);
+                                  .removeWord(currentState
+                                  .turnLog[idx]['word']);
                               currentState.players[currentState.playerOneID]
                                   .explainedWrong();
                               currentState.players[currentState.playerTwoID]
@@ -397,22 +402,22 @@ class _RoundEditingState extends State<RoundEditing> {
             return Card(
                 child: ListTile(
                     leading: Icon(Icons.error, color: Colors.red),
-                    title: Text(currentState.turnLog[idx][2]),
+                    title: Text(currentState.turnLog[idx]['word']),
                     trailing: DropdownButton<String>(
                         value: 'Ошибка',
                         onChanged: (value) {
                           setState(() {
                             if (value == 'Угадано') {
-                              currentState.turnLog[idx][5] = 'guessed';
+                              currentState.turnLog[idx]['outcome'] = 'guessed';
                               currentState.players[currentState.playerOneID]
                                   .explainedRight();
                               currentState.players[currentState.playerTwoID]
                                   .guessedRight();
                             } else if (value == 'Не угадано') {
-                              currentState.turnLog[idx].removeAt(5);
+                              currentState.turnLog[idx].remove('outcome');
                             }
                             currentState.hat
-                                .putWord(currentState.turnLog[idx][2]);
+                                .putWord(currentState.turnLog[idx]['word']);
                           });
                         },
                         items: ['Угадано', 'Не угадано', 'Ошибка']

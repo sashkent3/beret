@@ -37,10 +37,14 @@ abstract class _GameState with Store {
   List turnLog = [];
 
   @observable
-  Map gameLog = {'version': '2.0', 'time_zone_offset': DateTime
-      .now()
-      .timeZoneOffset
-      .inMilliseconds, 'attempts': []};
+  Map gameLog = {
+    'version': '2.0',
+    'time_zone_offset': DateTime
+        .now()
+        .timeZoneOffset
+        .inMilliseconds,
+    'attempts': []
+  };
 
   @observable
   int mainStateLength;
@@ -105,15 +109,21 @@ abstract class _GameState with Store {
   void concede() {
     if (state == 'main') {
       timeSpent = stopwatch.elapsedMilliseconds;
-      turnLog.add([playerOne, playerTwo, word, timeSpent, 0]);
+      turnLog.add({
+        'from': playerOne,
+        'to': playerTwo,
+        'word': word,
+        'time': timeSpent,
+        'extra_time': 0
+      });
     } else if (state == 'last' || state == 'verdict') {
-      turnLog.add([
-        playerOne,
-        playerTwo,
-        word,
-        timeSpent,
-        stopwatch.elapsedMilliseconds
-      ]);
+      turnLog.add({
+        'from': playerOne,
+        'to': playerTwo,
+        'word': word,
+        'time': timeSpent,
+        'extra_time': stopwatch.elapsedMilliseconds
+      });
     }
     soundpool.play(sounds['wordOutcomeTimeout']);
     hat.putWord(word);
@@ -126,16 +136,23 @@ abstract class _GameState with Store {
     players[playerTwoID].guessedRight();
     if (state == 'main') {
       timeSpent = stopwatch.elapsedMilliseconds;
-      turnLog.add([playerOne, playerTwo, word, timeSpent, 0, 'guessed']);
+      turnLog.add({
+        'from': playerOne,
+        'to': playerTwo,
+        'word': word,
+        'time': timeSpent,
+        'extra_time': 0,
+        'outcome': 'guessed'
+      });
     } else if (state == 'last') {
-      turnLog.add([
-        playerOne,
-        playerTwo,
-        word,
-        timeSpent,
-        stopwatch.elapsedMilliseconds,
-        'guessed'
-      ]);
+      turnLog.add({
+        'from': playerOne,
+        'to': playerTwo,
+        'word': word,
+        'time': timeSpent,
+        'extra_time': stopwatch.elapsedMilliseconds,
+        'outcome': 'guessed'
+      });
     }
     if (hat.isEmpty()) {
       stopwatch.stop();
@@ -154,16 +171,23 @@ abstract class _GameState with Store {
   void error() {
     if (state == 'main') {
       timeSpent = stopwatch.elapsedMilliseconds;
-      turnLog.add([playerOne, playerTwo, word, timeSpent, 0, 'failed']);
+      turnLog.add({
+        'from': playerOne,
+        'to': playerTwo,
+        'word': word,
+        'time': timeSpent,
+        'extra_time': 0,
+        'outcome': 'failed'
+      });
     } else if (state == 'last') {
-      turnLog.add([
-        playerOne,
-        playerTwo,
-        word,
-        timeSpent,
-        stopwatch.elapsedMilliseconds,
-        'failed'
-      ]);
+      turnLog.add({
+        'from': playerOne,
+        'to': playerTwo,
+        'word': word,
+        'time': timeSpent,
+        'extra_time': stopwatch.elapsedMilliseconds,
+        'outcome': 'failed'
+      });
     }
     soundpool.play(sounds['wordOutcomeFail']);
     stopwatch.stop();
