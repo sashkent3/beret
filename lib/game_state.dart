@@ -104,7 +104,7 @@ abstract class _GameState with Store {
   @action
   void concede() {
     if (state == 'main') {
-      timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
+      timeSpent = stopwatch.elapsedMilliseconds;
       turnLog.add([playerOne, playerTwo, word, timeSpent, 0]);
     } else if (state == 'last' || state == 'verdict') {
       turnLog.add([
@@ -112,7 +112,7 @@ abstract class _GameState with Store {
         playerTwo,
         word,
         timeSpent,
-        (stopwatch.elapsedMilliseconds / 100).round()
+        stopwatch.elapsedMilliseconds
       ]);
     }
     soundpool.play(sounds['wordOutcomeTimeout']);
@@ -125,7 +125,7 @@ abstract class _GameState with Store {
     players[playerOneID].explainedRight();
     players[playerTwoID].guessedRight();
     if (state == 'main') {
-      timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
+      timeSpent = stopwatch.elapsedMilliseconds;
       turnLog.add([playerOne, playerTwo, word, timeSpent, 0, 'guessed']);
     } else if (state == 'last') {
       turnLog.add([
@@ -133,7 +133,7 @@ abstract class _GameState with Store {
         playerTwo,
         word,
         timeSpent,
-        (stopwatch.elapsedMilliseconds / 100).round(),
+        stopwatch.elapsedMilliseconds,
         'guessed'
       ]);
     }
@@ -153,7 +153,7 @@ abstract class _GameState with Store {
   @action
   void error() {
     if (state == 'main') {
-      timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
+      timeSpent = stopwatch.elapsedMilliseconds;
       turnLog.add([playerOne, playerTwo, word, timeSpent, 0, 'failed']);
     } else if (state == 'last') {
       turnLog.add([
@@ -161,7 +161,7 @@ abstract class _GameState with Store {
         playerTwo,
         word,
         timeSpent,
-        (stopwatch.elapsedMilliseconds / 100).round(),
+        stopwatch.elapsedMilliseconds,
         'failed'
       ]);
     }
@@ -242,7 +242,7 @@ abstract class _GameState with Store {
         _timeout.cancel();
         timer = mainStateLength;
       } else if (timer == 0) {
-        timeSpent = (stopwatch.elapsedMilliseconds / 100).round();
+        timeSpent = stopwatch.elapsedMilliseconds;
         if (lastStateLength != 0) {
           soundpool.play(sounds['roundTimerTimeout']);
         }

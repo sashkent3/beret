@@ -36,7 +36,7 @@ abstract class _AppState with Store {
   @action
   Future sendGameLog(gameLog) async {
     return http.post('http://the-hat-dev.appspot.com/api/v2/game/log',
-        body: {'version': '2.0', 'attempts': jsonEncode(gameLog)});
+        body: jsonEncode(gameLog));
   }
 
   @action
@@ -44,11 +44,16 @@ abstract class _AppState with Store {
     if (File('$documentsPath/gameLogs.json').existsSync()) {
       List gameLogs = jsonDecode(
           File('$documentsPath/gameLogs.json').readAsStringSync());
+      Set sentLogs = Set();
       for (var gameLog in gameLogs) {
         var response = await sendGameLog(gameLog);
+        print(gameLog);
         if (response.statusCode == 202) {
-          gameLogs.remove(gameLog);
+          sentLogs.add(gameLog);
         }
+      }
+      for (var gameLog in sentLogs) {
+        gameLogs.remove(gameLog);
       }
       if (gameLogs.isEmpty)
         File('$documentsPath/gameLogs.json').deleteSync();
