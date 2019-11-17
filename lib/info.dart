@@ -1,4 +1,6 @@
+import 'package:beret/telegram_icon_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Info extends StatelessWidget {
   @override
@@ -23,9 +25,25 @@ class Info extends StatelessWidget {
                                     text: 'Новый Android-клиент:\n',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold)),
-                                TextSpan(text: 'Зинов Александр\n'),
+                                WidgetSpan(
+                                    child: Row(children: [
+                                      Text('Зинов Александр',
+                                          style: TextStyle(fontSize: 14)),
+                                      InkWell(
+                                          child: Icon(TelegramIcon.telegram),
+                                          onTap: () {
+                                            launch(
+                                                'tg://resolve?domain=sashkent3');
+                                          }),
+                                      InkWell(
+                                          child: Icon(Icons.email),
+                                          onTap: () {
+                                            launch(
+                                                'mailto:sashkent3@gmail.com');
+                                          }),
+                                    ])),
                                 TextSpan(
-                                    text: 'под руководством Зинова Николая\n\n'),
+                                    text: '\nпод руководством Зинова Николая\n\n'),
                                 TextSpan(
                                     text: 'Старый Android-клиент: ',
                                     style: TextStyle(
