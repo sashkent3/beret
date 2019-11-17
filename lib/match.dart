@@ -254,18 +254,18 @@ class _SettingsDialogState extends State<SettingsDialog> {
                     });
                   },
                 ),
-                Row(children: [
-                  Checkbox(
-                      value: currentSetFixTeams,
-                      onChanged: (value) {
-                        setState(() {
-                          currentSetFixTeams = value;
-                        });
-                      }),
-                  Text('Фиксировать команды',
-                      style: TextStyle(
-                          fontSize: 12, color: Colors.black.withOpacity(0.5)))
-                ])
+//                Row(children: [
+//                  Checkbox(
+//                      value: currentSetFixTeams,
+//                      onChanged: (value) {
+//                        setState(() {
+//                          currentSetFixTeams = value;
+//                        });
+//                      }),
+//                  Text('Фиксировать команды',
+//                      style: TextStyle(
+//                          fontSize: 12, color: Colors.black.withOpacity(0.5)))
+//                ])
               ]))),
       actions: <Widget>[
         FlatButton(
