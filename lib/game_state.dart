@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:flutter/services.dart';
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:mobx/mobx.dart';
-import 'package:soundpool/soundpool.dart';
 
 import 'dictionary.dart';
 import 'hat.dart';
@@ -21,7 +21,10 @@ abstract class _GameState with Store {
     lastStateLength = prefs.getInt('lastStateLength');
     mainStateLength = prefs.getInt('mainStateLength');
     fixTeams = prefs.getBool('fixTeams');
-    initSounds();
+    audioPlayer.loadAll(['round_start_timer_tick.wav',
+      'round_start_timer_timeout.wav', 'round_timer_timeout.wav',
+      'word_outcome_fail.wav', 'word_outcome_ok.wav',
+      'word_outcome_timeout.wav']);
   }
 
   @observable
@@ -66,7 +69,7 @@ abstract class _GameState with Store {
   int turn = 0;
 
   @observable
-  Soundpool soundpool = Soundpool();
+  AudioCache audioPlayer = AudioCache();
 
   @computed
   int get playerOneID => turn % players.length;
@@ -110,22 +113,22 @@ abstract class _GameState with Store {
     if (state == 'main') {
       timeSpent = stopwatch.elapsedMilliseconds;
       turnLog.add({
-        'from': playerOne,
-        'to': playerTwo,
+        'from': playerOneID,
+        'to': playerTwoID,
         'word': word,
         'time': timeSpent,
         'extra_time': 0
       });
     } else if (state == 'last' || state == 'verdict') {
       turnLog.add({
-        'from': playerOne,
-        'to': playerTwo,
+        'from': playerOneID,
+        'to': playerTwoID,
         'word': word,
         'time': timeSpent,
         'extra_time': stopwatch.elapsedMilliseconds
       });
     }
-    soundpool.play(sounds['wordOutcomeTimeout']);
+    audioPlayer.play('word_outcome_timeout.wav', mode: PlayerMode.LOW_LATENCY);
     hat.putWord(word);
     changeState('verdict');
   }
@@ -137,8 +140,8 @@ abstract class _GameState with Store {
     if (state == 'main') {
       timeSpent = stopwatch.elapsedMilliseconds;
       turnLog.add({
-        'from': playerOne,
-        'to': playerTwo,
+        'from': playerOneID,
+        'to': playerTwoID,
         'word': word,
         'time': timeSpent,
         'extra_time': 0,
@@ -146,8 +149,8 @@ abstract class _GameState with Store {
       });
     } else if (state == 'last') {
       turnLog.add({
-        'from': playerOne,
-        'to': playerTwo,
+        'from': playerOneID,
+        'to': playerTwoID,
         'word': word,
         'time': timeSpent,
         'extra_time': stopwatch.elapsedMilliseconds,
@@ -163,7 +166,7 @@ abstract class _GameState with Store {
     } else {
       word = hat.getWord();
     }
-    soundpool.play(sounds['wordOutcomeOK']);
+    audioPlayer.play('word_outcome_ok.wav', mode: PlayerMode.LOW_LATENCY);
     stopwatch.reset();
   }
 
@@ -172,8 +175,8 @@ abstract class _GameState with Store {
     if (state == 'main') {
       timeSpent = stopwatch.elapsedMilliseconds;
       turnLog.add({
-        'from': playerOne,
-        'to': playerTwo,
+        'from': playerOneID,
+        'to': playerTwoID,
         'word': word,
         'time': timeSpent,
         'extra_time': 0,
@@ -181,15 +184,15 @@ abstract class _GameState with Store {
       });
     } else if (state == 'last') {
       turnLog.add({
-        'from': playerOne,
-        'to': playerTwo,
+        'from': playerOneID,
+        'to': playerTwoID,
         'word': word,
         'time': timeSpent,
         'extra_time': stopwatch.elapsedMilliseconds,
         'outcome': 'failed'
       });
     }
-    soundpool.play(sounds['wordOutcomeFail']);
+    audioPlayer.play('word_outcome_fail.wav', mode: PlayerMode.LOW_LATENCY);
     stopwatch.stop();
     stopwatch.reset();
     changeState('verdict');
@@ -224,34 +227,18 @@ abstract class _GameState with Store {
   HashMap sounds;
 
   @action
-  Future<void> initSounds() async {
-    sounds = HashMap.of({
-      'roundStartTimer': await soundpool
-          .load(await rootBundle.load('static/round_start_timer_tick.wav')),
-      'roundStartTimeout': await soundpool
-          .load(await rootBundle.load('static/round_start_timer_timeout.wav')),
-      'roundTimerTimeout': await soundpool
-          .load(await rootBundle.load('static/round_timer_timeout.wav')),
-      'wordOutcomeOK': await soundpool
-          .load(await rootBundle.load('static/word_outcome_ok.wav')),
-      'wordOutcomeFail': await soundpool
-          .load(await rootBundle.load('static/word_outcome_fail.wav')),
-      'wordOutcomeTimeout': await soundpool
-          .load(await rootBundle.load('static/word_outcome_timeout.wav'))
-    });
-  }
-
-  @action
   void newTurnTimerStart() {
     newTurnTimerCnt = 3;
     newTurnTimer = Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
       newTurnTimerSecondPass();
       if (newTurnTimerCnt == 0) {
-        soundpool.play(sounds['roundStartTimeout']);
+        audioPlayer.play(
+            'round_start_timer_timeout.wav', mode: PlayerMode.LOW_LATENCY);
         _timeout.cancel();
         newTurn();
       } else {
-        soundpool.play(sounds['roundStartTimer']);
+        audioPlayer.play(
+            'round_start_timer_tick.wav', mode: PlayerMode.LOW_LATENCY);
       }
     });
   }
@@ -268,14 +255,22 @@ abstract class _GameState with Store {
       } else if (timer == 0) {
         timeSpent = stopwatch.elapsedMilliseconds;
         if (lastStateLength != 0) {
-          soundpool.play(sounds['roundTimerTimeout']);
+          audioPlayer.play(
+              'round_timer_timeout.wav', mode: PlayerMode.LOW_LATENCY);
         }
         stopwatch.reset();
         changeState('last');
       }
       if (timer == -lastStateLength) {
-        turnLog.add([playerOne, playerTwo, word, timeSpent, lastStateLength]);
-        soundpool.play(sounds['roundStartTimeout']);
+        turnLog.add({
+          'from': playerOneID,
+          'to': playerTwoID,
+          'word': word,
+          'time': timeSpent,
+          'extra_time': lastStateLength,
+        });
+        audioPlayer.play(
+            'round_start_timer_timeout.wav', mode: PlayerMode.LOW_LATENCY);
         changeState('verdict');
         stopwatch.stop();
       }
