@@ -21,10 +21,14 @@ abstract class _GameState with Store {
     lastStateLength = prefs.getInt('lastStateLength');
     mainStateLength = prefs.getInt('mainStateLength');
     fixTeams = prefs.getBool('fixTeams');
-    audioPlayer.loadAll(['round_start_timer_tick.wav',
-      'round_start_timer_timeout.wav', 'round_timer_timeout.wav',
-      'word_outcome_fail.wav', 'word_outcome_ok.wav',
-      'word_outcome_timeout.wav']);
+    audioPlayer.loadAll([
+      'round_start_timer_tick.wav',
+      'round_start_timer_timeout.wav',
+      'round_timer_timeout.wav',
+      'word_outcome_fail.wav',
+      'word_outcome_ok.wav',
+      'word_outcome_timeout.wav'
+    ]);
   }
 
   @observable
@@ -48,6 +52,9 @@ abstract class _GameState with Store {
         .inMilliseconds,
     'attempts': []
   };
+
+  @observable
+  List wordComplains = [];
 
   @observable
   int mainStateLength;
@@ -232,13 +239,13 @@ abstract class _GameState with Store {
     newTurnTimer = Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
       newTurnTimerSecondPass();
       if (newTurnTimerCnt == 0) {
-        audioPlayer.play(
-            'round_start_timer_timeout.wav', mode: PlayerMode.LOW_LATENCY);
+        audioPlayer.play('round_start_timer_timeout.wav',
+            mode: PlayerMode.LOW_LATENCY);
         _timeout.cancel();
         newTurn();
       } else {
-        audioPlayer.play(
-            'round_start_timer_tick.wav', mode: PlayerMode.LOW_LATENCY);
+        audioPlayer.play('round_start_timer_tick.wav',
+            mode: PlayerMode.LOW_LATENCY);
       }
     });
   }
@@ -255,8 +262,8 @@ abstract class _GameState with Store {
       } else if (timer == 0) {
         timeSpent = stopwatch.elapsedMilliseconds;
         if (lastStateLength != 0) {
-          audioPlayer.play(
-              'round_timer_timeout.wav', mode: PlayerMode.LOW_LATENCY);
+          audioPlayer.play('round_timer_timeout.wav',
+              mode: PlayerMode.LOW_LATENCY);
         }
         stopwatch.reset();
         changeState('last');
@@ -269,8 +276,8 @@ abstract class _GameState with Store {
           'time': timeSpent,
           'extra_time': lastStateLength,
         });
-        audioPlayer.play(
-            'round_start_timer_timeout.wav', mode: PlayerMode.LOW_LATENCY);
+        audioPlayer.play('round_start_timer_timeout.wav',
+            mode: PlayerMode.LOW_LATENCY);
         changeState('verdict');
         stopwatch.stop();
       }

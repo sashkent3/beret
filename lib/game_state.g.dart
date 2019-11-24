@@ -115,6 +115,23 @@ mixin _$GameState on _GameState, Store {
     }, _$gameLogAtom, name: '${_$gameLogAtom.name}_set');
   }
 
+  final _$wordComplainsAtom = Atom(name: '_GameState.wordComplains');
+
+  @override
+  List get wordComplains {
+    _$wordComplainsAtom.context.enforceReadPolicy(_$wordComplainsAtom);
+    _$wordComplainsAtom.reportObserved();
+    return super.wordComplains;
+  }
+
+  @override
+  set wordComplains(List value) {
+    _$wordComplainsAtom.context.conditionallyRunInAction(() {
+      super.wordComplains = value;
+      _$wordComplainsAtom.reportChanged();
+    }, _$wordComplainsAtom, name: '${_$wordComplainsAtom.name}_set');
+  }
+
   final _$mainStateLengthAtom = Atom(name: '_GameState.mainStateLength');
 
   @override

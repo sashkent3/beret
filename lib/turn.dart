@@ -23,10 +23,12 @@ class Turn extends StatelessWidget {
               backgroundColor: Color(0xFFDEA90C),
               child: Icon(Icons.arrow_forward),
               onPressed: () {
-                currentState.gameLog['end_timestamp'] = DateTime
-                    .now()
-                    .millisecondsSinceEpoch;
+                currentState.gameLog['end_timestamp'] =
+                    DateTime
+                        .now()
+                        .millisecondsSinceEpoch;
                 currentAppState.saveGameLog(currentState.gameLog);
+                currentAppState.saveWordsComplains(currentState.wordComplains);
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
@@ -130,10 +132,9 @@ class Turn extends StatelessWidget {
                 appBar: AppBar(
                   title: Text('Шляпа'),
                 ),
-                body: Center(child: Text(
-                    currentState.newTurnTimerCnt.toString(),
-                    style: TextStyle(fontSize: 157))))
-        );
+                body: Center(
+                    child: Text(currentState.newTurnTimerCnt.toString(),
+                        style: TextStyle(fontSize: 157)))));
       } else {
         return Scaffold(
             appBar: AppBar(
@@ -231,7 +232,7 @@ class GuessedRightButton extends StatelessWidget {
         style: TextStyle(color: Colors.white),
       ),
       icon: Icon(
-        Icons.thumb_up,
+        Icons.check,
         color: Colors.white,
       ),
     );
@@ -246,7 +247,7 @@ class GuessedWrongButton extends StatelessWidget {
         .gameState;
 
     return FlatButton.icon(
-      icon: Icon(Icons.thumb_down, color: Colors.white),
+      icon: Icon(Icons.close, color: Colors.white),
       onPressed: () {
         currentState.concede();
       },
@@ -263,7 +264,7 @@ class ConcedeButton extends StatelessWidget {
         .gameState;
 
     return FlatButton.icon(
-      icon: Icon(Icons.thumb_down, color: Colors.white),
+      icon: Icon(Icons.close, color: Colors.white),
       onPressed: () {
         currentState.concede();
       },
@@ -322,38 +323,52 @@ class _RoundEditingState extends State<RoundEditing> {
             if (shownNotGuessedIdx.contains(idx)) {
               return Card(
                   child: ListTile(
-                      leading: Icon(Icons.thumb_down),
+                      leading: Icon(Icons.close),
                       title: Text(currentState.turnLog[idx]['word']),
-                      trailing: DropdownButton<String>(
-                          value: 'Не угадано',
-                          onChanged: (value) {
-                            setState(() {
-                              if (value == 'Угадано') {
-                                currentState.turnLog[idx]['outcome'] =
-                                'guessed';
-                                currentState.players[currentState.playerOneID]
-                                    .explainedRight();
-                                currentState.players[currentState.playerTwoID]
-                                    .guessedRight();
-                              } else if (value == 'Ошибка') {
-                                currentState.turnLog[idx]['outcome'] = 'failed';
-                                currentState.hat
-                                    .removeWord(
-                                    currentState.turnLog[idx]['word']);
-                              }
-                            });
-                          },
-                          items: ['Угадано', 'Не угадано', 'Ошибка']
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList())));
+                      trailing: IntrinsicWidth(
+                          child: Row(children: [
+                            IconButton(
+                                icon: Icon(Icons.thumb_down),
+                                onPressed: () {
+                                  return showDialog<void>(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          WordComplainDialog());
+                                }),
+                            DropdownButton<String>(
+                                value: 'Не угадано',
+                                onChanged: (value) {
+                                  setState(() {
+                                    if (value == 'Угадано') {
+                                      currentState.turnLog[idx]['outcome'] =
+                                      'guessed';
+                                      currentState.players[currentState
+                                          .playerOneID]
+                                          .explainedRight();
+                                      currentState.players[currentState
+                                          .playerTwoID]
+                                          .guessedRight();
+                                    } else if (value == 'Ошибка') {
+                                      currentState.turnLog[idx]['outcome'] =
+                                      'failed';
+                                      currentState.hat.removeWord(
+                                          currentState.turnLog[idx]['word']);
+                                    }
+                                  });
+                                },
+                                items: ['Угадано', 'Не угадано', 'Ошибка']
+                                    .map<DropdownMenuItem<String>>((
+                                    String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList())
+                          ]))));
             } else {
               return Card(
                   child: ListTile(
-                      leading: Icon(Icons.thumb_down),
+                      leading: Icon(Icons.close),
                       title: FlatButton(
                         child: Text('Показать слово',
                             style: TextStyle(fontSize: 15)),
@@ -367,7 +382,7 @@ class _RoundEditingState extends State<RoundEditing> {
           } else if (currentState.turnLog[idx]['outcome'] == 'guessed') {
             return Card(
                 child: ListTile(
-                    leading: Icon(Icons.thumb_up, color: Colors.green),
+                    leading: Icon(Icons.check, color: Colors.green),
                     title: Text(currentState.turnLog[idx]['word']),
                     trailing: DropdownButton<String>(
                         value: 'Угадано',
@@ -381,9 +396,8 @@ class _RoundEditingState extends State<RoundEditing> {
                                   .guessedWrong();
                             } else if (value == 'Ошибка') {
                               currentState.turnLog[idx]['outcome'] = 'failed';
-                              currentState.hat
-                                  .removeWord(currentState
-                                  .turnLog[idx]['word']);
+                              currentState.hat.removeWord(
+                                  currentState.turnLog[idx]['word']);
                               currentState.players[currentState.playerOneID]
                                   .explainedWrong();
                               currentState.players[currentState.playerTwoID]
@@ -429,5 +443,76 @@ class _RoundEditingState extends State<RoundEditing> {
                         }).toList())));
           }
         });
+  }
+}
+
+class WordComplainDialog extends StatefulWidget {
+  final String word;
+
+  const WordComplainDialog({Key key, this.word}) : super(key: key);
+
+  @override
+  _WordComplainDialogState createState() => _WordComplainDialogState();
+}
+
+class _WordComplainDialogState extends State<WordComplainDialog> {
+  String word;
+  String reason = 'non_noun';
+
+  @override
+  void initState() {
+    word = widget.word;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currentState = Provider
+        .of<AppState>(context)
+        .gameState;
+    return AlertDialog(
+        title: Text('Пожаловаться на слово'),
+        content: Container(
+            width: double.maxFinite,
+            child: ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                ListTile(
+                    title: Text('Не существительное'),
+                    leading: Radio(
+                        value: 'non_noun',
+                        groupValue: reason,
+                        onChanged: (value) {
+                          setState(() {
+                            reason = value;
+                          });
+                        })),
+                ListTile(
+                    title: Text('Несловарное слово'),
+                    leading: Radio(
+                        value: 'non_dict',
+                        groupValue: reason,
+                        onChanged: (value) {
+                          setState(() {
+                            reason = value;
+                          });
+                        }))
+              ],
+            )),
+        actions: [
+          FlatButton(
+            child: Text('Отмена'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          FlatButton(
+              child: Text('Готово'),
+              onPressed: () {
+                currentState.wordComplains
+                    .add({'word': word, 'reason': reason});
+                Navigator.of(context).pop();
+              })
+        ]);
   }
 }

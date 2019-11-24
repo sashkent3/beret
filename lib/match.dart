@@ -86,9 +86,10 @@ class Match extends StatelessWidget {
               if (currentGameState.validateAll()) {
                 currentGameState.createHat(currentAppState.dictionary);
                 currentGameState.timer = currentGameState.mainStateLength;
-                currentGameState.gameLog['start_timestamp'] = DateTime
-                    .now()
-                    .millisecondsSinceEpoch;
+                currentGameState.gameLog['start_timestamp'] =
+                    DateTime
+                        .now()
+                        .millisecondsSinceEpoch;
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(

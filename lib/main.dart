@@ -69,7 +69,8 @@ class MyApp extends StatelessWidget {
                                       );
                                     },
                                     child: Text('Настройки',
-                                        style: TextStyle(color: Colors.blue,
+                                        style: TextStyle(
+                                            color: Colors.blue,
                                             fontSize: 25)))))
                       ]),
                       TableRow(children: [
@@ -104,7 +105,8 @@ class MyApp extends StatelessWidget {
                                               builder: (context) => Info()));
                                     },
                                     child: Text('Правила и доп. информация',
-                                        style: TextStyle(color: Colors.blue,
+                                        style: TextStyle(
+                                            color: Colors.blue,
                                             fontSize: 25)))))
                       ])
                 ]));
