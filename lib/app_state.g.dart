@@ -26,6 +26,40 @@ mixin _$AppState on _AppState, Store {
     }, _$loadedAtom, name: '${_$loadedAtom.name}_set');
   }
 
+  final _$uuidAtom = Atom(name: '_AppState.uuid');
+
+  @override
+  Uuid get uuid {
+    _$uuidAtom.context.enforceReadPolicy(_$uuidAtom);
+    _$uuidAtom.reportObserved();
+    return super.uuid;
+  }
+
+  @override
+  set uuid(Uuid value) {
+    _$uuidAtom.context.conditionallyRunInAction(() {
+      super.uuid = value;
+      _$uuidAtom.reportChanged();
+    }, _$uuidAtom, name: '${_$uuidAtom.name}_set');
+  }
+
+  final _$deviceIdAtom = Atom(name: '_AppState.deviceId');
+
+  @override
+  String get deviceId {
+    _$deviceIdAtom.context.enforceReadPolicy(_$deviceIdAtom);
+    _$deviceIdAtom.reportObserved();
+    return super.deviceId;
+  }
+
+  @override
+  set deviceId(String value) {
+    _$deviceIdAtom.context.conditionallyRunInAction(() {
+      super.deviceId = value;
+      _$deviceIdAtom.reportChanged();
+    }, _$deviceIdAtom, name: '${_$deviceIdAtom.name}_set');
+  }
+
   final _$gameStateAtom = Atom(name: '_AppState.gameState');
 
   @override
@@ -108,6 +142,15 @@ mixin _$AppState on _AppState, Store {
     return _$sendSavedGameLogsAsyncAction.run(() => super.sendSavedGameLogs());
   }
 
+  final _$sendSavedWordsComplainsAsyncAction =
+  AsyncAction('sendSavedWordsComplains');
+
+  @override
+  Future<void> sendSavedWordsComplains() {
+    return _$sendSavedWordsComplainsAsyncAction
+        .run(() => super.sendSavedWordsComplains());
+  }
+
   final _$loadAppAsyncAction = AsyncAction('loadApp');
 
   @override
@@ -122,6 +165,16 @@ mixin _$AppState on _AppState, Store {
     final _$actionInfo = _$_AppStateActionController.startAction();
     try {
       return super.saveGameLog(gameLog);
+    } finally {
+      _$_AppStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void saveWordsComplains(dynamic wordsComplains) {
+    final _$actionInfo = _$_AppStateActionController.startAction();
+    try {
+      return super.saveWordsComplains(wordsComplains);
     } finally {
       _$_AppStateActionController.endAction(_$actionInfo);
     }

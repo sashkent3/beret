@@ -19,7 +19,7 @@ abstract class _AppState with Store {
   bool loaded = false;
 
   @observable
-  var uuid = Uuid();
+  Uuid uuid = Uuid();
 
   @observable
   String deviceId;

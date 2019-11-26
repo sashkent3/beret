@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:beret/app_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
@@ -333,7 +334,8 @@ class _RoundEditingState extends State<RoundEditing> {
                                   return showDialog<void>(
                                       context: context,
                                       builder: (BuildContext context) =>
-                                          WordComplainDialog());
+                                          WordComplainDialog(word: currentState
+                                              .turnLog[idx]['word']));
                                 }),
                             DropdownButton<String>(
                                 value: 'Не угадано',
@@ -384,63 +386,98 @@ class _RoundEditingState extends State<RoundEditing> {
                 child: ListTile(
                     leading: Icon(Icons.check, color: Colors.green),
                     title: Text(currentState.turnLog[idx]['word']),
-                    trailing: DropdownButton<String>(
-                        value: 'Угадано',
-                        onChanged: (value) {
-                          setState(() {
-                            if (value == 'Не угадано') {
-                              currentState.turnLog[idx].remove('outcome');
-                              currentState.players[currentState.playerOneID]
-                                  .explainedWrong();
-                              currentState.players[currentState.playerTwoID]
-                                  .guessedWrong();
-                            } else if (value == 'Ошибка') {
-                              currentState.turnLog[idx]['outcome'] = 'failed';
-                              currentState.hat.removeWord(
-                                  currentState.turnLog[idx]['word']);
-                              currentState.players[currentState.playerOneID]
-                                  .explainedWrong();
-                              currentState.players[currentState.playerTwoID]
-                                  .guessedWrong();
-                            }
-                          });
-                        },
-                        items: ['Угадано', 'Не угадано', 'Ошибка']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList())));
+                    trailing: IntrinsicWidth(
+                        child: Row(children: [
+                          IconButton(
+                              icon: Icon(Icons.thumb_down),
+                              onPressed: () {
+                                return showDialog<void>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        WordComplainDialog(word: currentState
+                                            .turnLog[idx]['word']));
+                              }),
+                          DropdownButton<String>(
+                              value: 'Угадано',
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value == 'Не угадано') {
+                                    currentState.turnLog[idx].remove('outcome');
+                                    currentState.players[currentState
+                                        .playerOneID]
+                                        .explainedWrong();
+                                    currentState.players[currentState
+                                        .playerTwoID]
+                                        .guessedWrong();
+                                  } else if (value == 'Ошибка') {
+                                    currentState.turnLog[idx]['outcome'] =
+                                    'failed';
+                                    currentState.hat.removeWord(
+                                        currentState.turnLog[idx]['word']);
+                                    currentState.players[currentState
+                                        .playerOneID]
+                                        .explainedWrong();
+                                    currentState.players[currentState
+                                        .playerTwoID]
+                                        .guessedWrong();
+                                  }
+                                });
+                              },
+                              items: ['Угадано', 'Не угадано', 'Ошибка']
+                                  .map<DropdownMenuItem<String>>((
+                                  String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList())
+                        ]))));
           } else {
             return Card(
                 child: ListTile(
                     leading: Icon(Icons.error, color: Colors.red),
                     title: Text(currentState.turnLog[idx]['word']),
-                    trailing: DropdownButton<String>(
-                        value: 'Ошибка',
-                        onChanged: (value) {
-                          setState(() {
-                            if (value == 'Угадано') {
-                              currentState.turnLog[idx]['outcome'] = 'guessed';
-                              currentState.players[currentState.playerOneID]
-                                  .explainedRight();
-                              currentState.players[currentState.playerTwoID]
-                                  .guessedRight();
-                            } else if (value == 'Не угадано') {
-                              currentState.turnLog[idx].remove('outcome');
-                            }
-                            currentState.hat
-                                .putWord(currentState.turnLog[idx]['word']);
-                          });
-                        },
-                        items: ['Угадано', 'Не угадано', 'Ошибка']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList())));
+                    trailing: IntrinsicWidth(
+                        child: Row(children: [
+                          IconButton(
+                              icon: Icon(Icons.thumb_down),
+                              onPressed: () {
+                                return showDialog<void>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        WordComplainDialog(word: currentState
+                                            .turnLog[idx]['word']));
+                              }),
+                          DropdownButton<String>(
+                              value: 'Ошибка',
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value == 'Угадано') {
+                                    currentState.turnLog[idx]['outcome'] =
+                                    'guessed';
+                                    currentState.players[currentState
+                                        .playerOneID]
+                                        .explainedRight();
+                                    currentState.players[currentState
+                                        .playerTwoID]
+                                        .guessedRight();
+                                  } else if (value == 'Не угадано') {
+                                    currentState.turnLog[idx].remove('outcome');
+                                  }
+                                  currentState.hat
+                                      .putWord(
+                                      currentState.turnLog[idx]['word']);
+                                });
+                              },
+                              items: ['Угадано', 'Не угадано', 'Ошибка']
+                                  .map<DropdownMenuItem<String>>((
+                                  String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList())
+                        ]))));
           }
         });
   }
@@ -456,7 +493,10 @@ class WordComplainDialog extends StatefulWidget {
 }
 
 class _WordComplainDialogState extends State<WordComplainDialog> {
+  static GlobalKey<FormFieldState> replaceWordKey = GlobalKey<FormFieldState>();
+  final ScrollController scrollController = ScrollController();
   String word;
+  String replaceWord;
   String reason = 'non_noun';
 
   @override
@@ -470,11 +510,19 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
     final currentState = Provider
         .of<AppState>(context)
         .gameState;
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 10),
+        curve: Curves.easeOut,
+      );
+    });
     return AlertDialog(
-        title: Text('Пожаловаться на слово'),
+        title: Text('Пожаловаться на слово $word'),
         content: Container(
             width: double.maxFinite,
             child: ListView(
+              controller: scrollController,
               shrinkWrap: true,
               children: <Widget>[
                 ListTile(
@@ -496,7 +544,35 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
                           setState(() {
                             reason = value;
                           });
-                        }))
+                        })),
+                ListTile(
+                    title: Text('Прямое заимствование'),
+                    leading: Radio(
+                        value: 'loanword',
+                        groupValue: reason,
+                        onChanged: (value) {
+                          setState(() {
+                            reason = value;
+                          });
+                        })),
+                ListTile(
+                    title: Text('Опечатка'),
+                    leading: Radio(
+                        value: 'typo',
+                        groupValue: reason,
+                        onChanged: (value) {
+                          setState(() {
+                            reason = value;
+                          });
+                        })),
+                Visibility(
+                    visible: reason == 'typo',
+                    child: TextFormField(
+                        decoration: InputDecoration(labelText: 'Заменить на'),
+                        onSaved: (value) {
+                          replaceWord = value;
+                        },
+                        key: replaceWordKey))
               ],
             )),
         actions: [
@@ -509,8 +585,17 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
           FlatButton(
               child: Text('Готово'),
               onPressed: () {
-                currentState.wordComplains
-                    .add({'word': word, 'reason': reason});
+                if (reason == 'typo') {
+                  replaceWordKey.currentState.save();
+                  currentState.wordComplains.add({
+                    'word': word,
+                    'reason': reason,
+                    'replace_word': replaceWord
+                  });
+                } else {
+                  currentState.wordComplains
+                      .add({'word': word, 'reason': reason});
+                }
                 Navigator.of(context).pop();
               })
         ]);
