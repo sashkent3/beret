@@ -65,7 +65,10 @@ class MyApp extends StatelessWidget {
                                                         'matchDifficulty'),
                                                     currentSetDifficultyDispersion:
                                                     currentState.prefs.getInt(
-                                                        'difficultyDispersion'))),
+                                                        'difficultyDispersion'),
+                                                    currentSetFixTeams: currentState
+                                                        .prefs.getBool(
+                                                        'fixTeams'))),
                                       );
                                     },
                                     child: Text('Настройки',

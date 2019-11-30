@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:beret/app_state.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +24,16 @@ class Turn extends StatelessWidget {
               tooltip: 'Закончить игру',
               backgroundColor: Color(0xFFDEA90C),
               child: Icon(Icons.arrow_forward),
-              onPressed: () {
+              onPressed: () async {
                 currentState.gameLog['end_timestamp'] =
                     DateTime
                         .now()
                         .millisecondsSinceEpoch;
-                currentAppState.saveGameLog(currentState.gameLog);
-                currentAppState.saveWordsComplains(currentState.wordComplains);
+                var response =
+                await currentAppState.sendGameLog(currentState.gameLog);
+                if (response == null || response.statusCode != 201) {
+                  currentAppState.saveGameLog(currentState.gameLog);
+                }
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
@@ -170,32 +174,120 @@ class ScoreBoard extends StatelessWidget {
         player2.explainedRightCnt -
         player1.guessedRightCnt -
         player1.explainedRightCnt);
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: currentState.players.length + 1,
-        itemBuilder: (BuildContext context, int idx) {
-          if (idx > 0) {
-            idx -= 1;
-            return ListTile(
-                leading: Icon(Icons.person, color: Colors.blue),
-                title: Text(currentState.players[idx].name),
-                trailing: Text(
-                    currentState.players[idx].explainedRightCnt.toString() +
-                        '/' +
-                        currentState.players[idx].guessedRightCnt.toString() +
-                        '/' +
-                        (currentState.players[idx].explainedRightCnt +
-                            currentState.players[idx].guessedRightCnt)
-                            .toString()));
-          } else {
-            return ListTile(
-                leading: Visibility(child: Icon(Icons.person), visible: false),
-                title: Text('Имя игрока',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                trailing: Text('Объяснено/Угадано/Сумма',
-                    style: TextStyle(fontWeight: FontWeight.bold)));
-          }
-        });
+    if (currentState.fixTeams) {
+      return ListView.builder(
+          shrinkWrap: true,
+          itemCount: currentState.players.length ~/ 2 + 1,
+          itemBuilder: (BuildContext context, int idx) {
+            if (idx > 0) {
+              idx = (idx - 1) * 2;
+              return Card(
+                  child: ListTile(
+                      leading: Icon(
+                          Icons.group, color: currentState.players[idx].color),
+                      title: Container(child: Column(children: [
+                        Text(currentState.players[idx].name),
+                        Text(currentState.players[idx + 1].name)
+                      ]),
+                          alignment: Alignment.centerLeft),
+                      trailing: Container(
+                        width: 93,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Column(mainAxisAlignment: MainAxisAlignment
+                                  .spaceEvenly,
+                                  children: [
+                                    Text(currentState.players[idx]
+                                        .guessedRightCnt
+                                        .toString()),
+                                    Text(currentState
+                                        .players[idx + 1].guessedRightCnt
+                                        .toString())
+                                  ]),
+                              Column(mainAxisAlignment: MainAxisAlignment
+                                  .spaceEvenly, children: [
+                                Text(currentState.players[idx].explainedRightCnt
+                                    .toString()),
+                                Text(currentState.players[idx + 1]
+                                    .explainedRightCnt
+                                    .toString())
+                              ]),
+                              Text((currentState.players[idx].guessedRightCnt +
+                                  currentState
+                                      .players[idx].explainedRightCnt)
+                                  .toString())
+                            ]),
+                      )));
+            } else {
+              return ListTile(
+                  leading:
+                  Visibility(child: Icon(Icons.person), visible: false),
+                  title: Text('Имя игрока',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  trailing: Container(
+                    width: 100,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(Icons.lightbulb_outline),
+                          Icon(Icons.chat),
+                          Text(
+                            '\u{03A3}',
+                            style:
+                            TextStyle(fontSize: 25, color: Colors.black45),
+                          )
+                        ]),
+                  ));
+            }
+          });
+    } else {
+      return ListView.builder(
+          shrinkWrap: true,
+          itemCount: currentState.players.length + 1,
+          itemBuilder: (BuildContext context, int idx) {
+            if (idx > 0) {
+              idx -= 1;
+              return ListTile(
+                  leading: Icon(Icons.person, color: Colors.blue),
+                  title: Text(currentState.players[idx].name),
+                  trailing: Container(
+                    width: 93,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(currentState.players[idx].guessedRightCnt
+                              .toString()),
+                          Text(currentState.players[idx].explainedRightCnt
+                              .toString()),
+                          Text((currentState.players[idx].guessedRightCnt +
+                              currentState.players[idx].explainedRightCnt)
+                              .toString())
+                        ]),
+                  ));
+            } else {
+              return ListTile(
+                  leading:
+                  Visibility(child: Icon(Icons.person), visible: false),
+                  title: Text('Имя игрока',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  trailing: Container(
+                    width: 100,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(Icons.lightbulb_outline),
+                          Icon(Icons.chat),
+                          Text(
+                            '\u{03A3}',
+                            style:
+                            TextStyle(fontSize: 25, color: Colors.black45),
+                          )
+                        ]),
+                  ));
+            }
+          });
+    }
   }
 }
 
@@ -309,6 +401,7 @@ class RoundEditing extends StatefulWidget {
 
 class _RoundEditingState extends State<RoundEditing> {
   HashSet shownNotGuessedIdx = HashSet();
+  HashSet complainedWords = HashSet();
 
   @override
   Widget build(BuildContext context) {
@@ -320,6 +413,10 @@ class _RoundEditingState extends State<RoundEditing> {
         padding: EdgeInsets.symmetric(horizontal: 16),
         shrinkWrap: true,
         itemBuilder: (BuildContext context, int idx) {
+          Color thumbDownColor;
+          if (complainedWords.contains(idx)) {
+            thumbDownColor = Colors.red;
+          }
           if (!currentState.turnLog[idx].containsKey('outcome')) {
             if (shownNotGuessedIdx.contains(idx)) {
               return Card(
@@ -328,15 +425,6 @@ class _RoundEditingState extends State<RoundEditing> {
                       title: Text(currentState.turnLog[idx]['word']),
                       trailing: IntrinsicWidth(
                           child: Row(children: [
-                            IconButton(
-                                icon: Icon(Icons.thumb_down),
-                                onPressed: () {
-                                  return showDialog<void>(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          WordComplainDialog(word: currentState
-                                              .turnLog[idx]['word']));
-                                }),
                             DropdownButton<String>(
                                 value: 'Не угадано',
                                 onChanged: (value) {
@@ -365,7 +453,27 @@ class _RoundEditingState extends State<RoundEditing> {
                                     value: value,
                                     child: Text(value),
                                   );
-                                }).toList())
+                                }).toList()),
+                            IconButton(
+                                icon: Icon(
+                                    Icons.thumb_down, color: thumbDownColor),
+                                onPressed: () async {
+                                  var _complain = await showDialog<bool>(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          WordComplainDialog(
+                                              word: currentState.turnLog[idx]
+                                              ['word']));
+                                  if (_complain) {
+                                    setState(() {
+                                      complainedWords.add(idx);
+                                      Scaffold.of(context).showSnackBar(
+                                          SnackBar(
+                                              content: Text(
+                                                  'Жалоба отправлена!')));
+                                    });
+                                  }
+                                })
                           ]))));
             } else {
               return Card(
@@ -388,15 +496,6 @@ class _RoundEditingState extends State<RoundEditing> {
                     title: Text(currentState.turnLog[idx]['word']),
                     trailing: IntrinsicWidth(
                         child: Row(children: [
-                          IconButton(
-                              icon: Icon(Icons.thumb_down),
-                              onPressed: () {
-                                return showDialog<void>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        WordComplainDialog(word: currentState
-                                            .turnLog[idx]['word']));
-                              }),
                           DropdownButton<String>(
                               value: 'Угадано',
                               onChanged: (value) {
@@ -430,7 +529,25 @@ class _RoundEditingState extends State<RoundEditing> {
                                   value: value,
                                   child: Text(value),
                                 );
-                              }).toList())
+                              }).toList()),
+                          IconButton(
+                              icon: Icon(
+                                  Icons.thumb_down, color: thumbDownColor),
+                              onPressed: () async {
+                                var _complain = await showDialog<bool>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        WordComplainDialog(
+                                            word: currentState.turnLog[idx]
+                                            ['word']));
+                                if (_complain) {
+                                  setState(() {
+                                    complainedWords.add(idx);
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                        content: Text('Жалоба отправлена!')));
+                                  });
+                                }
+                              })
                         ]))));
           } else {
             return Card(
@@ -439,15 +556,6 @@ class _RoundEditingState extends State<RoundEditing> {
                     title: Text(currentState.turnLog[idx]['word']),
                     trailing: IntrinsicWidth(
                         child: Row(children: [
-                          IconButton(
-                              icon: Icon(Icons.thumb_down),
-                              onPressed: () {
-                                return showDialog<void>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        WordComplainDialog(word: currentState
-                                            .turnLog[idx]['word']));
-                              }),
                           DropdownButton<String>(
                               value: 'Ошибка',
                               onChanged: (value) {
@@ -476,7 +584,25 @@ class _RoundEditingState extends State<RoundEditing> {
                                   value: value,
                                   child: Text(value),
                                 );
-                              }).toList())
+                              }).toList()),
+                          IconButton(
+                              icon: Icon(
+                                  Icons.thumb_down, color: thumbDownColor),
+                              onPressed: () async {
+                                var _complain = await showDialog<bool>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        WordComplainDialog(
+                                            word: currentState.turnLog[idx]
+                                            ['word']));
+                                if (_complain) {
+                                  setState(() {
+                                    complainedWords.add(idx);
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                        content: Text('Жалоба отправлена!')));
+                                  });
+                                }
+                              })
                         ]))));
           }
         });
@@ -507,9 +633,7 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider
-        .of<AppState>(context)
-        .gameState;
+    final currentState = Provider.of<AppState>(context);
     SchedulerBinding.instance.addPostFrameCallback((_) {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
@@ -579,24 +703,29 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
           FlatButton(
             child: Text('Отмена'),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(false);
             },
           ),
           FlatButton(
               child: Text('Готово'),
-              onPressed: () {
+              onPressed: () async {
+                Map wordComplain;
                 if (reason == 'typo') {
                   replaceWordKey.currentState.save();
-                  currentState.wordComplains.add({
+                  wordComplain = {
                     'word': word,
                     'reason': reason,
                     'replace_word': replaceWord
-                  });
+                  };
                 } else {
-                  currentState.wordComplains
-                      .add({'word': word, 'reason': reason});
+                  wordComplain = {'word': word, 'reason': reason};
                 }
-                Navigator.of(context).pop();
+                var response =
+                await currentState.sendWordComplain(jsonEncode(wordComplain));
+                if (response == null || response.statusCode != 200) {
+                  currentState.saveWordComplain(wordComplain);
+                }
+                Navigator.of(context).pop(true);
               })
         ]);
   }

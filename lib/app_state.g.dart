@@ -142,6 +142,14 @@ mixin _$AppState on _AppState, Store {
     return _$sendSavedGameLogsAsyncAction.run(() => super.sendSavedGameLogs());
   }
 
+  final _$sendWordComplainAsyncAction = AsyncAction('sendWordComplain');
+
+  @override
+  Future sendWordComplain(dynamic wordComplain) {
+    return _$sendWordComplainAsyncAction
+        .run(() => super.sendWordComplain(wordComplain));
+  }
+
   final _$sendSavedWordsComplainsAsyncAction =
   AsyncAction('sendSavedWordsComplains');
 
@@ -171,10 +179,10 @@ mixin _$AppState on _AppState, Store {
   }
 
   @override
-  void saveWordsComplains(dynamic wordsComplains) {
+  void saveWordComplain(dynamic wordComplain) {
     final _$actionInfo = _$_AppStateActionController.startAction();
     try {
-      return super.saveWordsComplains(wordsComplains);
+      return super.saveWordComplain(wordComplain);
     } finally {
       _$_AppStateActionController.endAction(_$actionInfo);
     }

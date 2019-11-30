@@ -42,8 +42,14 @@ abstract class _AppState with Store {
 
   @action
   Future sendGameLog(gameLog) async {
-    return http.post('http://the-hat-dev.appspot.com/api/v2/game/log',
-        body: jsonEncode(gameLog));
+    String url = 'http://the-hat-dev.appspot.com/';
+    try {
+      return await http.post('$url/api/v2/game/log',
+          headers: {"content-type": "application/json"},
+          body: jsonEncode(gameLog));
+    } catch (_) {
+      return null;
+    }
   }
 
   @action
@@ -54,7 +60,7 @@ abstract class _AppState with Store {
       Set sentLogs = Set();
       for (var gameLog in gameLogs) {
         var response = await sendGameLog(gameLog);
-        if (response.statusCode == 202) {
+        if (response != null && response.statusCode == 202) {
           sentLogs.add(gameLog);
         }
       }
@@ -71,18 +77,30 @@ abstract class _AppState with Store {
   }
 
   @action
-  Future<void> sendSavedWordsComplains() async {
-    if (File('$documentsPath/wordsComplains.json').existsSync()) {
-      var response = await http.post(
-          'http://the-hat-dev.appspot.com/$deviceId/complain',
-          body: File('$documentsPath/wordsComplains.json').readAsStringSync());
-      if (response.statusCode == 200)
-        File('$documentsPath/wordsComplains.json').deleteSync();
+  Future sendWordComplain(wordComplain) async {
+    String url = 'http://the-hat-dev.appspot.com/';
+    try {
+      return await http.post('$url/$deviceId/complain',
+          body: {"json": wordComplain});
+    } on SocketException catch (_) {
+      return null;
     }
   }
 
   @action
-  void saveWordsComplains(wordsComplains) {
+  Future<void> sendSavedWordsComplains() async {
+    if (File('$documentsPath/wordsComplains.json').existsSync()) {
+      try {
+        var response = await sendWordComplain(
+            File('$documentsPath/wordsComplains.json').readAsStringSync());
+        if (response.statusCode == 200)
+          File('$documentsPath/wordsComplains.json').deleteSync();
+      } on SocketException catch (_) {}
+    }
+  }
+
+  @action
+  void saveWordComplain(wordComplain) {
     List savedWordsComplains;
     if (File('$documentsPath/wordsComplains.json').existsSync()) {
       savedWordsComplains = jsonDecode(
@@ -90,8 +108,9 @@ abstract class _AppState with Store {
     } else {
       savedWordsComplains = List();
     }
+    savedWordsComplains.add(wordComplain);
     File('$documentsPath/wordsComplains.json')
-        .writeAsStringSync(jsonEncode(savedWordsComplains + wordsComplains));
+        .writeAsStringSync(jsonEncode(savedWordsComplains));
   }
 
   @observable

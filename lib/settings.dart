@@ -6,9 +6,10 @@ import 'app_state.dart';
 class Settings extends StatefulWidget {
   final int currentSetDifficulty;
   final int currentSetDifficultyDispersion;
+  final bool currentSetFixTeams;
 
   const Settings(
-      {Key key, this.currentSetDifficulty, this.currentSetDifficultyDispersion})
+      {Key key, this.currentSetDifficulty, this.currentSetDifficultyDispersion, this.currentSetFixTeams})
       : super(key: key);
 
   @override
@@ -19,11 +20,13 @@ class _SettingsState extends State<Settings> {
   static GlobalKey<FormState> settingsKey = GlobalKey<FormState>();
   int currentSetDifficulty;
   int currentSetDifficultyDispersion;
+  bool currentSetFixTeams;
 
   @override
   void initState() {
     currentSetDifficulty = widget.currentSetDifficulty;
     currentSetDifficultyDispersion = widget.currentSetDifficultyDispersion;
+    currentSetFixTeams = widget.currentSetFixTeams;
     super.initState();
   }
 
@@ -46,6 +49,7 @@ class _SettingsState extends State<Settings> {
                   .setInt('matchDifficulty', currentSetDifficulty);
               currentState.prefs.setInt(
                   'difficultyDispersion', currentSetDifficultyDispersion);
+              currentState.prefs.setBool('fixTeams', currentSetFixTeams);
               Navigator.of(context).pop();
             }
           },
@@ -88,6 +92,8 @@ class _SettingsState extends State<Settings> {
                                     currentSetDifficultyDispersion =
                                         currentState.prefs
                                             .getInt('difficultyDispersion');
+                                    currentSetFixTeams =
+                                        currentState.prefs.getBool('fixTeams');
                                     setState(() {
                                       settingsKey = GlobalKey<FormState>();
                                       Navigator.of(context).pop();
@@ -204,7 +210,20 @@ class _SettingsState extends State<Settings> {
                           currentSetDifficulty = value.toInt();
                         });
                       },
-                    )
+                    ),
+                    Row(children: [
+                      Checkbox(
+                          value: currentSetFixTeams,
+                          onChanged: (value) {
+                            setState(() {
+                              currentSetFixTeams = value;
+                            });
+                          }),
+                      Text('Фиксировать команды',
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black.withOpacity(0.5)))
+                    ])
                   ])),
         ]));
   }

@@ -31,6 +31,33 @@ abstract class _GameState with Store {
     ]);
   }
 
+  @action
+  int getPlayerOneId() {
+    if (fixTeams) {
+      if (turn ~/ (players.length / 2) % 2 == 0) {
+        return 2 * turn % players.length;
+      } else {
+        return 2 * turn % players.length + 1;
+      }
+    } else {
+      return turn % players.length;
+    }
+  }
+
+  @action
+  int getPlayerTwoId() {
+    if (fixTeams) {
+      if (turn ~/ (players.length / 2) % 2 == 0) {
+        return 2 * turn % players.length + 1;
+      } else {
+        return 2 * turn % players.length;
+      }
+    } else {
+      return (1 + (turn ~/ players.length) % (players.length - 1) + turn) %
+          players.length;
+    }
+  }
+
   @observable
   int newTurnTimerCnt = 3;
 
@@ -54,9 +81,6 @@ abstract class _GameState with Store {
   };
 
   @observable
-  List wordComplains = [];
-
-  @observable
   int mainStateLength;
 
   @observable
@@ -78,13 +102,11 @@ abstract class _GameState with Store {
   @observable
   AudioCache audioPlayer = AudioCache();
 
-  @computed
-  int get playerOneID => turn % players.length;
+  @observable
+  int playerOneID = 0;
 
-  @computed
-  int get playerTwoID =>
-      (1 + (turn ~/ players.length) % (players.length - 1) + turn) %
-          players.length;
+  @observable
+  int playerTwoID = 1;
 
   @computed
   String get playerOne => players[playerOneID].name;
@@ -216,6 +238,8 @@ abstract class _GameState with Store {
 
   @action
   void newTurn() {
+    playerOneID = getPlayerOneId();
+    playerTwoID = getPlayerTwoId();
     turn++;
     word = hat.getWord();
     changeState('main');

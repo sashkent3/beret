@@ -15,33 +15,79 @@ class Match extends StatelessWidget {
     final ScrollController scrollController = ScrollController();
     return Observer(builder: (_) {
       List<Widget> listView = [];
-      for (int index = 0; index < currentGameState.players.length; index++) {
-        listView.add(ListTile(
-            title: TextFormField(
-                key: currentGameState.players[index].key,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.person, color: Colors.blue),
-                  labelText: 'Имя',
-                ),
-                initialValue: currentGameState.players[index].name,
-                onChanged: (value) {
-                  currentGameState.players[index].name = value
-                      .replaceAll(RegExp(r"^\s+|\s+$"), '')
-                      .replaceAll(RegExp(r"\s+"), ' ');
-                }),
-            trailing: Visibility(
-                visible: currentGameState.players.length > 2,
-                child: IconButton(
-                    tooltip: 'Удалить игрока',
-                    icon: Icon(Icons.close, color: Colors.blue),
-                    onPressed: () {
-                      currentGameState.removePlayer(index);
-                    }))));
+      if (currentGameState.fixTeams) {
+        for (int index = 0;
+        index < currentGameState.players.length;
+        index += 2) {
+          currentGameState.players[index].color = Colors.primaries[
+          index * 7 ~/ 2 % Colors.primaries.length];
+          listView.add(Card(
+              child: ListTile(
+                  leading: Icon(Icons.group,
+                      color: currentGameState.players[index].color),
+                  title: Column(children: [
+                    TextFormField(
+                        key: currentGameState.players[index].key,
+                        decoration: InputDecoration(
+                          labelText: 'Имя',
+                        ),
+                        initialValue: currentGameState.players[index].name,
+                        onChanged: (value) {
+                          currentGameState.players[index].name = value
+                              .replaceAll(RegExp(r"^\s+|\s+$"), '')
+                              .replaceAll(RegExp(r"\s+"), ' ');
+                        }),
+                    TextFormField(
+                        key: currentGameState.players[index + 1].key,
+                        decoration: InputDecoration(
+                          labelText: 'Имя',
+                        ),
+                        initialValue: currentGameState.players[index + 1].name,
+                        onChanged: (value) {
+                          currentGameState.players[index + 1].name = value
+                              .replaceAll(RegExp(r"^\s+|\s+$"), '')
+                              .replaceAll(RegExp(r"\s+"), ' ');
+                        })
+                  ]),
+                  trailing: Visibility(
+                      visible: currentGameState.players.length > 2,
+                      child: IconButton(
+                          tooltip: 'Удалить пару',
+                          icon: Icon(Icons.close, color: Colors.blue),
+                          onPressed: () {
+                            currentGameState.removePlayer(index);
+                            currentGameState.removePlayer(index);
+                          })))));
+        }
+      } else {
+        for (int index = 0; index < currentGameState.players.length; index++) {
+          listView.add(ListTile(
+              title: TextFormField(
+                  key: currentGameState.players[index].key,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.person, color: Colors.blue),
+                    labelText: 'Имя',
+                  ),
+                  initialValue: currentGameState.players[index].name,
+                  onChanged: (value) {
+                    currentGameState.players[index].name = value
+                        .replaceAll(RegExp(r"^\s+|\s+$"), '')
+                        .replaceAll(RegExp(r"\s+"), ' ');
+                  }),
+              trailing: Visibility(
+                  visible: currentGameState.players.length > 2,
+                  child: IconButton(
+                      tooltip: 'Удалить игрока',
+                      icon: Icon(Icons.close, color: Colors.blue),
+                      onPressed: () {
+                        currentGameState.removePlayer(index);
+                      }))));
+        }
       }
       SchedulerBinding.instance.addPostFrameCallback((_) {
         scrollController.animateTo(
           scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 10),
+          duration: Duration(milliseconds: 10),
           curve: Curves.easeOut,
         );
       });
@@ -51,11 +97,23 @@ class Match extends StatelessWidget {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    IconButton(
-                        color: Colors.white,
-                        tooltip: 'Добавить игрока',
-                        onPressed: currentGameState.addPlayer,
-                        icon: Icon(Icons.person_add)),
+                    Visibility(
+                        visible: currentGameState.fixTeams,
+                        child: IconButton(
+                            color: Colors.white,
+                            tooltip: 'Добавить пару',
+                            onPressed: () {
+                              currentGameState.addPlayer();
+                              currentGameState.addPlayer();
+                            },
+                            icon: Icon(Icons.group_add))),
+                    Visibility(
+                        visible: !currentGameState.fixTeams,
+                        child: IconButton(
+                            color: Colors.white,
+                            tooltip: 'Добавить игрока',
+                            onPressed: currentGameState.addPlayer,
+                            icon: Icon(Icons.person_add))),
                     IconButton(
                         color: Colors.white,
                         tooltip: 'Перемешать игроков',
@@ -224,25 +282,10 @@ class _SettingsDialogState extends State<SettingsDialog> {
                 ),
                 Padding(
                     padding: EdgeInsets.only(top: 10),
-                    child: Text('Разброс сложности',
+                    child: Text('Сложность',
                         style: TextStyle(
                             fontSize: 12,
                             color: Colors.black.withOpacity(0.5)))),
-                Slider.adaptive(
-                  min: 0,
-                  max: 50,
-                  divisions: 50,
-                  label: currentSetDifficultyDispersion.toString(),
-                  value: currentSetDifficultyDispersion.toDouble(),
-                  onChanged: (value) {
-                    setState(() {
-                      currentSetDifficultyDispersion = value.toInt();
-                    });
-                  },
-                ),
-                Text('Сложность',
-                    style: TextStyle(
-                        fontSize: 12, color: Colors.black.withOpacity(0.5))),
                 Slider(
                   min: 0,
                   max: 100,
@@ -252,6 +295,21 @@ class _SettingsDialogState extends State<SettingsDialog> {
                   onChanged: (value) {
                     setState(() {
                       currentSetDifficulty = value.toInt();
+                    });
+                  },
+                ),
+                Text('Разброс сложности',
+                    style: TextStyle(
+                        fontSize: 12, color: Colors.black.withOpacity(0.5))),
+                Slider.adaptive(
+                  min: 0,
+                  max: 50,
+                  divisions: 50,
+                  label: currentSetDifficultyDispersion.toString(),
+                  value: currentSetDifficultyDispersion.toDouble(),
+                  onChanged: (value) {
+                    setState(() {
+                      currentSetDifficultyDispersion = value.toInt();
                     });
                   },
                 ),
@@ -277,6 +335,10 @@ class _SettingsDialogState extends State<SettingsDialog> {
               currentGameState.difficultyDispersion =
                   currentSetDifficultyDispersion;
               currentGameState.fixTeams = currentSetFixTeams;
+              if (currentSetFixTeams &&
+                  currentGameState.players.length % 2 != 0) {
+                currentGameState.addPlayer();
+              }
               settingsKey.currentState.save();
               Navigator.of(context).pop();
             }

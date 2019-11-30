@@ -9,16 +9,6 @@ part of 'game_state.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$GameState on _GameState, Store {
-  Computed<int> _$playerOneIDComputed;
-
-  @override
-  int get playerOneID =>
-      (_$playerOneIDComputed ??= Computed<int>(() => super.playerOneID)).value;
-  Computed<int> _$playerTwoIDComputed;
-
-  @override
-  int get playerTwoID =>
-      (_$playerTwoIDComputed ??= Computed<int>(() => super.playerTwoID)).value;
   Computed<String> _$playerOneComputed;
 
   @override
@@ -113,23 +103,6 @@ mixin _$GameState on _GameState, Store {
       super.gameLog = value;
       _$gameLogAtom.reportChanged();
     }, _$gameLogAtom, name: '${_$gameLogAtom.name}_set');
-  }
-
-  final _$wordComplainsAtom = Atom(name: '_GameState.wordComplains');
-
-  @override
-  List get wordComplains {
-    _$wordComplainsAtom.context.enforceReadPolicy(_$wordComplainsAtom);
-    _$wordComplainsAtom.reportObserved();
-    return super.wordComplains;
-  }
-
-  @override
-  set wordComplains(List value) {
-    _$wordComplainsAtom.context.conditionallyRunInAction(() {
-      super.wordComplains = value;
-      _$wordComplainsAtom.reportChanged();
-    }, _$wordComplainsAtom, name: '${_$wordComplainsAtom.name}_set');
   }
 
   final _$mainStateLengthAtom = Atom(name: '_GameState.mainStateLength');
@@ -249,6 +222,40 @@ mixin _$GameState on _GameState, Store {
       super.audioPlayer = value;
       _$audioPlayerAtom.reportChanged();
     }, _$audioPlayerAtom, name: '${_$audioPlayerAtom.name}_set');
+  }
+
+  final _$playerOneIDAtom = Atom(name: '_GameState.playerOneID');
+
+  @override
+  int get playerOneID {
+    _$playerOneIDAtom.context.enforceReadPolicy(_$playerOneIDAtom);
+    _$playerOneIDAtom.reportObserved();
+    return super.playerOneID;
+  }
+
+  @override
+  set playerOneID(int value) {
+    _$playerOneIDAtom.context.conditionallyRunInAction(() {
+      super.playerOneID = value;
+      _$playerOneIDAtom.reportChanged();
+    }, _$playerOneIDAtom, name: '${_$playerOneIDAtom.name}_set');
+  }
+
+  final _$playerTwoIDAtom = Atom(name: '_GameState.playerTwoID');
+
+  @override
+  int get playerTwoID {
+    _$playerTwoIDAtom.context.enforceReadPolicy(_$playerTwoIDAtom);
+    _$playerTwoIDAtom.reportObserved();
+    return super.playerTwoID;
+  }
+
+  @override
+  set playerTwoID(int value) {
+    _$playerTwoIDAtom.context.conditionallyRunInAction(() {
+      super.playerTwoID = value;
+      _$playerTwoIDAtom.reportChanged();
+    }, _$playerTwoIDAtom, name: '${_$playerTwoIDAtom.name}_set');
   }
 
   final _$wordsPerPlayerAtom = Atom(name: '_GameState.wordsPerPlayer');
@@ -408,6 +415,26 @@ mixin _$GameState on _GameState, Store {
   }
 
   final _$_GameStateActionController = ActionController(name: '_GameState');
+
+  @override
+  int getPlayerOneId() {
+    final _$actionInfo = _$_GameStateActionController.startAction();
+    try {
+      return super.getPlayerOneId();
+    } finally {
+      _$_GameStateActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  int getPlayerTwoId() {
+    final _$actionInfo = _$_GameStateActionController.startAction();
+    try {
+      return super.getPlayerTwoId();
+    } finally {
+      _$_GameStateActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void changeState(String newState) {
