@@ -30,6 +30,7 @@ dependencies:
   audioplayers: 0.13.2
   url_launcher: ^5.2.5
   uuid: ^2.0.4
+  sentry: ^3.0.0+1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -42,8 +43,9 @@ dev_dependencies:
 
 flutter_icons:
   android: true
-  ios: true
+  ios: false
   image_path: static/the_hat_icon_900x900.png
+  android_image_path: static/the_hat_icon_900x900.png
   adaptive_icon_foreground: static/the_hat_icon_900x900.png
   adaptive_icon_background: "#FFFFFF"
 
