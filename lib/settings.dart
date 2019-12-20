@@ -9,7 +9,10 @@ class Settings extends StatefulWidget {
   final bool currentSetFixTeams;
 
   const Settings(
-      {Key key, this.currentSetDifficulty, this.currentSetDifficultyDispersion, this.currentSetFixTeams})
+      {Key key,
+      this.currentSetDifficulty,
+      this.currentSetDifficultyDispersion,
+      this.currentSetFixTeams})
       : super(key: key);
 
   @override
@@ -63,7 +66,7 @@ class _SettingsState extends State<Settings> {
                     style: TextStyle(color: Colors.white),
                   ),
                   icon:
-                  Icon(Icons.settings_backup_restore, color: Colors.white),
+                      Icon(Icons.settings_backup_restore, color: Colors.white),
                   onPressed: () {
                     showDialog<void>(
                         context: context,

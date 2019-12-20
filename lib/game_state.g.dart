@@ -293,7 +293,7 @@ mixin _$GameState on _GameState, Store {
   }
 
   final _$difficultyDispersionAtom =
-  Atom(name: '_GameState.difficultyDispersion');
+      Atom(name: '_GameState.difficultyDispersion');
 
   @override
   int get difficultyDispersion {

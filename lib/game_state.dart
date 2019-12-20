@@ -73,10 +73,7 @@ abstract class _GameState with Store {
   @observable
   Map gameLog = {
     'version': '2.0',
-    'time_zone_offset': DateTime
-        .now()
-        .timeZoneOffset
-        .inMilliseconds,
+    'time_zone_offset': DateTime.now().timeZoneOffset.inMilliseconds,
     'attempts': []
   };
 
@@ -94,7 +91,7 @@ abstract class _GameState with Store {
 
   @observable
   ObservableList<Player> players =
-  ObservableList.of([Player('Игрок 1'), Player('Игрок 2')]);
+      ObservableList.of([Player('Игрок 1'), Player('Игрок 2')]);
 
   @observable
   int turn = 0;
@@ -238,12 +235,9 @@ abstract class _GameState with Store {
 
   @action
   void newTurn() {
+    turn++;
     playerOneID = getPlayerOneId();
     playerTwoID = getPlayerTwoId();
-    turn++;
-    word = hat.getWord();
-    changeState('main');
-    turnStart();
   }
 
   @action
@@ -263,10 +257,8 @@ abstract class _GameState with Store {
     newTurnTimer = Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
       newTurnTimerSecondPass();
       if (newTurnTimerCnt == 0) {
-        audioPlayer.play('round_start_timer_timeout.wav',
-            mode: PlayerMode.LOW_LATENCY);
         _timeout.cancel();
-        newTurn();
+        turnStart();
       } else {
         audioPlayer.play('round_start_timer_tick.wav',
             mode: PlayerMode.LOW_LATENCY);
@@ -276,6 +268,10 @@ abstract class _GameState with Store {
 
   @action
   void turnStart() {
+    audioPlayer.play('round_start_timer_timeout.wav',
+        mode: PlayerMode.LOW_LATENCY);
+    word = hat.getWord();
+    changeState('main');
     stopwatch.start();
     turnLog = [];
     Timer.periodic(Duration(seconds: 1), (Timer _timeout) {

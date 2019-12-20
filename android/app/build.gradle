@@ -31,7 +31,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 27
 
     lintOptions {
         disable 'InvalidPackage'
@@ -40,7 +40,7 @@ android {
     defaultConfig {
         applicationId "ru.lksh.beret"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 27
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

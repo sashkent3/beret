@@ -151,7 +151,7 @@ mixin _$AppState on _AppState, Store {
   }
 
   final _$sendSavedWordsComplainsAsyncAction =
-  AsyncAction('sendSavedWordsComplains');
+      AsyncAction('sendSavedWordsComplains');
 
   @override
   Future<void> sendSavedWordsComplains() {

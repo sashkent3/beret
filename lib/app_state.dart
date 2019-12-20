@@ -33,7 +33,7 @@ abstract class _AppState with Store {
           .writeAsStringSync(jsonEncode(gameLogs));
     } else {
       List gameLogs =
-      jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
+          jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
       gameLogs.add(gameLog);
       File('$documentsPath/gameLogs.json')
           .writeAsStringSync(jsonEncode(gameLogs));
@@ -56,7 +56,7 @@ abstract class _AppState with Store {
   Future<void> sendSavedGameLogs() async {
     if (File('$documentsPath/gameLogs.json').existsSync()) {
       List gameLogs =
-      jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
+          jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
       Set sentLogs = Set();
       for (var gameLog in gameLogs) {
         var response = await sendGameLog(gameLog);
@@ -80,8 +80,8 @@ abstract class _AppState with Store {
   Future sendWordComplain(wordComplain) async {
     String url = 'http://the-hat-dev.appspot.com/';
     try {
-      return await http.post('$url/$deviceId/complain',
-          body: {"json": wordComplain});
+      return await http
+          .post('$url/$deviceId/complain', body: {"json": wordComplain});
     } on SocketException catch (_) {
       return null;
     }

@@ -68,8 +68,8 @@ class Dictionary {
     int usedWordsIter = getUsedWordsIter();
     for (var i = 0; i < size; i++) {
       int bucketIdx =
-      (Normal.generate(1)[0] / 3 * difficultyDispersion + difficulty)
-          .round();
+          (Normal.generate(1)[0] / 3 * difficultyDispersion + difficulty)
+              .round();
       while (bucketIdx < 0 || bucketIdx > 100) {
         bucketIdx =
             (Normal.generate(1)[0] / 3 * difficultyDispersion + difficulty)

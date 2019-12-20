@@ -8,19 +8,17 @@ import 'package:provider/provider.dart';
 class Match extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentGameState = Provider
-        .of<AppState>(context)
-        .gameState;
+    final currentGameState = Provider.of<AppState>(context).gameState;
     final currentAppState = Provider.of<AppState>(context);
     final ScrollController scrollController = ScrollController();
     return Observer(builder: (_) {
       List<Widget> listView = [];
       if (currentGameState.fixTeams) {
         for (int index = 0;
-        index < currentGameState.players.length;
-        index += 2) {
-          currentGameState.players[index].color = Colors.primaries[
-          index * 7 ~/ 2 % Colors.primaries.length];
+            index < currentGameState.players.length;
+            index += 2) {
+          currentGameState.players[index].color =
+              Colors.primaries[index * 7 ~/ 2 % Colors.primaries.length];
           listView.add(Card(
               child: ListTile(
                   leading: Icon(Icons.group,
@@ -126,13 +124,12 @@ class Match extends StatelessWidget {
                         onPressed: () {
                           showDialog<void>(
                               context: context,
-                              builder: (BuildContext context) =>
-                                  SettingsDialog(
-                                      currentSetDifficulty:
+                              builder: (BuildContext context) => SettingsDialog(
+                                  currentSetDifficulty:
                                       currentGameState.matchDifficulty,
-                                      currentSetDifficultyDispersion:
+                                  currentSetDifficultyDispersion:
                                       currentGameState.difficultyDispersion,
-                                      currentSetFixTeams:
+                                  currentSetFixTeams:
                                       currentGameState.fixTeams));
                         })
                   ])),
@@ -145,14 +142,12 @@ class Match extends StatelessWidget {
                 currentGameState.createHat(currentAppState.dictionary);
                 currentGameState.timer = currentGameState.mainStateLength;
                 currentGameState.gameLog['start_timestamp'] =
-                    DateTime
-                        .now()
-                        .millisecondsSinceEpoch;
+                    DateTime.now().millisecondsSinceEpoch;
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) => Turn()),
-                        (Route<dynamic> route) => false);
+                    (Route<dynamic> route) => false);
               } else {
                 showDialog<void>(
                   context: context,
@@ -193,10 +188,11 @@ class SettingsDialog extends StatefulWidget {
   final int currentSetDifficultyDispersion;
   final bool currentSetFixTeams;
 
-  const SettingsDialog({Key key,
-    this.currentSetDifficulty,
-    this.currentSetDifficultyDispersion,
-    this.currentSetFixTeams})
+  const SettingsDialog(
+      {Key key,
+      this.currentSetDifficulty,
+      this.currentSetDifficultyDispersion,
+      this.currentSetFixTeams})
       : super(key: key);
 
   @override
@@ -219,9 +215,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
 
   @override
   build(BuildContext context) {
-    final currentGameState = Provider
-        .of<AppState>(context)
-        .gameState;
+    final currentGameState = Provider.of<AppState>(context).gameState;
     return AlertDialog(
       title: Text('Настройки'),
       content: Form(
