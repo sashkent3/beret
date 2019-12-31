@@ -1,13 +1,71 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:beret/app_state.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:http/http.dart' as http;
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
 import 'main.dart';
+
+Future<void> sendSingleWordComplain(List args) async {
+  String url = 'http://the-hat-dev.appspot.com/';
+  var wordComplain = jsonEncode(args[0]);
+  String documentsPath = args[1];
+  String deviceId = args[2];
+  var response;
+  try {
+    response = await http
+        .post('$url/$deviceId/complain', body: {"json": wordComplain});
+  } on SocketException catch (_) {
+    response = null;
+  }
+  if (response == null || response.statusCode != 200) {
+    List savedWordsComplains;
+    if (File('$documentsPath/wordsComplains.json').existsSync()) {
+      savedWordsComplains = jsonDecode(
+          File('$documentsPath/wordsComplains.json').readAsStringSync());
+    } else {
+      savedWordsComplains = List();
+    }
+    savedWordsComplains.add(wordComplain);
+    File('$documentsPath/wordsComplains.json')
+        .writeAsStringSync(jsonEncode(savedWordsComplains));
+  }
+}
+
+Future<void> sendSingleGameLog(List args) async {
+  var gameLog = args[0];
+  String documentsPath = args[1];
+  String url = 'http://the-hat-dev.appspot.com/';
+  var response;
+  try {
+    response = await http.post('$url/api/v2/game/log',
+        headers: {"content-type": "application/json"},
+        body: jsonEncode(gameLog));
+  } catch (_) {
+    response = null;
+  }
+  if (response == null || response.statusCode != 201) {
+    if (!File('$documentsPath/gameLogs.json').existsSync()) {
+      List gameLogs = [gameLog];
+      File('$documentsPath/gameLogs.json').createSync();
+      File('$documentsPath/gameLogs.json')
+          .writeAsStringSync(jsonEncode(gameLogs));
+    } else {
+      List gameLogs =
+      jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
+      gameLogs.add(gameLog);
+      File('$documentsPath/gameLogs.json')
+          .writeAsStringSync(jsonEncode(gameLogs));
+    }
+  }
+}
 
 class Turn extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -27,11 +85,16 @@ class Turn extends StatelessWidget {
               onPressed: () async {
                 currentState.gameLog['end_timestamp'] =
                     DateTime.now().millisecondsSinceEpoch;
-                var response =
-                    await currentAppState.sendGameLog(currentState.gameLog);
-                if (response == null || response.statusCode != 201) {
-                  currentAppState.saveGameLog(currentState.gameLog);
-                }
+                when((_) => !currentAppState.syncing, () {
+                  currentAppState.syncing = true;
+                  compute(sendSingleGameLog, [
+                    currentState.gameLog,
+                    currentAppState.documentsPath,
+                    currentAppState.deviceId
+                  ]).then((void _) {
+                    currentAppState.syncing = false;
+                  });
+                });
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
@@ -701,11 +764,16 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
                 } else {
                   wordComplain = {'word': word, 'reason': reason};
                 }
-                var response = await currentState
-                    .sendWordComplain(jsonEncode(wordComplain));
-                if (response == null || response.statusCode != 200) {
-                  currentState.saveWordComplain(wordComplain);
-                }
+                when((_) => !currentState.syncing, () {
+                  currentState.syncing = true;
+                  compute(sendSingleWordComplain, [
+                    wordComplain,
+                    currentState.documentsPath,
+                    currentState.deviceId
+                  ]).then((void _) {
+                    currentState.syncing = false;
+                  });
+                });
                 Navigator.of(context).pop(true);
               })
         ]);

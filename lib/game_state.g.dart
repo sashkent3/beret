@@ -57,14 +57,14 @@ mixin _$GameState on _GameState, Store {
   final _$logAtom = Atom(name: '_GameState.log');
 
   @override
-  List get log {
+  List<dynamic> get log {
     _$logAtom.context.enforceReadPolicy(_$logAtom);
     _$logAtom.reportObserved();
     return super.log;
   }
 
   @override
-  set log(List value) {
+  set log(List<dynamic> value) {
     _$logAtom.context.conditionallyRunInAction(() {
       super.log = value;
       _$logAtom.reportChanged();
@@ -74,14 +74,14 @@ mixin _$GameState on _GameState, Store {
   final _$turnLogAtom = Atom(name: '_GameState.turnLog');
 
   @override
-  List get turnLog {
+  List<dynamic> get turnLog {
     _$turnLogAtom.context.enforceReadPolicy(_$turnLogAtom);
     _$turnLogAtom.reportObserved();
     return super.turnLog;
   }
 
   @override
-  set turnLog(List value) {
+  set turnLog(List<dynamic> value) {
     _$turnLogAtom.context.conditionallyRunInAction(() {
       super.turnLog = value;
       _$turnLogAtom.reportChanged();
@@ -91,14 +91,14 @@ mixin _$GameState on _GameState, Store {
   final _$gameLogAtom = Atom(name: '_GameState.gameLog');
 
   @override
-  Map get gameLog {
+  Map<dynamic, dynamic> get gameLog {
     _$gameLogAtom.context.enforceReadPolicy(_$gameLogAtom);
     _$gameLogAtom.reportObserved();
     return super.gameLog;
   }
 
   @override
-  set gameLog(Map value) {
+  set gameLog(Map<dynamic, dynamic> value) {
     _$gameLogAtom.context.conditionallyRunInAction(() {
       super.gameLog = value;
       _$gameLogAtom.reportChanged();
@@ -383,14 +383,14 @@ mixin _$GameState on _GameState, Store {
   final _$soundsAtom = Atom(name: '_GameState.sounds');
 
   @override
-  HashMap get sounds {
+  HashMap<dynamic, dynamic> get sounds {
     _$soundsAtom.context.enforceReadPolicy(_$soundsAtom);
     _$soundsAtom.reportObserved();
     return super.sounds;
   }
 
   @override
-  set sounds(HashMap value) {
+  set sounds(HashMap<dynamic, dynamic> value) {
     _$soundsAtom.context.conditionallyRunInAction(() {
       super.sounds = value;
       _$soundsAtom.reportChanged();

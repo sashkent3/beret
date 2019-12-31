@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,7 @@ void main() {
       );
     }
   }
+
   FlutterError.onError = (FlutterErrorDetails details) {
     if (isInDebugMode) {
       FlutterError.dumpErrorToConsole(details);
@@ -94,21 +96,24 @@ class MyApp extends StatelessWidget {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Settings(
-                                                currentSetDifficulty: currentState
-                                                    .prefs
-                                                    .getInt('matchDifficulty'),
-                                                currentSetDifficultyDispersion:
+                                            builder: (context) =>
+                                                Settings(
+                                                    currentSetDifficulty: currentState
+                                                        .prefs
+                                                        .getInt(
+                                                        'matchDifficulty'),
+                                                    currentSetDifficultyDispersion:
                                                 currentState.prefs.getInt(
                                                     'difficultyDispersion'),
-                                                currentSetFixTeams: currentState
-                                                    .prefs
-                                                    .getBool('fixTeams'))),
+                                                    currentSetFixTeams: currentState
+                                                        .prefs
+                                                        .getBool('fixTeams'))),
                                       );
                                     },
                                     child: Text('Настройки',
                                         style: TextStyle(
-                                            color: Colors.blue, fontSize: 25)))))
+                                            color: Colors.blue,
+                                            fontSize: 25)))))
                       ]),
                       TableRow(children: [
                         Padding(
@@ -121,7 +126,8 @@ class MyApp extends StatelessWidget {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => GameHistory()));
+                                              builder: (context) =>
+                                                  GameHistory()));
                                     },
                                     child: Text(
                                       'История игр',
@@ -142,11 +148,12 @@ class MyApp extends StatelessWidget {
                                     },
                                     child: Text('Правила и доп. информация',
                                         style: TextStyle(
-                                            color: Colors.blue, fontSize: 25)))))
+                                            color: Colors.blue,
+                                            fontSize: 25)))))
                       ])
                     ]));
               } else {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: Image.asset('assets/the_hat_loading.png'));
               }
             })));
   }

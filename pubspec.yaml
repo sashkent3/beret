@@ -19,34 +19,34 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  mobx: ^0.3.5
-  provider: ^3.0.0+1
-  mobx_codegen: ^0.3.3+1
-  flutter_mobx: ^0.3.0+1
-  flutter_cache_manager: ^1.1.1
-  shared_preferences: ^0.5.4+3
+  mobx: ^0.4.0+1
+  provider: ^4.0.1
+  mobx_codegen: ^0.3.12
+  flutter_mobx: ^0.3.5
+  flutter_cache_manager: ^1.1.3
+  shared_preferences: ^0.5.6
   normal: ^0.5.1
-  path_provider: ^1.3.1
-  audioplayers: 0.13.2
-  url_launcher: ^5.2.5
+  path_provider: ^1.5.1
+  audioplayers: ^0.13.5
+  url_launcher: ^5.4.1
   uuid: ^2.0.4
   sentry: ^3.0.0+1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
+  cupertino_icons: ^0.1.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.7.4
-  build_runner: ^1.0.0
+  build_runner: ^1.7.2
 
 flutter_icons:
   android: true
   ios: false
-  image_path: static/the_hat_icon_900x900.png
-  android_image_path: static/the_hat_icon_900x900.png
-  adaptive_icon_foreground: static/the_hat_icon_900x900.png
+  image_path: assets/the_hat_icon_900x900.png
+  android_image_path: assets/the_hat_icon_900x900.png
+  adaptive_icon_foreground: assets/the_hat_icon_900x900.png
   adaptive_icon_background: "#FFFFFF"
 
 
@@ -72,6 +72,7 @@ flutter:
     - assets/word_outcome_ok.wav
     - assets/word_outcome_fail.wav
     - assets/word_outcome_timeout.wav
+    - assets/the_hat_loading.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

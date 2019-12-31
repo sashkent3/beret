@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
@@ -14,6 +16,53 @@ part 'app_state.g.dart';
 
 class AppState = _AppState with _$AppState;
 
+Future<void> syncWithServer(List<String> args) async {
+  String documentsPath = args[0];
+  String deviceId = args[1];
+  String url = 'http://the-hat-dev.appspot.com/';
+  if (File('$documentsPath/gameLogs.json').existsSync()) {
+    List gameLogs =
+    jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
+    Set sentLogs = Set();
+    for (var gameLog in gameLogs) {
+      var response;
+      try {
+        response = await http.post('$url/api/v2/game/log',
+            headers: {"content-type": "application/json"},
+            body: jsonEncode(gameLog));
+      } catch (_) {
+        response = null;
+      }
+      if (response != null && response.statusCode == 202) {
+        sentLogs.add(gameLog);
+      }
+    }
+    for (var gameLog in sentLogs) {
+      gameLogs.remove(gameLog);
+    }
+    if (gameLogs.isEmpty) {
+      File('$documentsPath/gameLogs.json').deleteSync();
+    } else {
+      File('$documentsPath/gameLogs.json')
+          .writeAsStringSync(jsonEncode(gameLogs));
+    }
+  }
+  if (File('$documentsPath/wordsComplains.json').existsSync()) {
+    try {
+      var response;
+      try {
+        response = await http.post('$url/$deviceId/complain', body: {
+          "json": File('$documentsPath/wordsComplains.json').readAsStringSync()
+        });
+      } on SocketException catch (_) {
+        response = null;
+      }
+      if (response.statusCode == 200)
+        File('$documentsPath/wordsComplains.json').deleteSync();
+    } on SocketException catch (_) {}
+  }
+}
+
 abstract class _AppState with Store {
   @observable
   bool loaded = false;
@@ -23,95 +72,6 @@ abstract class _AppState with Store {
 
   @observable
   String deviceId;
-
-  @action
-  void saveGameLog(gameLog) {
-    if (!File('$documentsPath/gameLogs.json').existsSync()) {
-      List gameLogs = [gameLog];
-      File('$documentsPath/gameLogs.json').createSync();
-      File('$documentsPath/gameLogs.json')
-          .writeAsStringSync(jsonEncode(gameLogs));
-    } else {
-      List gameLogs =
-          jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
-      gameLogs.add(gameLog);
-      File('$documentsPath/gameLogs.json')
-          .writeAsStringSync(jsonEncode(gameLogs));
-    }
-  }
-
-  @action
-  Future sendGameLog(gameLog) async {
-    String url = 'http://the-hat-dev.appspot.com/';
-    try {
-      return await http.post('$url/api/v2/game/log',
-          headers: {"content-type": "application/json"},
-          body: jsonEncode(gameLog));
-    } catch (_) {
-      return null;
-    }
-  }
-
-  @action
-  Future<void> sendSavedGameLogs() async {
-    if (File('$documentsPath/gameLogs.json').existsSync()) {
-      List gameLogs =
-          jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
-      Set sentLogs = Set();
-      for (var gameLog in gameLogs) {
-        var response = await sendGameLog(gameLog);
-        if (response != null && response.statusCode == 202) {
-          sentLogs.add(gameLog);
-        }
-      }
-      for (var gameLog in sentLogs) {
-        gameLogs.remove(gameLog);
-      }
-      if (gameLogs.isEmpty) {
-        File('$documentsPath/gameLogs.json').deleteSync();
-      } else {
-        File('$documentsPath/gameLogs.json')
-            .writeAsStringSync(jsonEncode(gameLogs));
-      }
-    }
-  }
-
-  @action
-  Future sendWordComplain(wordComplain) async {
-    String url = 'http://the-hat-dev.appspot.com/';
-    try {
-      return await http
-          .post('$url/$deviceId/complain', body: {"json": wordComplain});
-    } on SocketException catch (_) {
-      return null;
-    }
-  }
-
-  @action
-  Future<void> sendSavedWordsComplains() async {
-    if (File('$documentsPath/wordsComplains.json').existsSync()) {
-      try {
-        var response = await sendWordComplain(
-            File('$documentsPath/wordsComplains.json').readAsStringSync());
-        if (response.statusCode == 200)
-          File('$documentsPath/wordsComplains.json').deleteSync();
-      } on SocketException catch (_) {}
-    }
-  }
-
-  @action
-  void saveWordComplain(wordComplain) {
-    List savedWordsComplains;
-    if (File('$documentsPath/wordsComplains.json').existsSync()) {
-      savedWordsComplains = jsonDecode(
-          File('$documentsPath/wordsComplains.json').readAsStringSync());
-    } else {
-      savedWordsComplains = List();
-    }
-    savedWordsComplains.add(wordComplain);
-    File('$documentsPath/wordsComplains.json')
-        .writeAsStringSync(jsonEncode(savedWordsComplains));
-  }
 
   @observable
   GameState gameState;
@@ -125,6 +85,18 @@ abstract class _AppState with Store {
   @observable
   String documentsPath;
 
+  @observable
+  bool syncing = false;
+
+  /* @action
+  void saveToHistory(gameLog) {
+  var gameHistory;
+    if (File('$documentsPath/gameHistory.json').existsSync()) {
+      gameHistory = jsonDecode(File('$documentsPath/gameHistory.json').readAsStringSync());
+      gameHistory.add(gameLog);
+    }
+  }*/
+
   @action
   Future<void> loadApp() async {
     if (!loaded) {
@@ -134,7 +106,6 @@ abstract class _AppState with Store {
       }
       final directory = await getApplicationDocumentsDirectory();
       documentsPath = directory.path;
-      await sendSavedGameLogs();
       dictionary = Dictionary(prefs, documentsPath);
       await dictionary.load();
       if (prefs.getString('deviceId') == null) {
@@ -143,7 +114,14 @@ abstract class _AppState with Store {
       } else {
         deviceId = prefs.getString('deviceId');
       }
-      await sendSavedWordsComplains();
+      Timer.periodic(Duration(minutes: 15), (Timer timeout) {
+        if (!syncing) {
+          syncing = true;
+          compute(syncWithServer, [documentsPath, deviceId]).then((void _) {
+            syncing = false;
+          });
+        }
+      });
       loaded = true;
     }
   }

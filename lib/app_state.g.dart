@@ -128,35 +128,21 @@ mixin _$AppState on _AppState, Store {
     }, _$documentsPathAtom, name: '${_$documentsPathAtom.name}_set');
   }
 
-  final _$sendGameLogAsyncAction = AsyncAction('sendGameLog');
+  final _$syncingAtom = Atom(name: '_AppState.syncing');
 
   @override
-  Future sendGameLog(dynamic gameLog) {
-    return _$sendGameLogAsyncAction.run(() => super.sendGameLog(gameLog));
+  bool get syncing {
+    _$syncingAtom.context.enforceReadPolicy(_$syncingAtom);
+    _$syncingAtom.reportObserved();
+    return super.syncing;
   }
 
-  final _$sendSavedGameLogsAsyncAction = AsyncAction('sendSavedGameLogs');
-
   @override
-  Future<void> sendSavedGameLogs() {
-    return _$sendSavedGameLogsAsyncAction.run(() => super.sendSavedGameLogs());
-  }
-
-  final _$sendWordComplainAsyncAction = AsyncAction('sendWordComplain');
-
-  @override
-  Future sendWordComplain(dynamic wordComplain) {
-    return _$sendWordComplainAsyncAction
-        .run(() => super.sendWordComplain(wordComplain));
-  }
-
-  final _$sendSavedWordsComplainsAsyncAction =
-      AsyncAction('sendSavedWordsComplains');
-
-  @override
-  Future<void> sendSavedWordsComplains() {
-    return _$sendSavedWordsComplainsAsyncAction
-        .run(() => super.sendSavedWordsComplains());
+  set syncing(bool value) {
+    _$syncingAtom.context.conditionallyRunInAction(() {
+      super.syncing = value;
+      _$syncingAtom.reportChanged();
+    }, _$syncingAtom, name: '${_$syncingAtom.name}_set');
   }
 
   final _$loadAppAsyncAction = AsyncAction('loadApp');
@@ -167,26 +153,6 @@ mixin _$AppState on _AppState, Store {
   }
 
   final _$_AppStateActionController = ActionController(name: '_AppState');
-
-  @override
-  void saveGameLog(dynamic gameLog) {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.saveGameLog(gameLog);
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void saveWordComplain(dynamic wordComplain) {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.saveWordComplain(wordComplain);
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   void restoreDefaultSettings() {
