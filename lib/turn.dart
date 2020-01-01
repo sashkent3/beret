@@ -767,7 +767,7 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
                 when((_) => !currentState.syncing, () {
                   currentState.syncing = true;
                   compute(sendSingleWordComplain, [
-                    wordComplain,
+                    [wordComplain],
                     currentState.documentsPath,
                     currentState.deviceId
                   ]).then((void _) {

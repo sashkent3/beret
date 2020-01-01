@@ -114,7 +114,7 @@ abstract class _AppState with Store {
       } else {
         deviceId = prefs.getString('deviceId');
       }
-      Timer.periodic(Duration(minutes: 15), (Timer timeout) {
+      Timer.periodic(Duration(minutes: 5), (Timer timeout) {
         if (!syncing) {
           syncing = true;
           compute(syncWithServer, [documentsPath, deviceId]).then((void _) {
