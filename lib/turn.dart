@@ -67,6 +67,33 @@ Future<void> sendSingleGameLog(List args) async {
   }
 }
 
+Future<void> saveToHistory(List args) async {
+  List players = List.from(args[0]);
+  String documentsPath = args[1];
+  int gameStartTimestamp = args[2];
+  bool fixTeams = args[3];
+  List gameHistory = [];
+  for (int i = 0; i < players.length; i++) {
+    int color;
+    if (fixTeams && i % 2 == 0) {
+      color = players[i].color.value;
+    }
+    players[i] = [
+      players[i].explainedRightCnt,
+      players[i].guessedRightCnt,
+      color,
+      players[i].name
+    ];
+  }
+  if (File('$documentsPath/gameHistory.json').existsSync()) {
+    gameHistory =
+        jsonDecode(File('$documentsPath/gameHistory.json').readAsStringSync());
+  }
+  gameHistory.add([players, gameStartTimestamp, fixTeams]);
+  File('$documentsPath/gameHistory.json').writeAsStringSync(
+      jsonEncode(gameHistory));
+}
+
 class Turn extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentAppState = Provider.of<AppState>(context);
@@ -123,9 +150,10 @@ class Turn extends StatelessWidget {
                       alignment: Alignment.topRight,
                       child: Text(
                         currentState.timer.toString(),
-                        style: TextStyle(fontSize: 30),
+                        textScaleFactor: 2.5,
                       )),
-                  Center(child: CurrentWord())
+                  Center(child: FittedBox(
+                      fit: BoxFit.fitWidth, child: CurrentWord()))
                 ])));
       } else if (currentState.state == 'last') {
         return Scaffold(
@@ -148,7 +176,8 @@ class Turn extends StatelessWidget {
                       child: Text(
                           (currentState.timer + currentState.lastStateLength)
                               .toString(),
-                          style: TextStyle(fontSize: 30, color: Colors.red))),
+                          style: TextStyle(color: Colors.red),
+                          textScaleFactor: 2.5)),
                   Center(child: CurrentWord())
                 ])));
       } else if (currentState.state == 'verdict') {
@@ -166,9 +195,35 @@ class Turn extends StatelessWidget {
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
-                        currentState.gameLog['attempts'] +=
-                            currentState.turnLog;
-                        currentState.changeState('end');
+                        showDialog<void>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: Text(
+                                  'Вы уверены, что хотите закончить игру?',
+                                ),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text(
+                                      'Нет',
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  FlatButton(
+                                      child: Text(
+                                        'Да',
+                                      ),
+                                      onPressed: () {
+                                        currentState.gameLog['attempts'] +=
+                                            currentState.turnLog;
+                                        currentState.changeState('end');
+                                        Navigator.of(context).pop();
+                                      })
+                                ],
+                              );
+                            });
                       })
                 ])),
             floatingActionButtonLocation:
@@ -235,11 +290,18 @@ class ScoreBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState;
+    final currentAppState = Provider.of<AppState>(context);
     currentState.players.sort((player1, player2) =>
         player2.guessedRightCnt +
         player2.explainedRightCnt -
         player1.guessedRightCnt -
         player1.explainedRightCnt);
+    saveToHistory([
+      currentState.players,
+      currentAppState.documentsPath,
+      currentState.gameLog['start_timestamp'],
+      currentState.fixTeams
+    ]);
     if (currentState.fixTeams) {
       return ListView.builder(
           shrinkWrap: true,
@@ -372,12 +434,11 @@ class PlayersDisplay extends StatelessWidget {
               Align(
                   alignment: Alignment.bottomRight,
                   child: Text(currentState.playerTwo,
-                      style: TextStyle(fontSize: 20))),
+                      textScaleFactor: 2.5)),
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(currentState.playerOne,
-                    style: TextStyle(fontSize: 20)),
-              )
+                    textScaleFactor: 2.5))
             ]));
   }
 }
@@ -562,6 +623,8 @@ class _RoundEditingState extends State<RoundEditing> {
                                     .explainedWrong();
                                 currentState.players[currentState.playerTwoID]
                                     .guessedWrong();
+                                currentState.hat.putWord(
+                                    currentState.turnLog[idx]['word']);
                               } else if (value == 'Ошибка') {
                                 currentState.turnLog[idx]['outcome'] = 'failed';
                                 currentState.hat.removeWord(
