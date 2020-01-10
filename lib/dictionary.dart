@@ -31,6 +31,7 @@ class Dictionary {
     for (int i = 0; i < dictionaryList.length; i++) {
       buckets[dictionaryList[i]['diff']].add(dictionaryList[i]['word']);
     }
+
     for (int i = 0; i < 101; i++) {
       buckets[i].shuffle();
       bucketsIters[i] = 0;
@@ -76,12 +77,31 @@ class Dictionary {
                 .round();
       }
       String word = buckets[bucketIdx][bucketsIters[bucketIdx]];
+      bool bucketShuffled = false;
       while (usedWords.contains(word)) {
         word = buckets[bucketIdx][bucketsIters[bucketIdx]];
+        print(buckets[bucketIdx].length);
         bucketsIters[bucketIdx]++;
         if (bucketsIters[bucketIdx] == buckets[bucketIdx].length) {
-          buckets[bucketIdx].shuffle();
-          bucketsIters[bucketIdx] = 0;
+          if (bucketShuffled) {
+            int newBucketIdx =
+            (Normal.generate(1)[0] / 3 * difficultyDispersion + difficulty)
+                .round();
+            while (newBucketIdx < 0 || newBucketIdx > 100 ||
+                newBucketIdx == bucketIdx) {
+              newBucketIdx =
+                  (Normal.generate(1)[0] / 3 * difficultyDispersion +
+                      difficulty)
+                      .round();
+            }
+            bucketIdx = newBucketIdx;
+            bucketShuffled = false;
+          }
+          else {
+            buckets[bucketIdx].shuffle();
+            bucketsIters[bucketIdx] = 0;
+            bucketShuffled = true;
+          }
         }
       }
       hatWords.add(word);
