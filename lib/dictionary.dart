@@ -80,7 +80,6 @@ class Dictionary {
       bool bucketShuffled = false;
       while (usedWords.contains(word)) {
         word = buckets[bucketIdx][bucketsIters[bucketIdx]];
-        print(buckets[bucketIdx].length);
         bucketsIters[bucketIdx]++;
         if (bucketsIters[bucketIdx] == buckets[bucketIdx].length) {
           if (bucketShuffled) {
