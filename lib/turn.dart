@@ -89,9 +89,9 @@ Future<void> saveToHistory(List args) async {
     gameHistory =
         jsonDecode(File('$documentsPath/gameHistory.json').readAsStringSync());
   }
-  gameHistory.add([players, gameStartTimestamp, fixTeams]);
-  File('$documentsPath/gameHistory.json').writeAsStringSync(
-      jsonEncode(gameHistory));
+  gameHistory.add([players, gameStartTimestamp, fixTeams, 'quickgame']);
+  File('$documentsPath/gameHistory.json')
+      .writeAsStringSync(jsonEncode(gameHistory));
 }
 
 class Turn extends StatelessWidget {
@@ -152,8 +152,9 @@ class Turn extends StatelessWidget {
                         currentState.timer.toString(),
                         textScaleFactor: 2.5,
                       )),
-                  Center(child: FittedBox(
-                      fit: BoxFit.fitWidth, child: CurrentWord()))
+                  Center(
+                      child:
+                      FittedBox(fit: BoxFit.fitWidth, child: CurrentWord()))
                 ])));
       } else if (currentState.state == 'last') {
         return Scaffold(
@@ -433,12 +434,10 @@ class PlayersDisplay extends StatelessWidget {
         builder: (_) => Stack(children: <Widget>[
               Align(
                   alignment: Alignment.bottomRight,
-                  child: Text(currentState.playerTwo,
-                      textScaleFactor: 2.5)),
+                  child: Text(currentState.playerTwo, textScaleFactor: 2.5)),
               Align(
-                alignment: Alignment.topLeft,
-                child: Text(currentState.playerOne,
-                    textScaleFactor: 2.5))
+                  alignment: Alignment.topLeft,
+                  child: Text(currentState.playerOne, textScaleFactor: 2.5))
             ]));
   }
 }
@@ -623,8 +622,8 @@ class _RoundEditingState extends State<RoundEditing> {
                                     .explainedWrong();
                                 currentState.players[currentState.playerTwoID]
                                     .guessedWrong();
-                                currentState.hat.putWord(
-                                    currentState.turnLog[idx]['word']);
+                                currentState.hat
+                                    .putWord(currentState.turnLog[idx]['word']);
                               } else if (value == 'Ошибка') {
                                 currentState.turnLog[idx]['outcome'] = 'failed';
                                 currentState.hat.removeWord(

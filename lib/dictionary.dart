@@ -86,17 +86,16 @@ class Dictionary {
             int newBucketIdx =
             (Normal.generate(1)[0] / 3 * difficultyDispersion + difficulty)
                 .round();
-            while (newBucketIdx < 0 || newBucketIdx > 100 ||
+            while (newBucketIdx < 0 ||
+                newBucketIdx > 100 ||
                 newBucketIdx == bucketIdx) {
-              newBucketIdx =
-                  (Normal.generate(1)[0] / 3 * difficultyDispersion +
+              newBucketIdx = (Normal.generate(1)[0] / 3 * difficultyDispersion +
                       difficulty)
-                      .round();
+                  .round();
             }
             bucketIdx = newBucketIdx;
             bucketShuffled = false;
-          }
-          else {
+          } else {
             buckets[bucketIdx].shuffle();
             bucketsIters[bucketIdx] = 0;
             bucketShuffled = true;

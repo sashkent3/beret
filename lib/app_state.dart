@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import 'deathmatch_state.dart';
 import 'dictionary.dart';
 import 'game_state.dart';
 
@@ -65,6 +66,9 @@ Future<void> syncWithServer(List<String> args) async {
 
 abstract class _AppState with Store {
   @observable
+  bool loading = false;
+
+  @observable
   bool loaded = false;
 
   @observable
@@ -75,6 +79,9 @@ abstract class _AppState with Store {
 
   @observable
   GameState gameState;
+
+  @observable
+  DeathmatchState deathmatchState;
 
   @observable
   SharedPreferences prefs;
@@ -88,18 +95,10 @@ abstract class _AppState with Store {
   @observable
   bool syncing = false;
 
-  /* @action
-  void saveToHistory(gameLog) {
-  var gameHistory;
-    if (File('$documentsPath/gameHistory.json').existsSync()) {
-      gameHistory = jsonDecode(File('$documentsPath/gameHistory.json').readAsStringSync());
-      gameHistory.add(gameLog);
-    }
-  }*/
-
   @action
   Future<void> loadApp() async {
-    if (!loaded) {
+    if (!loaded && !loading) {
+      loading = true;
       prefs = await SharedPreferences.getInstance();
       if (prefs.getInt('matchDifficulty') == null) {
         restoreDefaultSettings();
@@ -139,5 +138,10 @@ abstract class _AppState with Store {
   @action
   void newGame() {
     gameState = GameState(prefs);
+  }
+
+  @action
+  void newDeathMatch() {
+    deathmatchState = DeathmatchState(dictionary);
   }
 }

@@ -296,9 +296,9 @@ class _SettingsDialogState extends State<SettingsDialog> {
                     style: TextStyle(
                         fontSize: 12, color: Colors.black.withOpacity(0.5))),
                 Slider.adaptive(
-                  min: 0,
+                  min: 5,
                   max: 50,
-                  divisions: 50,
+                  divisions: 45,
                   label: currentSetDifficultyDispersion.toString(),
                   value: currentSetDifficultyDispersion.toDouble(),
                   onChanged: (value) {

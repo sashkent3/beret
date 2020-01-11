@@ -182,26 +182,10 @@ class _SettingsState extends State<Settings> {
                     ),
                     Padding(
                         padding: EdgeInsets.only(top: 10),
-                        child: Text('Разброс сложности',
+                        child: Text('Сложность',
                             style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.black.withOpacity(0.5)))),
-                    Slider.adaptive(
-                      min: 0,
-                      max: 50,
-                      divisions: 50,
-                      label: currentSetDifficultyDispersion.toString(),
-                      value: currentSetDifficultyDispersion.toDouble(),
-                      onChanged: (value) {
-                        setState(() {
-                          currentSetDifficultyDispersion = value.toInt();
-                        });
-                      },
-                    ),
-                    Text('Сложность',
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black.withOpacity(0.5))),
                     Slider.adaptive(
                       min: 0,
                       max: 100,
@@ -211,6 +195,22 @@ class _SettingsState extends State<Settings> {
                       onChanged: (value) {
                         setState(() {
                           currentSetDifficulty = value.toInt();
+                        });
+                      },
+                    ),
+                    Text('Разброс сложности',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.5))),
+                    Slider.adaptive(
+                      min: 5,
+                      max: 50,
+                      divisions: 45,
+                      label: currentSetDifficultyDispersion.toString(),
+                      value: currentSetDifficultyDispersion.toDouble(),
+                      onChanged: (value) {
+                        setState(() {
+                          currentSetDifficultyDispersion = value.toInt();
                         });
                       },
                     ),

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
 
 import 'app_state.dart';
-import 'game_history.dart';
+import 'deathmatch.dart';
 import 'info.dart';
 import 'match.dart';
 import 'settings.dart';
@@ -58,6 +58,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context);
     currentState.loadApp();
+
     return Scaffold(
         appBar: AppBar(title: Text('Шляпа')),
         body: Padding(
@@ -93,27 +94,19 @@ class MyApp extends StatelessWidget {
                                 child: RaisedButton(
                                     color: Colors.white,
                                     onPressed: () {
+                                      currentState.newDeathMatch();
+
                                       Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                Settings(
-                                                    currentSetDifficulty: currentState
-                                                        .prefs
-                                                        .getInt(
-                                                        'matchDifficulty'),
-                                                    currentSetDifficultyDispersion:
-                                                currentState.prefs.getInt(
-                                                    'difficultyDispersion'),
-                                                    currentSetFixTeams: currentState
-                                                        .prefs
-                                                        .getBool('fixTeams'))),
-                                      );
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Deathmatch()));
                                     },
-                                    child: Text('Настройки',
-                                        style: TextStyle(
-                                            color: Colors.blue,
-                                            fontSize: 25)))))
+                                    child: Text(
+                                      'Режим для двоих',
+                                      style: TextStyle(
+                                          color: Colors.blue, fontSize: 25),
+                                    ))))
                       ]),
                       TableRow(children: [
                         Padding(
@@ -124,16 +117,26 @@ class MyApp extends StatelessWidget {
                                     color: Colors.white,
                                     onPressed: () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  GameHistory()));
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Settings(
+                                                    currentSetDifficulty: currentState
+                                                        .prefs
+                                                        .getInt(
+                                                        'matchDifficulty'),
+                                                    currentSetDifficultyDispersion:
+                                                    currentState.prefs.getInt(
+                                                        'difficultyDispersion'),
+                                                    currentSetFixTeams: currentState
+                                                        .prefs
+                                                        .getBool('fixTeams'))),
+                                      );
                                     },
-                                    child: Text(
-                                      'История игр',
-                                      style: TextStyle(
-                                          color: Colors.blue, fontSize: 25),
-                                    )))),
+                                    child: Text('Настройки',
+                                        style: TextStyle(
+                                            color: Colors.blue,
+                                            fontSize: 25))))),
                         Padding(
                             padding: EdgeInsets.fromLTRB(6, 6, 0, 0),
                             child: AspectRatio(
@@ -146,11 +149,12 @@ class MyApp extends StatelessWidget {
                                           MaterialPageRoute(
                                               builder: (context) => Info()));
                                     },
-                                    child: Text('Правила и доп. информация',
+                                    child: Text('История игр, правила и авторы',
                                         style: TextStyle(
                                             color: Colors.blue,
                                             fontSize: 25)))))
-                      ])
+                      ]),
+                      TableRow(children: [])
                     ]));
               } else {
                 return Center(child: Image.asset('assets/the_hat_loading.png'));
