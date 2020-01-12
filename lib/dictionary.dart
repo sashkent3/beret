@@ -97,9 +97,9 @@ class Dictionary {
             bucketShuffled = false;
           } else {
             buckets[bucketIdx].shuffle();
-            bucketsIters[bucketIdx] = 0;
             bucketShuffled = true;
           }
+          bucketsIters[bucketIdx] = 0;
         }
       }
       hatWords.add(word);
