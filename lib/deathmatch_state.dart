@@ -91,15 +91,7 @@ abstract class _DeathmatchState with Store {
     stopwatch.reset();
     score += 1;
     matchTimer.cancel();
-    matchTimer = Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
-      timerTick();
-      if (mainTimer == 0) {
-        _timeout.cancel();
-        audioPlayer.play('round_start_timer_timeout.wav',
-            mode: PlayerMode.LOW_LATENCY);
-        setState('score');
-      }
-    });
+    resetMatchTimer();
     if (score % 5 == 0) {
       bool decreaseAdditionalTime;
       if (additionalTime == 0) {
@@ -175,24 +167,7 @@ abstract class _DeathmatchState with Store {
         mode: PlayerMode.LOW_LATENCY);
     setState('main');
     word = dictionary.getWords(1, difficulty, 5)[0];
-    matchTimer = Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
-      timerTick();
-      if (mainTimer == 0) {
-        _timeout.cancel();
-        audioPlayer.play('round_start_timer_timeout.wav',
-            mode: PlayerMode.LOW_LATENCY);
-        gameLog['end_timestamp'] = DateTime.now().millisecondsSinceEpoch;
-        gameLog['attempts'].add({
-          'from': 0,
-          'to': 1,
-          'word': word,
-          'time': stopwatch.elapsedMilliseconds,
-          'extra_time': 0
-        });
-        stopwatch.stop();
-        setState('score');
-      }
-    });
+    resetMatchTimer();
   }
 
   @observable
@@ -220,6 +195,30 @@ abstract class _DeathmatchState with Store {
       } else {
         audioPlayer.play('round_start_timer_tick.wav',
             mode: PlayerMode.LOW_LATENCY);
+      }
+    });
+  }
+
+  @action
+  void resetMatchTimer() {
+    matchTimer = Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
+      timerTick();
+      if (mainTimer == 0) {
+        _timeout.cancel();
+        audioPlayer.play('round_start_timer_timeout.wav',
+            mode: PlayerMode.LOW_LATENCY);
+        gameLog['end_timestamp'] = DateTime
+            .now()
+            .millisecondsSinceEpoch;
+        gameLog['attempts'].add({
+          'from': 0,
+          'to': 1,
+          'word': word,
+          'time': stopwatch.elapsedMilliseconds,
+          'extra_time': 0
+        });
+        stopwatch.stop();
+        setState('score');
       }
     });
   }
