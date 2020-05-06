@@ -298,6 +298,7 @@ abstract class _GameState with Store {
         });
         audioPlayer.play('round_start_timer_timeout.wav',
             mode: PlayerMode.LOW_LATENCY);
+        hat.putWord(word);
         changeState('verdict');
         stopwatch.stop();
       }
