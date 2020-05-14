@@ -29,7 +29,9 @@ class Dictionary {
     var dictionaryList = jsonDecode(dictionaryFile.readAsStringSync());
 
     for (int i = 0; i < dictionaryList.length; i++) {
-      buckets[dictionaryList[i]['diff']].add(dictionaryList[i]['word']);
+      if (dictionaryList[i]['tags'] != '-deleted') {
+        buckets[dictionaryList[i]['diff']].add();
+      }
     }
 
     for (int i = 0; i < 101; i++) {

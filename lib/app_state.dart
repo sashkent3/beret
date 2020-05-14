@@ -20,7 +20,7 @@ class AppState = _AppState with _$AppState;
 Future<void> syncWithServer(List<String> args) async {
   String documentsPath = args[0];
   String deviceId = args[1];
-  String url = 'http://the-hat-dev.appspot.com/';
+  String url = 'http://the-hat.appspot.com/';
   if (File('$documentsPath/gameLogs.json').existsSync()) {
     List gameLogs =
     jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());

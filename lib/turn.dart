@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 import 'main.dart';
 
 Future<void> sendSingleWordComplain(List args) async {
-  String url = 'http://the-hat-dev.appspot.com/';
+  String url = 'http://the-hat.appspot.com/';
   var wordComplain = jsonEncode(args[0]);
   String documentsPath = args[1];
   String deviceId = args[2];
@@ -42,7 +42,7 @@ Future<void> sendSingleWordComplain(List args) async {
 Future<void> sendSingleGameLog(List args) async {
   var gameLog = args[0];
   String documentsPath = args[1];
-  String url = 'http://the-hat-dev.appspot.com/';
+  String url = 'http://the-hat.appspot.com/';
   var response;
   try {
     response = await http.post('$url/api/v2/game/log',
