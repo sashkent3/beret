@@ -16,7 +16,7 @@ import 'app_state.dart';
 Future<void> sendSingleGameLog(List args) async {
   var gameLog = args[0];
   String documentsPath = args[1];
-  String url = 'http://the-hat.appspot.com/';
+  String url = 'http://the-hat.appspot.com';
   var response;
   try {
     response = await http.post('$url/api/v2/game/log',

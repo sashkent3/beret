@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 import 'main.dart';
 
 Future<void> sendSingleWordComplain(List args) async {
-  String url = 'http://the-hat.appspot.com/';
+  String url = 'http://the-hat.appspot.com';
   var wordComplain = jsonEncode(args[0]);
   String documentsPath = args[1];
   String deviceId = args[2];
@@ -42,7 +42,7 @@ Future<void> sendSingleWordComplain(List args) async {
 Future<void> sendSingleGameLog(List args) async {
   var gameLog = args[0];
   String documentsPath = args[1];
-  String url = 'http://the-hat.appspot.com/';
+  String url = 'http://the-hat.appspot.com';
   var response;
   try {
     response = await http.post('$url/api/v2/game/log',
@@ -554,6 +554,8 @@ class _RoundEditingState extends State<RoundEditing> {
                                 if (value == 'Угадано') {
                                   currentState.turnLog[idx]['outcome'] =
                                       'guessed';
+                                  currentState.hat.removeWord(
+                                      currentState.turnLog[idx]['word']);
                                   currentState.players[currentState.playerOneID]
                                       .explainedRight();
                                   currentState.players[currentState.playerTwoID]
@@ -626,8 +628,6 @@ class _RoundEditingState extends State<RoundEditing> {
                                     .putWord(currentState.turnLog[idx]['word']);
                               } else if (value == 'Ошибка') {
                                 currentState.turnLog[idx]['outcome'] = 'failed';
-                                currentState.hat.removeWord(
-                                    currentState.turnLog[idx]['word']);
                                 currentState.players[currentState.playerOneID]
                                     .explainedWrong();
                                 currentState.players[currentState.playerTwoID]
@@ -680,9 +680,9 @@ class _RoundEditingState extends State<RoundEditing> {
                                     .guessedRight();
                               } else if (value == 'Не угадано') {
                                 currentState.turnLog[idx].remove('outcome');
+                                currentState.hat
+                                    .putWord(currentState.turnLog[idx]['word']);
                               }
-                              currentState.hat
-                                  .putWord(currentState.turnLog[idx]['word']);
                             });
                           },
                           items: ['Угадано', 'Не угадано', 'Ошибка']
