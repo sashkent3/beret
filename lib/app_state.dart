@@ -23,7 +23,7 @@ Future<void> syncWithServer(List<String> args) async {
   String url = 'http://the-hat.appspot.com';
   if (File('$documentsPath/gameLogs.json').existsSync()) {
     List gameLogs =
-    jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
+        jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
     Set sentLogs = Set();
     for (var gameLog in gameLogs) {
       var response;

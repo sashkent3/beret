@@ -207,9 +207,7 @@ abstract class _DeathmatchState with Store {
         _timeout.cancel();
         audioPlayer.play('round_start_timer_timeout.wav',
             mode: PlayerMode.LOW_LATENCY);
-        gameLog['end_timestamp'] = DateTime
-            .now()
-            .millisecondsSinceEpoch;
+        gameLog['end_timestamp'] = DateTime.now().millisecondsSinceEpoch;
         gameLog['attempts'].add({
           'from': 0,
           'to': 1,

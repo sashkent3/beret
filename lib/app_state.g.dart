@@ -6,180 +6,160 @@ part of 'app_state.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$AppState on _AppState, Store {
   final _$loadingAtom = Atom(name: '_AppState.loading');
 
   @override
   bool get loading {
-    _$loadingAtom.context.enforceReadPolicy(_$loadingAtom);
-    _$loadingAtom.reportObserved();
+    _$loadingAtom.reportRead();
     return super.loading;
   }
 
   @override
   set loading(bool value) {
-    _$loadingAtom.context.conditionallyRunInAction(() {
+    _$loadingAtom.reportWrite(value, super.loading, () {
       super.loading = value;
-      _$loadingAtom.reportChanged();
-    }, _$loadingAtom, name: '${_$loadingAtom.name}_set');
+    });
   }
 
   final _$loadedAtom = Atom(name: '_AppState.loaded');
 
   @override
   bool get loaded {
-    _$loadedAtom.context.enforceReadPolicy(_$loadedAtom);
-    _$loadedAtom.reportObserved();
+    _$loadedAtom.reportRead();
     return super.loaded;
   }
 
   @override
   set loaded(bool value) {
-    _$loadedAtom.context.conditionallyRunInAction(() {
+    _$loadedAtom.reportWrite(value, super.loaded, () {
       super.loaded = value;
-      _$loadedAtom.reportChanged();
-    }, _$loadedAtom, name: '${_$loadedAtom.name}_set');
+    });
   }
 
   final _$uuidAtom = Atom(name: '_AppState.uuid');
 
   @override
   Uuid get uuid {
-    _$uuidAtom.context.enforceReadPolicy(_$uuidAtom);
-    _$uuidAtom.reportObserved();
+    _$uuidAtom.reportRead();
     return super.uuid;
   }
 
   @override
   set uuid(Uuid value) {
-    _$uuidAtom.context.conditionallyRunInAction(() {
+    _$uuidAtom.reportWrite(value, super.uuid, () {
       super.uuid = value;
-      _$uuidAtom.reportChanged();
-    }, _$uuidAtom, name: '${_$uuidAtom.name}_set');
+    });
   }
 
   final _$deviceIdAtom = Atom(name: '_AppState.deviceId');
 
   @override
   String get deviceId {
-    _$deviceIdAtom.context.enforceReadPolicy(_$deviceIdAtom);
-    _$deviceIdAtom.reportObserved();
+    _$deviceIdAtom.reportRead();
     return super.deviceId;
   }
 
   @override
   set deviceId(String value) {
-    _$deviceIdAtom.context.conditionallyRunInAction(() {
+    _$deviceIdAtom.reportWrite(value, super.deviceId, () {
       super.deviceId = value;
-      _$deviceIdAtom.reportChanged();
-    }, _$deviceIdAtom, name: '${_$deviceIdAtom.name}_set');
+    });
   }
 
   final _$gameStateAtom = Atom(name: '_AppState.gameState');
 
   @override
   GameState get gameState {
-    _$gameStateAtom.context.enforceReadPolicy(_$gameStateAtom);
-    _$gameStateAtom.reportObserved();
+    _$gameStateAtom.reportRead();
     return super.gameState;
   }
 
   @override
   set gameState(GameState value) {
-    _$gameStateAtom.context.conditionallyRunInAction(() {
+    _$gameStateAtom.reportWrite(value, super.gameState, () {
       super.gameState = value;
-      _$gameStateAtom.reportChanged();
-    }, _$gameStateAtom, name: '${_$gameStateAtom.name}_set');
+    });
   }
 
   final _$deathmatchStateAtom = Atom(name: '_AppState.deathmatchState');
 
   @override
   DeathmatchState get deathmatchState {
-    _$deathmatchStateAtom.context.enforceReadPolicy(_$deathmatchStateAtom);
-    _$deathmatchStateAtom.reportObserved();
+    _$deathmatchStateAtom.reportRead();
     return super.deathmatchState;
   }
 
   @override
   set deathmatchState(DeathmatchState value) {
-    _$deathmatchStateAtom.context.conditionallyRunInAction(() {
+    _$deathmatchStateAtom.reportWrite(value, super.deathmatchState, () {
       super.deathmatchState = value;
-      _$deathmatchStateAtom.reportChanged();
-    }, _$deathmatchStateAtom, name: '${_$deathmatchStateAtom.name}_set');
+    });
   }
 
   final _$prefsAtom = Atom(name: '_AppState.prefs');
 
   @override
   SharedPreferences get prefs {
-    _$prefsAtom.context.enforceReadPolicy(_$prefsAtom);
-    _$prefsAtom.reportObserved();
+    _$prefsAtom.reportRead();
     return super.prefs;
   }
 
   @override
   set prefs(SharedPreferences value) {
-    _$prefsAtom.context.conditionallyRunInAction(() {
+    _$prefsAtom.reportWrite(value, super.prefs, () {
       super.prefs = value;
-      _$prefsAtom.reportChanged();
-    }, _$prefsAtom, name: '${_$prefsAtom.name}_set');
+    });
   }
 
   final _$dictionaryAtom = Atom(name: '_AppState.dictionary');
 
   @override
   Dictionary get dictionary {
-    _$dictionaryAtom.context.enforceReadPolicy(_$dictionaryAtom);
-    _$dictionaryAtom.reportObserved();
+    _$dictionaryAtom.reportRead();
     return super.dictionary;
   }
 
   @override
   set dictionary(Dictionary value) {
-    _$dictionaryAtom.context.conditionallyRunInAction(() {
+    _$dictionaryAtom.reportWrite(value, super.dictionary, () {
       super.dictionary = value;
-      _$dictionaryAtom.reportChanged();
-    }, _$dictionaryAtom, name: '${_$dictionaryAtom.name}_set');
+    });
   }
 
   final _$documentsPathAtom = Atom(name: '_AppState.documentsPath');
 
   @override
   String get documentsPath {
-    _$documentsPathAtom.context.enforceReadPolicy(_$documentsPathAtom);
-    _$documentsPathAtom.reportObserved();
+    _$documentsPathAtom.reportRead();
     return super.documentsPath;
   }
 
   @override
   set documentsPath(String value) {
-    _$documentsPathAtom.context.conditionallyRunInAction(() {
+    _$documentsPathAtom.reportWrite(value, super.documentsPath, () {
       super.documentsPath = value;
-      _$documentsPathAtom.reportChanged();
-    }, _$documentsPathAtom, name: '${_$documentsPathAtom.name}_set');
+    });
   }
 
   final _$syncingAtom = Atom(name: '_AppState.syncing');
 
   @override
   bool get syncing {
-    _$syncingAtom.context.enforceReadPolicy(_$syncingAtom);
-    _$syncingAtom.reportObserved();
+    _$syncingAtom.reportRead();
     return super.syncing;
   }
 
   @override
   set syncing(bool value) {
-    _$syncingAtom.context.conditionallyRunInAction(() {
+    _$syncingAtom.reportWrite(value, super.syncing, () {
       super.syncing = value;
-      _$syncingAtom.reportChanged();
-    }, _$syncingAtom, name: '${_$syncingAtom.name}_set');
+    });
   }
 
-  final _$loadAppAsyncAction = AsyncAction('loadApp');
+  final _$loadAppAsyncAction = AsyncAction('_AppState.loadApp');
 
   @override
   Future<void> loadApp() {
@@ -190,7 +170,8 @@ mixin _$AppState on _AppState, Store {
 
   @override
   void restoreDefaultSettings() {
-    final _$actionInfo = _$_AppStateActionController.startAction();
+    final _$actionInfo = _$_AppStateActionController.startAction(
+        name: '_AppState.restoreDefaultSettings');
     try {
       return super.restoreDefaultSettings();
     } finally {
@@ -200,7 +181,8 @@ mixin _$AppState on _AppState, Store {
 
   @override
   void newGame() {
-    final _$actionInfo = _$_AppStateActionController.startAction();
+    final _$actionInfo =
+        _$_AppStateActionController.startAction(name: '_AppState.newGame');
     try {
       return super.newGame();
     } finally {
@@ -210,11 +192,28 @@ mixin _$AppState on _AppState, Store {
 
   @override
   void newDeathMatch() {
-    final _$actionInfo = _$_AppStateActionController.startAction();
+    final _$actionInfo = _$_AppStateActionController.startAction(
+        name: '_AppState.newDeathMatch');
     try {
       return super.newDeathMatch();
     } finally {
       _$_AppStateActionController.endAction(_$actionInfo);
     }
+  }
+
+  @override
+  String toString() {
+    return '''
+loading: ${loading},
+loaded: ${loaded},
+uuid: ${uuid},
+deviceId: ${deviceId},
+gameState: ${gameState},
+deathmatchState: ${deathmatchState},
+prefs: ${prefs},
+dictionary: ${dictionary},
+documentsPath: ${documentsPath},
+syncing: ${syncing}
+    ''';
   }
 }

@@ -30,7 +30,7 @@ class Dictionary {
 
     for (int i = 0; i < dictionaryList.length; i++) {
       if (dictionaryList[i]['tags'] != '-deleted') {
-        buckets[dictionaryList[i]['diff']].add();
+        buckets[dictionaryList[i]['diff']].add(dictionaryList[i]['word']);
       }
     }
 
@@ -86,8 +86,8 @@ class Dictionary {
         if (bucketsIters[bucketIdx] == buckets[bucketIdx].length) {
           if (bucketShuffled) {
             int newBucketIdx =
-            (Normal.generate(1)[0] / 3 * difficultyDispersion + difficulty)
-                .round();
+                (Normal.generate(1)[0] / 3 * difficultyDispersion + difficulty)
+                    .round();
             while (newBucketIdx < 0 ||
                 newBucketIdx > 100 ||
                 newBucketIdx == bucketIdx) {

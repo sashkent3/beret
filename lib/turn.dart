@@ -59,7 +59,7 @@ Future<void> sendSingleGameLog(List args) async {
           .writeAsStringSync(jsonEncode(gameLogs));
     } else {
       List gameLogs =
-      jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
+          jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
       gameLogs.add(gameLog);
       File('$documentsPath/gameLogs.json')
           .writeAsStringSync(jsonEncode(gameLogs));
