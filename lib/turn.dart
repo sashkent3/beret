@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:beret/app_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -544,7 +545,8 @@ class _RoundEditingState extends State<RoundEditing> {
               return Card(
                   child: ListTile(
                       leading: Icon(Icons.close),
-                      title: Text(currentState.turnLog[idx]['word']),
+                      title: AutoSizeText(currentState.turnLog[idx]['word'],
+                          maxLines: 1, maxFontSize: 18),
                       trailing: IntrinsicWidth(
                           child: Row(children: [
                         DropdownButton<String>(
@@ -613,7 +615,8 @@ class _RoundEditingState extends State<RoundEditing> {
             return Card(
                 child: ListTile(
                     leading: Icon(Icons.check, color: Colors.green),
-                    title: Text(currentState.turnLog[idx]['word']),
+                    title: AutoSizeText(currentState.turnLog[idx]['word'],
+                        maxLines: 1, maxFontSize: 18),
                     trailing: IntrinsicWidth(
                         child: Row(children: [
                       DropdownButton<String>(
@@ -667,7 +670,8 @@ class _RoundEditingState extends State<RoundEditing> {
             return Card(
                 child: ListTile(
                     leading: Icon(Icons.error, color: Colors.red),
-                    title: Text(currentState.turnLog[idx]['word']),
+                    title: AutoSizeText(currentState.turnLog[idx]['word'],
+                        maxLines: 1, maxFontSize: 18),
                     trailing: IntrinsicWidth(
                         child: Row(children: [
                       DropdownButton<String>(
