@@ -57,13 +57,13 @@ mixin _$AppState on _AppState, Store {
   final _$deviceIdAtom = Atom(name: '_AppState.deviceId');
 
   @override
-  String get deviceId {
+  String? get deviceId {
     _$deviceIdAtom.reportRead();
     return super.deviceId;
   }
 
   @override
-  set deviceId(String value) {
+  set deviceId(String? value) {
     _$deviceIdAtom.reportWrite(value, super.deviceId, () {
       super.deviceId = value;
     });
@@ -72,13 +72,13 @@ mixin _$AppState on _AppState, Store {
   final _$gameStateAtom = Atom(name: '_AppState.gameState');
 
   @override
-  GameState get gameState {
+  GameState? get gameState {
     _$gameStateAtom.reportRead();
     return super.gameState;
   }
 
   @override
-  set gameState(GameState value) {
+  set gameState(GameState? value) {
     _$gameStateAtom.reportWrite(value, super.gameState, () {
       super.gameState = value;
     });
@@ -87,13 +87,13 @@ mixin _$AppState on _AppState, Store {
   final _$deathmatchStateAtom = Atom(name: '_AppState.deathmatchState');
 
   @override
-  DeathmatchState get deathmatchState {
+  DeathmatchState? get deathmatchState {
     _$deathmatchStateAtom.reportRead();
     return super.deathmatchState;
   }
 
   @override
-  set deathmatchState(DeathmatchState value) {
+  set deathmatchState(DeathmatchState? value) {
     _$deathmatchStateAtom.reportWrite(value, super.deathmatchState, () {
       super.deathmatchState = value;
     });
@@ -102,13 +102,13 @@ mixin _$AppState on _AppState, Store {
   final _$prefsAtom = Atom(name: '_AppState.prefs');
 
   @override
-  SharedPreferences get prefs {
+  SharedPreferences? get prefs {
     _$prefsAtom.reportRead();
     return super.prefs;
   }
 
   @override
-  set prefs(SharedPreferences value) {
+  set prefs(SharedPreferences? value) {
     _$prefsAtom.reportWrite(value, super.prefs, () {
       super.prefs = value;
     });
@@ -117,13 +117,13 @@ mixin _$AppState on _AppState, Store {
   final _$dictionaryAtom = Atom(name: '_AppState.dictionary');
 
   @override
-  Dictionary get dictionary {
+  Dictionary? get dictionary {
     _$dictionaryAtom.reportRead();
     return super.dictionary;
   }
 
   @override
-  set dictionary(Dictionary value) {
+  set dictionary(Dictionary? value) {
     _$dictionaryAtom.reportWrite(value, super.dictionary, () {
       super.dictionary = value;
     });
@@ -132,13 +132,13 @@ mixin _$AppState on _AppState, Store {
   final _$documentsPathAtom = Atom(name: '_AppState.documentsPath');
 
   @override
-  String get documentsPath {
+  String? get documentsPath {
     _$documentsPathAtom.reportRead();
     return super.documentsPath;
   }
 
   @override
-  set documentsPath(String value) {
+  set documentsPath(String? value) {
     _$documentsPathAtom.reportWrite(value, super.documentsPath, () {
       super.documentsPath = value;
     });

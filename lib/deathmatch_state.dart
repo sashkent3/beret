@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:mobx/mobx.dart';
 
@@ -57,13 +56,13 @@ abstract class _DeathmatchState with Store {
   AudioCache audioPlayer = AudioCache();
 
   @observable
-  Dictionary dictionary;
+  Dictionary? dictionary;
 
   @observable
   Random rng = Random();
 
   @observable
-  String word;
+  String? word;
 
   @observable
   int difficulty = 15;
@@ -72,7 +71,7 @@ abstract class _DeathmatchState with Store {
   int additionalTime = 10;
 
   @observable
-  String partner;
+  String? partner;
 
   @observable
   int score = 0;
@@ -90,7 +89,7 @@ abstract class _DeathmatchState with Store {
     });
     stopwatch.reset();
     score += 1;
-    matchTimer.cancel();
+    matchTimer!.cancel();
     resetMatchTimer();
     if (score % 5 == 0) {
       bool decreaseAdditionalTime;
@@ -110,7 +109,7 @@ abstract class _DeathmatchState with Store {
       }
     }
     addTimer = additionalTime;
-    word = dictionary.getWords(1, difficulty, 5)[0];
+    word = dictionary!.getWords(1, difficulty, 5)[0];
   }
 
   @observable
@@ -137,7 +136,7 @@ abstract class _DeathmatchState with Store {
   }
 
   @observable
-  Timer matchTimer;
+  Timer? matchTimer;
 
   @observable
   bool gameLogSent = false;
@@ -154,7 +153,7 @@ abstract class _DeathmatchState with Store {
       'time': stopwatch.elapsedMilliseconds,
       'extra_time': 0
     });
-    matchTimer.cancel();
+    matchTimer!.cancel();
     stopwatch.stop();
     setState('score');
   }
@@ -166,7 +165,7 @@ abstract class _DeathmatchState with Store {
     audioPlayer.play('round_start_timer_timeout.wav',
         mode: PlayerMode.LOW_LATENCY);
     setState('main');
-    word = dictionary.getWords(1, difficulty, 5)[0];
+    word = dictionary!.getWords(1, difficulty, 5)[0];
     resetMatchTimer();
   }
 
@@ -179,7 +178,7 @@ abstract class _DeathmatchState with Store {
   }
 
   @observable
-  Timer countdownTimer;
+  Timer? countdownTimer;
 
   @action
   void startCountdown() {

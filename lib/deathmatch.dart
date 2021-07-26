@@ -9,17 +9,17 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'app_state.dart';
 
 Future<void> sendSingleGameLog(List args) async {
   var gameLog = args[0];
   String documentsPath = args[1];
-  String url = 'http://the-hat.appspot.com';
+  String host = 'the-hat.appspot.com';
   var response;
   try {
-    response = await http.post('$url/api/v2/game/log',
+    response = await http.post(Uri.http(host, '/api/v2/game/log'),
         headers: {"content-type": "application/json"},
         body: jsonEncode(gameLog));
   } catch (_) {
@@ -59,7 +59,7 @@ Future<void> saveToHistory(List args) async {
 class Deathmatch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<AppState>(context).deathmatchState;
+    final currentState = Provider.of<AppState>(context).deathmatchState!;
     final currentAppState = Provider.of<AppState>(context);
 
     return Observer(builder: (_) {
@@ -87,7 +87,7 @@ class Deathmatch extends StatelessWidget {
         return WillPopScope(
             onWillPop: () async {
               currentState.setState('start');
-              currentState.countdownTimer.cancel();
+              currentState.countdownTimer!.cancel();
               return false;
             },
             child: Scaffold(
@@ -204,8 +204,8 @@ class Deathmatch extends StatelessWidget {
                 backgroundColor: Color(0xFFDEA90C),
                 child: Icon(Icons.arrow_forward),
                 onPressed: () {
-                  if (formKey.currentState.validate()) {
-                    formKey.currentState.save();
+                  if (formKey.currentState!.validate()) {
+                    formKey.currentState!.save();
                     compute(saveToHistory, [
                       currentState.partner,
                       currentAppState.documentsPath,
@@ -231,8 +231,8 @@ class Deathmatch extends StatelessWidget {
                           color: Colors.blue,
                           icon: Icon(Icons.share),
                           onPressed: () {
-                            if (formKey.currentState.validate()) {
-                              formKey.currentState.save();
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState!.save();
                               Share.share(
                                   'Я и ${currentState.partner} набрали ${currentState.score} очков в новом режиме для двух игроков в шляпу! Попробуй побить наш результат: https://github.com/nzinov/beret/releases');
                             }
@@ -247,12 +247,12 @@ class Deathmatch extends StatelessWidget {
                                 icon: Icon(Icons.person)),
                             initialValue: 'мой друг',
                             onSaved: (value) {
-                              currentState.partner = value
+                              currentState.partner = value!
                                   .replaceAll(RegExp(r"^\s+|\s+$"), '')
                                   .replaceAll(RegExp(r"\s+"), ' ');
                             },
                             validator: (value) {
-                              if (value
+                              if (value!
                                       .replaceAll(RegExp(r"^\s+|\s+$"), '')
                                       .replaceAll(RegExp(r"\s+"), ' ') ==
                                   '') {
@@ -270,7 +270,7 @@ class Deathmatch extends StatelessWidget {
 class GuessedRightButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<AppState>(context).deathmatchState;
+    final currentState = Provider.of<AppState>(context).deathmatchState!;
 
     return FloatingActionButton.extended(
       backgroundColor: Color(0xFFDEA90C),
@@ -278,7 +278,7 @@ class GuessedRightButton extends StatelessWidget {
         currentState.guessedRight();
       },
       label: Text(
-        'Угадано',
+        'УГАДАНО',
         style: TextStyle(color: Colors.white),
       ),
       icon: Icon(
@@ -292,9 +292,9 @@ class GuessedRightButton extends StatelessWidget {
 class ConcedeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<AppState>(context).deathmatchState;
+    final currentState = Provider.of<AppState>(context).deathmatchState!;
 
-    return FlatButton.icon(
+    return TextButton.icon(
       icon: Icon(Icons.close, color: Colors.white),
       onPressed: currentState.concede,
       label: Text('СДАТЬСЯ', style: TextStyle(color: Colors.white)),

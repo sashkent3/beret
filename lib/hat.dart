@@ -2,7 +2,7 @@ import 'dart:math' show Random;
 
 class Hat {
   List words;
-  Random randomGenerator;
+  late Random randomGenerator;
 
   Hat(this.words) {
     randomGenerator = Random();

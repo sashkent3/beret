@@ -6,20 +6,20 @@ import 'package:normal/normal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Dictionary {
-  List words;
+  late List words;
 
-  List buckets;
+  late List buckets;
 
-  List bucketsIters;
+  late List bucketsIters;
 
-  List usedWords;
+  late List usedWords;
 
   String usedWordsPath;
 
   SharedPreferences prefs;
 
   Dictionary(this.prefs, this.usedWordsPath) {
-    buckets = List.generate(101, (_) => List());
+    buckets = List.generate(101, (_) => []);
     bucketsIters = List.filled(101, 0);
   }
 
@@ -53,7 +53,7 @@ class Dictionary {
 
   List getUsedWords() {
     if (!File('$usedWordsPath/used_words.json').existsSync()) {
-      List usedWords = List(1000);
+      List usedWords = List.filled(1000, null);
       new File('$usedWordsPath/used_words.json').createSync();
       File('$usedWordsPath/used_words.json')
           .writeAsStringSync(jsonEncode(usedWords));
@@ -66,7 +66,7 @@ class Dictionary {
   }
 
   List getWords(int size, int difficulty, int difficultyDispersion) {
-    List hatWords = List();
+    List hatWords = [];
     List usedWords = getUsedWords();
     int usedWordsIter = getUsedWordsIter();
     for (var i = 0; i < size; i++) {

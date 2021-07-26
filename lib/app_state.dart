@@ -17,10 +17,10 @@ part 'app_state.g.dart';
 
 class AppState = _AppState with _$AppState;
 
-Future<void> syncWithServer(List<String> args) async {
-  String documentsPath = args[0];
-  String deviceId = args[1];
-  String url = 'http://the-hat.appspot.com';
+Future<void> syncWithServer(List<String?> args) async {
+  String documentsPath = args[0]!;
+  String deviceId = args[1]!;
+  String host = 'the-hat.appspot.com';
   if (File('$documentsPath/gameLogs.json').existsSync()) {
     List gameLogs =
         jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
@@ -28,7 +28,7 @@ Future<void> syncWithServer(List<String> args) async {
     for (var gameLog in gameLogs) {
       var response;
       try {
-        response = await http.post('$url/api/v2/game/log',
+        response = await http.post(Uri.http(host, '/api/v2/game/log'),
             headers: {"content-type": "application/json"},
             body: jsonEncode(gameLog));
       } catch (_) {
@@ -52,7 +52,8 @@ Future<void> syncWithServer(List<String> args) async {
     try {
       var response;
       try {
-        response = await http.post('$url/$deviceId/complain', body: {
+        response = await http
+            .post(Uri.http(host, '/$deviceId/complain'), body: {
           "json": File('$documentsPath/wordsComplains.json').readAsStringSync()
         });
       } on SocketException catch (_) {
@@ -75,22 +76,22 @@ abstract class _AppState with Store {
   Uuid uuid = Uuid();
 
   @observable
-  String deviceId;
+  String? deviceId;
 
   @observable
-  GameState gameState;
+  GameState? gameState;
 
   @observable
-  DeathmatchState deathmatchState;
+  DeathmatchState? deathmatchState;
 
   @observable
-  SharedPreferences prefs;
+  SharedPreferences? prefs;
 
   @observable
-  Dictionary dictionary;
+  Dictionary? dictionary;
 
   @observable
-  String documentsPath;
+  String? documentsPath;
 
   @observable
   bool syncing = false;
@@ -100,18 +101,18 @@ abstract class _AppState with Store {
     if (!loaded && !loading) {
       loading = true;
       prefs = await SharedPreferences.getInstance();
-      if (prefs.getInt('matchDifficulty') == null) {
+      if (prefs!.getInt('matchDifficulty') == null) {
         restoreDefaultSettings();
       }
       final directory = await getApplicationDocumentsDirectory();
       documentsPath = directory.path;
-      dictionary = Dictionary(prefs, documentsPath);
-      await dictionary.load();
-      if (prefs.getString('deviceId') == null) {
+      dictionary = Dictionary(prefs!, documentsPath!);
+      await dictionary!.load();
+      if (prefs!.getString('deviceId') == null) {
         deviceId = uuid.v4();
-        prefs.setString('deviceId', deviceId);
+        prefs!.setString('deviceId', deviceId!);
       } else {
-        deviceId = prefs.getString('deviceId');
+        deviceId = prefs!.getString('deviceId')!;
       }
       Timer.periodic(Duration(minutes: 5), (Timer timeout) {
         if (!syncing) {
@@ -127,12 +128,12 @@ abstract class _AppState with Store {
 
   @action
   void restoreDefaultSettings() {
-    prefs.setInt('matchDifficulty', 30);
-    prefs.setInt('wordsPerPlayer', 10);
-    prefs.setInt('difficultyDispersion', 15);
-    prefs.setInt('lastStateLength', 3);
-    prefs.setInt('mainStateLength', 20);
-    prefs.setBool('fixTeams', false);
+    prefs!.setInt('matchDifficulty', 30);
+    prefs!.setInt('wordsPerPlayer', 10);
+    prefs!.setInt('difficultyDispersion', 15);
+    prefs!.setInt('lastStateLength', 3);
+    prefs!.setInt('mainStateLength', 20);
+    prefs!.setBool('fixTeams', false);
   }
 
   @action
@@ -142,6 +143,6 @@ abstract class _AppState with Store {
 
   @action
   void newDeathMatch() {
-    deathmatchState = DeathmatchState(dictionary);
+    deathmatchState = DeathmatchState(dictionary!);
   }
 }

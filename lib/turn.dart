@@ -14,14 +14,14 @@ import 'package:provider/provider.dart';
 import 'main.dart';
 
 Future<void> sendSingleWordComplain(List args) async {
-  String url = 'http://the-hat.appspot.com';
+  String host = 'the-hat.appspot.com';
   var wordComplain = jsonEncode(args[0]);
   String documentsPath = args[1];
   String deviceId = args[2];
   var response;
   try {
-    response = await http
-        .post('$url/$deviceId/complain', body: {"json": wordComplain});
+    response = await http.post(Uri.http(host, '/$deviceId/complain'),
+        body: {"json": wordComplain});
   } on SocketException catch (_) {
     response = null;
   }
@@ -31,7 +31,7 @@ Future<void> sendSingleWordComplain(List args) async {
       savedWordsComplains = jsonDecode(
           File('$documentsPath/wordsComplains.json').readAsStringSync());
     } else {
-      savedWordsComplains = List();
+      savedWordsComplains = [];
     }
     savedWordsComplains.add(wordComplain);
     File('$documentsPath/wordsComplains.json')
@@ -42,10 +42,10 @@ Future<void> sendSingleWordComplain(List args) async {
 Future<void> sendSingleGameLog(List args) async {
   var gameLog = args[0];
   String documentsPath = args[1];
-  String url = 'http://the-hat.appspot.com';
+  String host = 'the-hat.appspot.com';
   var response;
   try {
-    response = await http.post('$url/api/v2/game/log',
+    response = await http.post(Uri.http(host, '/api/v2/game/log'),
         headers: {"content-type": "application/json"},
         body: jsonEncode(gameLog));
   } catch (_) {
@@ -74,7 +74,7 @@ Future<void> saveToHistory(List args) async {
   bool fixTeams = args[3];
   List gameHistory = [];
   for (int i = 0; i < players.length; i++) {
-    int color;
+    int? color;
     if (fixTeams && i % 2 == 0) {
       color = players[i].color.value;
     }
@@ -97,7 +97,7 @@ Future<void> saveToHistory(List args) async {
 class Turn extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentAppState = Provider.of<AppState>(context);
-    final currentState = Provider.of<AppState>(context).gameState;
+    final currentState = Provider.of<AppState>(context).gameState!;
 
     return Observer(builder: (_) {
       if (currentState.state == 'end') {
@@ -154,7 +154,7 @@ class Turn extends StatelessWidget {
                       )),
                   Center(
                       child:
-                      FittedBox(fit: BoxFit.fitWidth, child: CurrentWord()))
+                          FittedBox(fit: BoxFit.fitWidth, child: CurrentWord()))
                 ])));
       } else if (currentState.state == 'last') {
         return Scaffold(
@@ -175,7 +175,7 @@ class Turn extends StatelessWidget {
                   Align(
                       alignment: Alignment.topRight,
                       child: Text(
-                          (currentState.timer + currentState.lastStateLength)
+                          (currentState.timer! + currentState.lastStateLength!)
                               .toString(),
                           style: TextStyle(color: Colors.red),
                           textScaleFactor: 2.5)),
@@ -190,7 +190,7 @@ class Turn extends StatelessWidget {
                 color: Colors.blue,
                 child:
                     Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  FlatButton(
+                  TextButton(
                       child: Text(
                         'ЗАКОНЧИТЬ ИГРУ',
                         style: TextStyle(color: Colors.white),
@@ -204,7 +204,7 @@ class Turn extends StatelessWidget {
                                   'Вы уверены, что хотите закончить игру?',
                                 ),
                                 actions: <Widget>[
-                                  FlatButton(
+                                  TextButton(
                                     child: Text(
                                       'Нет',
                                     ),
@@ -212,7 +212,7 @@ class Turn extends StatelessWidget {
                                       Navigator.of(context).pop();
                                     },
                                   ),
-                                  FlatButton(
+                                  TextButton(
                                       child: Text(
                                         'Да',
                                       ),
@@ -235,7 +235,7 @@ class Turn extends StatelessWidget {
                 onPressed: () {
                   currentState.gameLog['attempts'] += currentState.turnLog;
                   currentState.newTurn();
-                  if (currentState.hat.isEmpty()) {
+                  if (currentState.hat!.isEmpty()) {
                     currentState.changeState('end');
                   } else {
                     currentState.changeState('lobby');
@@ -248,7 +248,7 @@ class Turn extends StatelessWidget {
         return WillPopScope(
             onWillPop: () async {
               currentState.changeState('lobby');
-              currentState.newTurnTimer.cancel();
+              currentState.newTurnTimer!.cancel();
               return false;
             },
             child: Scaffold(
@@ -260,7 +260,7 @@ class Turn extends StatelessWidget {
                       child: Text(currentState.newTurnTimerCnt.toString(),
                           style: TextStyle(fontSize: 157))),
                   GestureDetector(onTap: () {
-                    currentState.newTurnTimer.cancel();
+                    currentState.newTurnTimer!.cancel();
                     currentState.turnStart();
                   })
                 ])));
@@ -290,7 +290,7 @@ class Turn extends StatelessWidget {
 class ScoreBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<AppState>(context).gameState;
+    final currentState = Provider.of<AppState>(context).gameState!;
     final currentAppState = Provider.of<AppState>(context);
     currentState.players.sort((player1, player2) =>
         player2.guessedRightCnt +
@@ -303,7 +303,7 @@ class ScoreBoard extends StatelessWidget {
       currentState.gameLog['start_timestamp'],
       currentState.fixTeams
     ]);
-    if (currentState.fixTeams) {
+    if (currentState.fixTeams!) {
       return ListView.builder(
           shrinkWrap: true,
           itemCount: currentState.players.length ~/ 2 + 1,
@@ -428,7 +428,7 @@ class ScoreBoard extends StatelessWidget {
 class PlayersDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<AppState>(context).gameState;
+    final currentState = Provider.of<AppState>(context).gameState!;
 
     return Observer(
         builder: (_) => Stack(children: <Widget>[
@@ -445,13 +445,13 @@ class PlayersDisplay extends StatelessWidget {
 class GuessedRightButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<AppState>(context).gameState;
+    final currentState = Provider.of<AppState>(context).gameState!;
 
     return FloatingActionButton.extended(
       backgroundColor: Color(0xFFDEA90C),
       onPressed: currentState.guessedRight,
       label: Text(
-        'Угадано',
+        'УГАДАНО',
         style: TextStyle(color: Colors.white),
       ),
       icon: Icon(
@@ -465,9 +465,9 @@ class GuessedRightButton extends StatelessWidget {
 class GuessedWrongButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<AppState>(context).gameState;
+    final currentState = Provider.of<AppState>(context).gameState!;
 
-    return FlatButton.icon(
+    return TextButton.icon(
       icon: Icon(Icons.close, color: Colors.white),
       onPressed: () {
         currentState.concede();
@@ -480,9 +480,9 @@ class GuessedWrongButton extends StatelessWidget {
 class ConcedeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<AppState>(context).gameState;
+    final currentState = Provider.of<AppState>(context).gameState!;
 
-    return FlatButton.icon(
+    return TextButton.icon(
       icon: Icon(Icons.close, color: Colors.white),
       onPressed: () {
         currentState.concede();
@@ -495,9 +495,9 @@ class ConcedeButton extends StatelessWidget {
 class ErrorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<AppState>(context).gameState;
+    final currentState = Provider.of<AppState>(context).gameState!;
 
-    return FlatButton.icon(
+    return TextButton.icon(
       icon: Icon(Icons.error, color: Colors.red),
       onPressed: () {
         currentState.error();
@@ -510,11 +510,11 @@ class ErrorButton extends StatelessWidget {
 class CurrentWord extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<AppState>(context).gameState;
+    final currentState = Provider.of<AppState>(context).gameState!;
 
     return Observer(
         builder: (_) =>
-            Text(currentState.word, style: TextStyle(fontSize: 40)));
+            Text(currentState.word!, style: TextStyle(fontSize: 40)));
   }
 }
 
@@ -529,13 +529,13 @@ class _RoundEditingState extends State<RoundEditing> {
 
   @override
   Widget build(BuildContext context) {
-    final currentState = Provider.of<AppState>(context).gameState;
+    final currentState = Provider.of<AppState>(context).gameState!;
     return ListView.builder(
         itemCount: currentState.turnLog.length,
         padding: EdgeInsets.symmetric(horizontal: 16),
         shrinkWrap: true,
         itemBuilder: (BuildContext context, int idx) {
-          Color thumbDownColor;
+          Color? thumbDownColor;
           if (complainedWords.contains(idx)) {
             thumbDownColor = Colors.red;
           }
@@ -554,7 +554,7 @@ class _RoundEditingState extends State<RoundEditing> {
                                 if (value == 'Угадано') {
                                   currentState.turnLog[idx]['outcome'] =
                                       'guessed';
-                                  currentState.hat.removeWord(
+                                  currentState.hat!.removeWord(
                                       currentState.turnLog[idx]['word']);
                                   currentState.players[currentState.playerOneID]
                                       .explainedRight();
@@ -563,7 +563,7 @@ class _RoundEditingState extends State<RoundEditing> {
                                 } else if (value == 'Ошибка') {
                                   currentState.turnLog[idx]['outcome'] =
                                       'failed';
-                                  currentState.hat.removeWord(
+                                  currentState.hat!.removeWord(
                                       currentState.turnLog[idx]['word']);
                                 }
                               });
@@ -578,17 +578,19 @@ class _RoundEditingState extends State<RoundEditing> {
                         IconButton(
                             icon: Icon(Icons.thumb_down, color: thumbDownColor),
                             onPressed: () async {
-                              var _complain = await showDialog<bool>(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      WordComplainDialog(
-                                          word: currentState.turnLog[idx]
-                                              ['word']));
-                              if (_complain) {
+                              bool? _complain = await showDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    WordComplainDialog(
+                                  word: currentState.turnLog[idx]['word'],
+                                ),
+                              );
+                              if (_complain != null && _complain) {
                                 setState(() {
                                   complainedWords.add(idx);
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text('Жалоба отправлена!')));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text('Жалоба отправлена!')));
                                 });
                               }
                             })
@@ -597,7 +599,7 @@ class _RoundEditingState extends State<RoundEditing> {
               return Card(
                   child: ListTile(
                       leading: Icon(Icons.close),
-                      title: FlatButton(
+                      title: TextButton(
                         child: Text('Показать слово',
                             style: TextStyle(fontSize: 15)),
                         onPressed: () {
@@ -624,7 +626,7 @@ class _RoundEditingState extends State<RoundEditing> {
                                     .explainedWrong();
                                 currentState.players[currentState.playerTwoID]
                                     .guessedWrong();
-                                currentState.hat
+                                currentState.hat!
                                     .putWord(currentState.turnLog[idx]['word']);
                               } else if (value == 'Ошибка') {
                                 currentState.turnLog[idx]['outcome'] = 'failed';
@@ -645,17 +647,18 @@ class _RoundEditingState extends State<RoundEditing> {
                       IconButton(
                           icon: Icon(Icons.thumb_down, color: thumbDownColor),
                           onPressed: () async {
-                            var _complain = await showDialog<bool>(
+                            bool? _complain = await showDialog<bool>(
                                 context: context,
                                 builder: (BuildContext context) =>
                                     WordComplainDialog(
                                         word: currentState.turnLog[idx]
                                             ['word']));
-                            if (_complain) {
+                            if (_complain != null && _complain) {
                               setState(() {
                                 complainedWords.add(idx);
-                                Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text('Жалоба отправлена!')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text('Жалоба отправлена!')));
                               });
                             }
                           })
@@ -680,7 +683,7 @@ class _RoundEditingState extends State<RoundEditing> {
                                     .guessedRight();
                               } else if (value == 'Не угадано') {
                                 currentState.turnLog[idx].remove('outcome');
-                                currentState.hat
+                                currentState.hat!
                                     .putWord(currentState.turnLog[idx]['word']);
                               }
                             });
@@ -695,17 +698,18 @@ class _RoundEditingState extends State<RoundEditing> {
                       IconButton(
                           icon: Icon(Icons.thumb_down, color: thumbDownColor),
                           onPressed: () async {
-                            var _complain = await showDialog<bool>(
+                            bool? _complain = await showDialog<bool>(
                                 context: context,
                                 builder: (BuildContext context) =>
                                     WordComplainDialog(
                                         word: currentState.turnLog[idx]
                                             ['word']));
-                            if (_complain) {
+                            if (_complain != null && _complain) {
                               setState(() {
                                 complainedWords.add(idx);
-                                Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text('Жалоба отправлена!')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text('Жалоба отправлена!')));
                               });
                             }
                           })
@@ -718,7 +722,7 @@ class _RoundEditingState extends State<RoundEditing> {
 class WordComplainDialog extends StatefulWidget {
   final String word;
 
-  const WordComplainDialog({Key key, this.word}) : super(key: key);
+  const WordComplainDialog({Key? key, required this.word}) : super(key: key);
 
   @override
   _WordComplainDialogState createState() => _WordComplainDialogState();
@@ -727,8 +731,8 @@ class WordComplainDialog extends StatefulWidget {
 class _WordComplainDialogState extends State<WordComplainDialog> {
   static GlobalKey<FormFieldState> replaceWordKey = GlobalKey<FormFieldState>();
   final ScrollController scrollController = ScrollController();
-  String word;
-  String replaceWord;
+  late String word;
+  late String replaceWord;
   String reason = 'non_noun';
 
   @override
@@ -740,7 +744,7 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context);
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 10),
@@ -760,9 +764,9 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
                     leading: Radio(
                         value: 'non_noun',
                         groupValue: reason,
-                        onChanged: (value) {
+                        onChanged: (String? value) {
                           setState(() {
-                            reason = value;
+                            reason = value!;
                           });
                         })),
                 ListTile(
@@ -770,9 +774,9 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
                     leading: Radio(
                         value: 'non_dict',
                         groupValue: reason,
-                        onChanged: (value) {
+                        onChanged: (String? value) {
                           setState(() {
-                            reason = value;
+                            reason = value!;
                           });
                         })),
                 ListTile(
@@ -780,9 +784,9 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
                     leading: Radio(
                         value: 'loanword',
                         groupValue: reason,
-                        onChanged: (value) {
+                        onChanged: (String? value) {
                           setState(() {
-                            reason = value;
+                            reason = value!;
                           });
                         })),
                 ListTile(
@@ -790,34 +794,34 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
                     leading: Radio(
                         value: 'typo',
                         groupValue: reason,
-                        onChanged: (value) {
+                        onChanged: (String? value) {
                           setState(() {
-                            reason = value;
+                            reason = value!;
                           });
                         })),
                 Visibility(
                     visible: reason == 'typo',
                     child: TextFormField(
                         decoration: InputDecoration(labelText: 'Заменить на'),
-                        onSaved: (value) {
-                          replaceWord = value;
+                        onSaved: (String? value) {
+                          replaceWord = value!;
                         },
                         key: replaceWordKey))
               ],
             )),
         actions: [
-          FlatButton(
+          TextButton(
             child: Text('Отмена'),
             onPressed: () {
               Navigator.of(context).pop(false);
             },
           ),
-          FlatButton(
+          TextButton(
               child: Text('Готово'),
               onPressed: () async {
                 Map wordComplain;
                 if (reason == 'typo') {
-                  replaceWordKey.currentState.save();
+                  replaceWordKey.currentState!.save();
                   wordComplain = {
                     'word': word,
                     'reason': reason,

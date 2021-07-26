@@ -9,19 +9,18 @@ part of 'game_state.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$GameState on _GameState, Store {
-  Computed<String> _$playerOneComputed;
+  Computed<String>? _$playerOneComputed;
 
   @override
   String get playerOne => (_$playerOneComputed ??=
           Computed<String>(() => super.playerOne, name: '_GameState.playerOne'))
       .value;
-  Computed<String> _$playerTwoComputed;
+  Computed<String>? _$playerTwoComputed;
 
   @override
-  String get playerTwo =>
-      (_$playerTwoComputed ??=
+  String get playerTwo => (_$playerTwoComputed ??=
           Computed<String>(() => super.playerTwo, name: '_GameState.playerTwo'))
-          .value;
+      .value;
 
   final _$newTurnTimerCntAtom = Atom(name: '_GameState.newTurnTimerCnt');
 
@@ -101,13 +100,13 @@ mixin _$GameState on _GameState, Store {
   final _$mainStateLengthAtom = Atom(name: '_GameState.mainStateLength');
 
   @override
-  int get mainStateLength {
+  int? get mainStateLength {
     _$mainStateLengthAtom.reportRead();
     return super.mainStateLength;
   }
 
   @override
-  set mainStateLength(int value) {
+  set mainStateLength(int? value) {
     _$mainStateLengthAtom.reportWrite(value, super.mainStateLength, () {
       super.mainStateLength = value;
     });
@@ -116,13 +115,13 @@ mixin _$GameState on _GameState, Store {
   final _$lastStateLengthAtom = Atom(name: '_GameState.lastStateLength');
 
   @override
-  int get lastStateLength {
+  int? get lastStateLength {
     _$lastStateLengthAtom.reportRead();
     return super.lastStateLength;
   }
 
   @override
-  set lastStateLength(int value) {
+  set lastStateLength(int? value) {
     _$lastStateLengthAtom.reportWrite(value, super.lastStateLength, () {
       super.lastStateLength = value;
     });
@@ -131,13 +130,13 @@ mixin _$GameState on _GameState, Store {
   final _$matchDifficultyAtom = Atom(name: '_GameState.matchDifficulty');
 
   @override
-  int get matchDifficulty {
+  int? get matchDifficulty {
     _$matchDifficultyAtom.reportRead();
     return super.matchDifficulty;
   }
 
   @override
-  set matchDifficulty(int value) {
+  set matchDifficulty(int? value) {
     _$matchDifficultyAtom.reportWrite(value, super.matchDifficulty, () {
       super.matchDifficulty = value;
     });
@@ -146,13 +145,13 @@ mixin _$GameState on _GameState, Store {
   final _$fixTeamsAtom = Atom(name: '_GameState.fixTeams');
 
   @override
-  bool get fixTeams {
+  bool? get fixTeams {
     _$fixTeamsAtom.reportRead();
     return super.fixTeams;
   }
 
   @override
-  set fixTeams(bool value) {
+  set fixTeams(bool? value) {
     _$fixTeamsAtom.reportWrite(value, super.fixTeams, () {
       super.fixTeams = value;
     });
@@ -251,13 +250,13 @@ mixin _$GameState on _GameState, Store {
   final _$timerAtom = Atom(name: '_GameState.timer');
 
   @override
-  int get timer {
+  int? get timer {
     _$timerAtom.reportRead();
     return super.timer;
   }
 
   @override
-  set timer(int value) {
+  set timer(int? value) {
     _$timerAtom.reportWrite(value, super.timer, () {
       super.timer = value;
     });
@@ -275,21 +274,21 @@ mixin _$GameState on _GameState, Store {
   @override
   set difficultyDispersion(int value) {
     _$difficultyDispersionAtom.reportWrite(value, super.difficultyDispersion,
-            () {
-          super.difficultyDispersion = value;
-        });
+        () {
+      super.difficultyDispersion = value;
+    });
   }
 
   final _$wordAtom = Atom(name: '_GameState.word');
 
   @override
-  String get word {
+  String? get word {
     _$wordAtom.reportRead();
     return super.word;
   }
 
   @override
-  set word(String value) {
+  set word(String? value) {
     _$wordAtom.reportWrite(value, super.word, () {
       super.word = value;
     });
@@ -298,13 +297,13 @@ mixin _$GameState on _GameState, Store {
   final _$timeSpentAtom = Atom(name: '_GameState.timeSpent');
 
   @override
-  int get timeSpent {
+  int? get timeSpent {
     _$timeSpentAtom.reportRead();
     return super.timeSpent;
   }
 
   @override
-  set timeSpent(int value) {
+  set timeSpent(int? value) {
     _$timeSpentAtom.reportWrite(value, super.timeSpent, () {
       super.timeSpent = value;
     });
@@ -328,13 +327,13 @@ mixin _$GameState on _GameState, Store {
   final _$newTurnTimerAtom = Atom(name: '_GameState.newTurnTimer');
 
   @override
-  Timer get newTurnTimer {
+  Timer? get newTurnTimer {
     _$newTurnTimerAtom.reportRead();
     return super.newTurnTimer;
   }
 
   @override
-  set newTurnTimer(Timer value) {
+  set newTurnTimer(Timer? value) {
     _$newTurnTimerAtom.reportWrite(value, super.newTurnTimer, () {
       super.newTurnTimer = value;
     });
@@ -343,13 +342,13 @@ mixin _$GameState on _GameState, Store {
   final _$soundsAtom = Atom(name: '_GameState.sounds');
 
   @override
-  HashMap<dynamic, dynamic> get sounds {
+  HashMap<dynamic, dynamic>? get sounds {
     _$soundsAtom.reportRead();
     return super.sounds;
   }
 
   @override
-  set sounds(HashMap<dynamic, dynamic> value) {
+  set sounds(HashMap<dynamic, dynamic>? value) {
     _$soundsAtom.reportWrite(value, super.sounds, () {
       super.sounds = value;
     });
@@ -358,13 +357,13 @@ mixin _$GameState on _GameState, Store {
   final _$hatAtom = Atom(name: '_GameState.hat');
 
   @override
-  Hat get hat {
+  Hat? get hat {
     _$hatAtom.reportRead();
     return super.hat;
   }
 
   @override
-  set hat(Hat value) {
+  set hat(Hat? value) {
     _$hatAtom.reportWrite(value, super.hat, () {
       super.hat = value;
     });
@@ -408,7 +407,7 @@ mixin _$GameState on _GameState, Store {
   @override
   void concede() {
     final _$actionInfo =
-    _$_GameStateActionController.startAction(name: '_GameState.concede');
+        _$_GameStateActionController.startAction(name: '_GameState.concede');
     try {
       return super.concede();
     } finally {
@@ -430,7 +429,7 @@ mixin _$GameState on _GameState, Store {
   @override
   void error() {
     final _$actionInfo =
-    _$_GameStateActionController.startAction(name: '_GameState.error');
+        _$_GameStateActionController.startAction(name: '_GameState.error');
     try {
       return super.error();
     } finally {
@@ -452,7 +451,7 @@ mixin _$GameState on _GameState, Store {
   @override
   void newTurn() {
     final _$actionInfo =
-    _$_GameStateActionController.startAction(name: '_GameState.newTurn');
+        _$_GameStateActionController.startAction(name: '_GameState.newTurn');
     try {
       return super.newTurn();
     } finally {
@@ -485,7 +484,7 @@ mixin _$GameState on _GameState, Store {
   @override
   void turnStart() {
     final _$actionInfo =
-    _$_GameStateActionController.startAction(name: '_GameState.turnStart');
+        _$_GameStateActionController.startAction(name: '_GameState.turnStart');
     try {
       return super.turnStart();
     } finally {
@@ -507,7 +506,7 @@ mixin _$GameState on _GameState, Store {
   @override
   void addPlayer() {
     final _$actionInfo =
-    _$_GameStateActionController.startAction(name: '_GameState.addPlayer');
+        _$_GameStateActionController.startAction(name: '_GameState.addPlayer');
     try {
       return super.addPlayer();
     } finally {
@@ -529,7 +528,7 @@ mixin _$GameState on _GameState, Store {
   @override
   void createHat(Dictionary dictionary) {
     final _$actionInfo =
-    _$_GameStateActionController.startAction(name: '_GameState.createHat');
+        _$_GameStateActionController.startAction(name: '_GameState.createHat');
     try {
       return super.createHat(dictionary);
     } finally {

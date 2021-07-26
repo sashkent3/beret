@@ -74,13 +74,13 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
   final _$dictionaryAtom = Atom(name: '_DeathmatchState.dictionary');
 
   @override
-  Dictionary get dictionary {
+  Dictionary? get dictionary {
     _$dictionaryAtom.reportRead();
     return super.dictionary;
   }
 
   @override
-  set dictionary(Dictionary value) {
+  set dictionary(Dictionary? value) {
     _$dictionaryAtom.reportWrite(value, super.dictionary, () {
       super.dictionary = value;
     });
@@ -104,13 +104,13 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
   final _$wordAtom = Atom(name: '_DeathmatchState.word');
 
   @override
-  String get word {
+  String? get word {
     _$wordAtom.reportRead();
     return super.word;
   }
 
   @override
-  set word(String value) {
+  set word(String? value) {
     _$wordAtom.reportWrite(value, super.word, () {
       super.word = value;
     });
@@ -149,13 +149,13 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
   final _$partnerAtom = Atom(name: '_DeathmatchState.partner');
 
   @override
-  String get partner {
+  String? get partner {
     _$partnerAtom.reportRead();
     return super.partner;
   }
 
   @override
-  set partner(String value) {
+  set partner(String? value) {
     _$partnerAtom.reportWrite(value, super.partner, () {
       super.partner = value;
     });
@@ -224,13 +224,13 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
   final _$matchTimerAtom = Atom(name: '_DeathmatchState.matchTimer');
 
   @override
-  Timer get matchTimer {
+  Timer? get matchTimer {
     _$matchTimerAtom.reportRead();
     return super.matchTimer;
   }
 
   @override
-  set matchTimer(Timer value) {
+  set matchTimer(Timer? value) {
     _$matchTimerAtom.reportWrite(value, super.matchTimer, () {
       super.matchTimer = value;
     });
@@ -252,7 +252,7 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
   }
 
   final _$startingCountdownAtom =
-  Atom(name: '_DeathmatchState.startingCountdown');
+      Atom(name: '_DeathmatchState.startingCountdown');
 
   @override
   int get startingCountdown {
@@ -270,20 +270,20 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
   final _$countdownTimerAtom = Atom(name: '_DeathmatchState.countdownTimer');
 
   @override
-  Timer get countdownTimer {
+  Timer? get countdownTimer {
     _$countdownTimerAtom.reportRead();
     return super.countdownTimer;
   }
 
   @override
-  set countdownTimer(Timer value) {
+  set countdownTimer(Timer? value) {
     _$countdownTimerAtom.reportWrite(value, super.countdownTimer, () {
       super.countdownTimer = value;
     });
   }
 
   final _$_DeathmatchStateActionController =
-  ActionController(name: '_DeathmatchState');
+      ActionController(name: '_DeathmatchState');
 
   @override
   void toggleVisibility(int idx) {

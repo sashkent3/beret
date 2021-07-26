@@ -5,7 +5,7 @@ class Player {
   Key key = UniqueKey();
   int guessedRightCnt = 0;
   int explainedRightCnt = 0;
-  Color color;
+  late Color color;
 
   Player(this.name);
 

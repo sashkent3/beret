@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:mobx/mobx.dart';
 
@@ -33,7 +32,7 @@ abstract class _GameState with Store {
 
   @action
   int getPlayerOneId() {
-    if (fixTeams) {
+    if (fixTeams!) {
       if (turn ~/ (players.length / 2) % 2 == 0) {
         return 2 * turn % players.length;
       } else {
@@ -46,7 +45,7 @@ abstract class _GameState with Store {
 
   @action
   int getPlayerTwoId() {
-    if (fixTeams) {
+    if (fixTeams!) {
       if (turn ~/ (players.length / 2) % 2 == 0) {
         return 2 * turn % players.length + 1;
       } else {
@@ -78,16 +77,16 @@ abstract class _GameState with Store {
   };
 
   @observable
-  int mainStateLength;
+  int? mainStateLength;
 
   @observable
-  int lastStateLength;
+  int? lastStateLength;
 
   @observable
-  int matchDifficulty;
+  int? matchDifficulty;
 
   @observable
-  bool fixTeams;
+  bool? fixTeams;
 
   @observable
   ObservableList<Player> players =
@@ -115,16 +114,16 @@ abstract class _GameState with Store {
   int wordsPerPlayer = 10;
 
   @observable
-  int timer;
+  int? timer;
 
   @observable
   int difficultyDispersion = 5;
 
   @observable
-  String word;
+  String? word;
 
   @observable
-  int timeSpent;
+  int? timeSpent;
 
   @observable
   Stopwatch stopwatch = Stopwatch();
@@ -155,7 +154,7 @@ abstract class _GameState with Store {
       });
     }
     audioPlayer.play('word_outcome_timeout.wav', mode: PlayerMode.LOW_LATENCY);
-    hat.putWord(word);
+    hat!.putWord(word!);
     changeState('verdict');
   }
 
@@ -183,14 +182,14 @@ abstract class _GameState with Store {
         'outcome': 'guessed'
       });
     }
-    if (hat.isEmpty()) {
+    if (hat!.isEmpty()) {
       stopwatch.stop();
       changeState('verdict');
     } else if (state == 'last') {
       stopwatch.stop();
       changeState('verdict');
     } else {
-      word = hat.getWord();
+      word = hat!.getWord();
     }
     audioPlayer.play('word_outcome_ok.wav', mode: PlayerMode.LOW_LATENCY);
     stopwatch.reset();
@@ -246,10 +245,10 @@ abstract class _GameState with Store {
   }
 
   @observable
-  Timer newTurnTimer;
+  Timer? newTurnTimer;
 
   @observable
-  HashMap sounds;
+  HashMap? sounds;
 
   @action
   void newTurnTimerStart() {
@@ -270,7 +269,7 @@ abstract class _GameState with Store {
   void turnStart() {
     audioPlayer.play('round_start_timer_timeout.wav',
         mode: PlayerMode.LOW_LATENCY);
-    word = hat.getWord();
+    word = hat!.getWord();
     changeState('main');
     stopwatch.start();
     turnLog = [];
@@ -288,7 +287,7 @@ abstract class _GameState with Store {
         stopwatch.reset();
         changeState('last');
       }
-      if (timer == -lastStateLength) {
+      if (timer == -lastStateLength!) {
         turnLog.add({
           'from': playerOneID,
           'to': playerTwoID,
@@ -298,7 +297,7 @@ abstract class _GameState with Store {
         });
         audioPlayer.play('round_start_timer_timeout.wav',
             mode: PlayerMode.LOW_LATENCY);
-        hat.putWord(word);
+        hat!.putWord(word!);
         changeState('verdict');
         stopwatch.stop();
       }
@@ -306,11 +305,11 @@ abstract class _GameState with Store {
   }
 
   @observable
-  Hat hat;
+  Hat? hat;
 
   @action
   void timerSecondPass() {
-    timer--;
+    timer = timer! - 1;
   }
 
   @action
@@ -326,6 +325,6 @@ abstract class _GameState with Store {
   @action
   void createHat(Dictionary dictionary) {
     hat = Hat(dictionary.getWords(wordsPerPlayer * players.length,
-        matchDifficulty, difficultyDispersion));
+        matchDifficulty!, difficultyDispersion));
   }
 }

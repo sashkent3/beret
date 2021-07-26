@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:beret/game_history.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:sentry/sentry.dart';
-
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'app_state.dart';
 import 'authors.dart';
 import 'deathmatch.dart';
@@ -21,38 +19,14 @@ bool get isInDebugMode {
   return inDebugMode;
 }
 
-void main() {
-  final SentryClient sentry = SentryClient(
-      dsn: 'https://ff1c3969e7fc468ab6a30f857208faa3@sentry.io/1863108');
-  Future<void> _reportError(dynamic error, dynamic stackTrace) async {
-    print('Caught error: $error');
-    if (isInDebugMode) {
-      print(stackTrace);
-      return;
-    } else {
-      sentry.captureException(
-        exception: error,
-        stackTrace: stackTrace,
-      );
-    }
-  }
-
-  FlutterError.onError = (FlutterErrorDetails details) {
-    if (isInDebugMode) {
-      FlutterError.dumpErrorToConsole(details);
-    } else {
-      Zone.current.handleUncaughtError(details.exception, details.stack);
-    }
-  };
-  runZoned(
-        () async {
-      runApp(Provider<AppState>(
-          create: (_) => AppState(),
-          child: MaterialApp(title: 'Шляпа', home: MyApp())));
-    },
-    onError: (Object error, StackTrace stackTrace) {
-      _reportError(error, stackTrace);
-    },
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SentryFlutter.init(
+    (options) => options.dsn =
+        'https://ff1c3969e7fc468ab6a30f857208faa3@sentry.io/1863108',
+    appRunner: () => runApp(Provider<AppState>(
+        create: (_) => AppState(),
+        child: MaterialApp(title: 'Шляпа', home: MyApp()))),
   );
 }
 
@@ -75,8 +49,10 @@ class MyApp extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(0, 0, 3, 3),
                         child: AspectRatio(
                             aspectRatio: 1,
-                            child: RaisedButton(
-                                color: Colors.white,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                ),
                                 onPressed: () {
                                   currentState.newGame();
                                   Navigator.push(
@@ -94,8 +70,10 @@ class MyApp extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(3, 0, 0, 3),
                         child: AspectRatio(
                             aspectRatio: 1,
-                            child: RaisedButton(
-                                color: Colors.white,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                ),
                                 onPressed: () {
                                   currentState.newDeathMatch();
 
@@ -115,22 +93,25 @@ class MyApp extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(0, 3, 3, 3),
                         child: AspectRatio(
                             aspectRatio: 1,
-                            child: RaisedButton(
-                                color: Colors.white,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                ),
                                 onPressed: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Settings(
-                                            currentSetDifficulty: currentState
-                                                .prefs
-                                                .getInt('matchDifficulty'),
-                                            currentSetDifficultyDispersion:
-                                                currentState.prefs.getInt(
-                                                    'difficultyDispersion'),
-                                            currentSetFixTeams: currentState
-                                                .prefs
-                                                .getBool('fixTeams'))),
+                                      builder: (context) => SettingsPage(
+                                        currentSetDifficulty: currentState
+                                            .prefs!
+                                            .getInt('matchDifficulty')!,
+                                        currentSetDifficultyDispersion:
+                                            currentState.prefs!.getInt(
+                                                'difficultyDispersion')!,
+                                        currentSetFixTeams: currentState.prefs!
+                                            .getBool('fixTeams')!,
+                                      ),
+                                    ),
                                   );
                                 },
                                 child: Text('Настройки',
@@ -140,8 +121,10 @@ class MyApp extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(3, 3, 0, 3),
                         child: AspectRatio(
                             aspectRatio: 1,
-                            child: RaisedButton(
-                                color: Colors.white,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                ),
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -157,8 +140,10 @@ class MyApp extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(0, 3, 3, 0),
                         child: AspectRatio(
                             aspectRatio: 1,
-                            child: RaisedButton(
-                                color: Colors.white,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                ),
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -172,8 +157,10 @@ class MyApp extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(3, 3, 0, 0),
                         child: AspectRatio(
                             aspectRatio: 1,
-                            child: RaisedButton(
-                                color: Colors.white,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                ),
                                 onPressed: () {
                                   Navigator.push(
                                       context,

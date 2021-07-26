@@ -35,8 +35,8 @@ class Info extends StatelessWidget {
                                   onTap: () {
                                     launch('tg://resolve?domain=sashkent3')
                                         .catchError((e) {
-                                      Scaffold.of(context).showSnackBar(
-                                          SnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
                                               content: Text(
                                                   'Telegram: @sashkent3')));
                                     });
