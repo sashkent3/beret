@@ -8,19 +8,10 @@ import 'dictionary.dart';
 
 part 'deathmatch_state.g.dart';
 
-class DeathmatchState = _DeathmatchState with _$DeathmatchState;
+class DeathmatchState = DeathmatchStateBase with _$DeathmatchState;
 
-abstract class _DeathmatchState with Store {
-  _DeathmatchState(this.dictionary) {
-    audioPlayer.loadAll([
-      'round_start_timer_tick.wav',
-      'round_start_timer_timeout.wav',
-      'round_timer_timeout.wav',
-      'word_outcome_fail.wav',
-      'word_outcome_ok.wav',
-      'word_outcome_timeout.wav'
-    ]);
-  }
+abstract class DeathmatchStateBase with Store {
+  DeathmatchStateBase(this.dictionary);
 
   @observable
   Stopwatch stopwatch = Stopwatch();
@@ -43,7 +34,7 @@ abstract class _DeathmatchState with Store {
   @action
   void startBlinking(int idx) {
     int blinksCnt = 0;
-    Timer.periodic(Duration(milliseconds: 300), (Timer timeout) {
+    Timer.periodic(const Duration(milliseconds: 300), (Timer timeout) {
       toggleVisibility(idx);
       blinksCnt += 1;
       if (blinksCnt == 6) {
@@ -53,7 +44,7 @@ abstract class _DeathmatchState with Store {
   }
 
   @observable
-  AudioCache audioPlayer = AudioCache();
+  AudioPlayer audioPlayer = AudioPlayer();
 
   @observable
   Dictionary? dictionary;
@@ -78,7 +69,11 @@ abstract class _DeathmatchState with Store {
 
   @action
   void guessedRight() {
-    audioPlayer.play('word_outcome_ok.wav', mode: PlayerMode.LOW_LATENCY);
+    audioPlayer.stop();
+    audioPlayer.play(
+      AssetSource('word_outcome_ok.wav'),
+      mode: PlayerMode.lowLatency,
+    );
     gameLog['attempts'].add({
       'from': 0,
       'to': 1,
@@ -143,8 +138,11 @@ abstract class _DeathmatchState with Store {
 
   @action
   void concede() {
-    audioPlayer.play('round_start_timer_timeout.wav',
-        mode: PlayerMode.LOW_LATENCY);
+    audioPlayer.stop();
+    audioPlayer.play(
+      AssetSource('round_start_timer_timeout.wav'),
+      mode: PlayerMode.lowLatency,
+    );
     gameLog['end_timestamp'] = DateTime.now().millisecondsSinceEpoch;
     gameLog['attempts'].add({
       'from': 0,
@@ -162,8 +160,11 @@ abstract class _DeathmatchState with Store {
   void startMatch() {
     stopwatch.start();
     gameLog['start_timestamp'] = DateTime.now().millisecondsSinceEpoch;
-    audioPlayer.play('round_start_timer_timeout.wav',
-        mode: PlayerMode.LOW_LATENCY);
+    audioPlayer.stop();
+    audioPlayer.play(
+      AssetSource('round_start_timer_timeout.wav'),
+      mode: PlayerMode.lowLatency,
+    );
     setState('main');
     word = dictionary!.getWords(1, difficulty, 5)[0];
     resetMatchTimer();
@@ -184,28 +185,35 @@ abstract class _DeathmatchState with Store {
   void startCountdown() {
     startingCountdown = 3;
     setState('countdown');
-    countdownTimer = Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
+    countdownTimer =
+        Timer.periodic(const Duration(seconds: 1), (Timer timeout) {
       startingCountdownTick();
       if (state != 'countdown') {
-        _timeout.cancel();
+        timeout.cancel();
       } else if (startingCountdown == 0) {
-        _timeout.cancel();
+        timeout.cancel();
         startMatch();
       } else {
-        audioPlayer.play('round_start_timer_tick.wav',
-            mode: PlayerMode.LOW_LATENCY);
+        audioPlayer.stop();
+        audioPlayer.play(
+          AssetSource('round_start_timer_tick.wav'),
+          mode: PlayerMode.lowLatency,
+        );
       }
     });
   }
 
   @action
   void resetMatchTimer() {
-    matchTimer = Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
+    matchTimer = Timer.periodic(const Duration(seconds: 1), (Timer timeout) {
       timerTick();
       if (mainTimer == 0) {
-        _timeout.cancel();
-        audioPlayer.play('round_start_timer_timeout.wav',
-            mode: PlayerMode.LOW_LATENCY);
+        timeout.cancel();
+        audioPlayer.stop();
+        audioPlayer.play(
+          AssetSource('round_start_timer_timeout.wav'),
+          mode: PlayerMode.lowLatency,
+        );
         gameLog['end_timestamp'] = DateTime.now().millisecondsSinceEpoch;
         gameLog['attempts'].add({
           'from': 0,

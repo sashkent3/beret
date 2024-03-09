@@ -19,7 +19,7 @@ Future<void> sendSingleWordComplain(List args) async {
   var wordComplain = jsonEncode(args[0]);
   String documentsPath = args[1];
   String deviceId = args[2];
-  var response;
+  http.Response? response;
   try {
     response = await http.post(Uri.http(host, '/$deviceId/complain'),
         body: {"json": wordComplain});
@@ -44,7 +44,7 @@ Future<void> sendSingleGameLog(List args) async {
   var gameLog = args[0];
   String documentsPath = args[1];
   String host = 'the-hat.appspot.com';
-  var response;
+  http.Response? response;
   try {
     response = await http.post(Uri.http(host, '/api/v2/game/log'),
         headers: {"content-type": "application/json"},
@@ -96,6 +96,9 @@ Future<void> saveToHistory(List args) async {
 }
 
 class Turn extends StatelessWidget {
+  const Turn({super.key});
+
+  @override
   Widget build(BuildContext context) {
     final currentAppState = Provider.of<AppState>(context);
     final currentState = Provider.of<AppState>(context).gameState!;
@@ -104,12 +107,12 @@ class Turn extends StatelessWidget {
       if (currentState.state == 'end') {
         return Scaffold(
             appBar: AppBar(
-              title: Text('Шляпа'),
+              title: const Text('Шляпа'),
             ),
             floatingActionButton: FloatingActionButton(
               tooltip: 'Закончить игру',
-              backgroundColor: Color(0xFFDEA90C),
-              child: Icon(Icons.arrow_forward),
+              backgroundColor: const Color(0xFFDEA90C),
+              child: const Icon(Icons.arrow_forward),
               onPressed: () async {
                 currentState.gameLog['end_timestamp'] =
                     DateTime.now().millisecondsSinceEpoch;
@@ -126,73 +129,73 @@ class Turn extends StatelessWidget {
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => MyApp()),
+                        builder: (BuildContext context) => const MyApp()),
                     (Route<dynamic> route) => false);
               },
             ),
-            body: ScoreBoard());
+            body: const ScoreBoard());
       } else if (currentState.state == 'main') {
         return Scaffold(
             appBar: AppBar(
-              title: Text('Шляпа'),
+              title: const Text('Шляпа'),
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.endDocked,
-            floatingActionButton: GuessedRightButton(),
-            bottomNavigationBar: BottomAppBar(
+            floatingActionButton: const GuessedRightButton(),
+            bottomNavigationBar: const BottomAppBar(
                 color: Colors.blue,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [ErrorButton(), ConcedeButton()])),
             body: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Stack(children: <Widget>[
                   Align(
                       alignment: Alignment.topRight,
                       child: Text(
                         currentState.timer.toString(),
-                        textScaleFactor: 2.5,
+                        textScaler: const TextScaler.linear(2.5),
                       )),
-                  Center(
+                  const Center(
                       child:
                           FittedBox(fit: BoxFit.fitWidth, child: CurrentWord()))
                 ])));
       } else if (currentState.state == 'last') {
         return Scaffold(
             appBar: AppBar(
-              title: Text('Шляпа'),
+              title: const Text('Шляпа'),
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.endDocked,
-            floatingActionButton: GuessedRightButton(),
-            bottomNavigationBar: BottomAppBar(
+            floatingActionButton: const GuessedRightButton(),
+            bottomNavigationBar: const BottomAppBar(
                 color: Colors.blue,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [ErrorButton(), GuessedWrongButton()])),
             body: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Stack(children: <Widget>[
                   Align(
                       alignment: Alignment.topRight,
                       child: Text(
                           (currentState.timer! + currentState.lastStateLength!)
                               .toString(),
-                          style: TextStyle(color: Colors.red),
-                          textScaleFactor: 2.5)),
-                  Center(child: CurrentWord())
+                          style: const TextStyle(color: Colors.red),
+                          textScaler: const TextScaler.linear(2.5))),
+                  const Center(child: CurrentWord())
                 ])));
       } else if (currentState.state == 'verdict') {
         return Scaffold(
             appBar: AppBar(
-              title: Text('Шляпа'),
+              title: const Text('Шляпа'),
             ),
             bottomNavigationBar: BottomAppBar(
                 color: Colors.blue,
                 child:
                     Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                   TextButton(
-                      child: Text(
+                      child: const Text(
                         'ЗАКОНЧИТЬ ИГРУ',
                         style: TextStyle(color: Colors.white),
                       ),
@@ -201,12 +204,12 @@ class Turn extends StatelessWidget {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                content: Text(
+                                content: const Text(
                                   'Вы уверены, что хотите закончить игру?',
                                 ),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: Text(
+                                    child: const Text(
                                       'Нет',
                                     ),
                                     onPressed: () {
@@ -214,7 +217,7 @@ class Turn extends StatelessWidget {
                                     },
                                   ),
                                   TextButton(
-                                      child: Text(
+                                      child: const Text(
                                         'Да',
                                       ),
                                       onPressed: () {
@@ -231,8 +234,8 @@ class Turn extends StatelessWidget {
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.endDocked,
             floatingActionButton: FloatingActionButton(
-                backgroundColor: Color(0xFFDEA90C),
-                child: Icon(Icons.arrow_forward),
+                backgroundColor: const Color(0xFFDEA90C),
+                child: const Icon(Icons.arrow_forward),
                 onPressed: () {
                   currentState.gameLog['attempts'] += currentState.turnLog;
                   currentState.newTurn();
@@ -242,24 +245,24 @@ class Turn extends StatelessWidget {
                     currentState.changeState('lobby');
                   }
                 }),
-            body: Padding(
-                child: RoundEditing(),
-                padding: EdgeInsets.symmetric(vertical: 12)));
+            body: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: RoundEditing()));
       } else if (currentState.state == 'countdown') {
-        return WillPopScope(
-            onWillPop: () async {
+        return PopScope(
+            canPop: false,
+            onPopInvoked: (_) {
               currentState.changeState('lobby');
               currentState.newTurnTimer!.cancel();
-              return false;
             },
             child: Scaffold(
                 appBar: AppBar(
-                  title: Text('Шляпа'),
+                  title: const Text('Шляпа'),
                 ),
                 body: Stack(children: [
                   Center(
                       child: Text(currentState.newTurnTimerCnt.toString(),
-                          style: TextStyle(fontSize: 157))),
+                          style: const TextStyle(fontSize: 157))),
                   GestureDetector(onTap: () {
                     currentState.newTurnTimer!.cancel();
                     currentState.turnStart();
@@ -268,16 +271,16 @@ class Turn extends StatelessWidget {
       } else {
         return Scaffold(
             appBar: AppBar(
-              title: Text('Шляпа'),
+              title: const Text('Шляпа'),
             ),
             floatingActionButton: FloatingActionButton(
-                backgroundColor: Color(0xFFDEA90C),
-                child: Icon(Icons.play_arrow),
+                backgroundColor: const Color(0xFFDEA90C),
+                child: const Icon(Icons.play_arrow),
                 onPressed: () {
                   currentState.changeState('countdown');
                   currentState.newTurnTimerStart();
                 }),
-            body: Padding(
+            body: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Center(
                   child: SizedBox(
@@ -289,6 +292,8 @@ class Turn extends StatelessWidget {
 }
 
 class ScoreBoard extends StatelessWidget {
+  const ScoreBoard({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState!;
@@ -316,12 +321,12 @@ class ScoreBoard extends StatelessWidget {
                       leading: Icon(Icons.group,
                           color: currentState.players[idx].color),
                       title: Container(
+                          alignment: Alignment.centerLeft,
                           child: Column(children: [
                             Text(currentState.players[idx].name),
                             Text(currentState.players[idx + 1].name)
-                          ]),
-                          alignment: Alignment.centerLeft),
-                      trailing: Container(
+                          ])),
+                      trailing: SizedBox(
                         width: 93,
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -355,12 +360,12 @@ class ScoreBoard extends StatelessWidget {
                             ]),
                       )));
             } else {
-              return ListTile(
+              return const ListTile(
                   leading:
-                      Visibility(child: Icon(Icons.person), visible: false),
+                      Visibility(visible: false, child: Icon(Icons.person)),
                   title: Text('Имя игрока',
                       style: TextStyle(fontWeight: FontWeight.bold)),
-                  trailing: Container(
+                  trailing: SizedBox(
                     width: 100,
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -384,9 +389,9 @@ class ScoreBoard extends StatelessWidget {
             if (idx > 0) {
               idx -= 1;
               return ListTile(
-                  leading: Icon(Icons.person, color: Colors.blue),
+                  leading: const Icon(Icons.person, color: Colors.blue),
                   title: Text(currentState.players[idx].name),
-                  trailing: Container(
+                  trailing: SizedBox(
                     width: 93,
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -401,12 +406,12 @@ class ScoreBoard extends StatelessWidget {
                         ]),
                   ));
             } else {
-              return ListTile(
+              return const ListTile(
                   leading:
-                      Visibility(child: Icon(Icons.person), visible: false),
+                      Visibility(visible: false, child: Icon(Icons.person)),
                   title: Text('Имя игрока',
                       style: TextStyle(fontWeight: FontWeight.bold)),
-                  trailing: Container(
+                  trailing: SizedBox(
                     width: 100,
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -427,6 +432,8 @@ class ScoreBoard extends StatelessWidget {
 }
 
 class PlayersDisplay extends StatelessWidget {
+  const PlayersDisplay({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState!;
@@ -435,27 +442,35 @@ class PlayersDisplay extends StatelessWidget {
         builder: (_) => Stack(children: <Widget>[
               Align(
                   alignment: Alignment.bottomRight,
-                  child: Text(currentState.playerTwo, textScaleFactor: 2.5)),
+                  child: Text(
+                    currentState.playerTwo,
+                    textScaler: const TextScaler.linear(2.5),
+                  )),
               Align(
                   alignment: Alignment.topLeft,
-                  child: Text(currentState.playerOne, textScaleFactor: 2.5))
+                  child: Text(
+                    currentState.playerOne,
+                    textScaler: const TextScaler.linear(2.5),
+                  ))
             ]));
   }
 }
 
 class GuessedRightButton extends StatelessWidget {
+  const GuessedRightButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState!;
 
     return FloatingActionButton.extended(
-      backgroundColor: Color(0xFFDEA90C),
+      backgroundColor: const Color(0xFFDEA90C),
       onPressed: currentState.guessedRight,
-      label: Text(
+      label: const Text(
         'УГАДАНО',
         style: TextStyle(color: Colors.white),
       ),
-      icon: Icon(
+      icon: const Icon(
         Icons.check,
         color: Colors.white,
       ),
@@ -464,67 +479,77 @@ class GuessedRightButton extends StatelessWidget {
 }
 
 class GuessedWrongButton extends StatelessWidget {
+  const GuessedWrongButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState!;
 
     return TextButton.icon(
-      icon: Icon(Icons.close, color: Colors.white),
+      icon: const Icon(Icons.close, color: Colors.white),
       onPressed: () {
         currentState.concede();
       },
-      label: Text('НЕ УГАДАНО', style: TextStyle(color: Colors.white)),
+      label: const Text('НЕ УГАДАНО', style: TextStyle(color: Colors.white)),
     );
   }
 }
 
 class ConcedeButton extends StatelessWidget {
+  const ConcedeButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState!;
 
     return TextButton.icon(
-      icon: Icon(Icons.close, color: Colors.white),
+      icon: const Icon(Icons.close, color: Colors.white),
       onPressed: () {
         currentState.concede();
       },
-      label: Text('СДАТЬСЯ', style: TextStyle(color: Colors.white)),
+      label: const Text('СДАТЬСЯ', style: TextStyle(color: Colors.white)),
     );
   }
 }
 
 class ErrorButton extends StatelessWidget {
+  const ErrorButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState!;
 
     return TextButton.icon(
-      icon: Icon(Icons.error, color: Colors.red),
+      icon: const Icon(Icons.error, color: Colors.red),
       onPressed: () {
         currentState.error();
       },
-      label: Text('ОШИБКА', style: TextStyle(color: Colors.red)),
+      label: const Text('ОШИБКА', style: TextStyle(color: Colors.red)),
     );
   }
 }
 
 class CurrentWord extends StatelessWidget {
+  const CurrentWord({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).gameState!;
 
     return Observer(
         builder: (_) =>
-            Text(currentState.word!, style: TextStyle(fontSize: 40)));
+            Text(currentState.word!, style: const TextStyle(fontSize: 40)));
   }
 }
 
 class RoundEditing extends StatefulWidget {
+  const RoundEditing({super.key});
+
   @override
-  _RoundEditingState createState() => _RoundEditingState();
+  RoundEditingState createState() => RoundEditingState();
 }
 
-class _RoundEditingState extends State<RoundEditing> {
+class RoundEditingState extends State<RoundEditing> {
   HashSet shownNotGuessedIdx = HashSet();
   HashSet complainedWords = HashSet();
 
@@ -533,7 +558,7 @@ class _RoundEditingState extends State<RoundEditing> {
     final currentState = Provider.of<AppState>(context).gameState!;
     return ListView.builder(
         itemCount: currentState.turnLog.length,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         shrinkWrap: true,
         itemBuilder: (BuildContext context, int idx) {
           Color? thumbDownColor;
@@ -544,7 +569,7 @@ class _RoundEditingState extends State<RoundEditing> {
             if (shownNotGuessedIdx.contains(idx)) {
               return Card(
                   child: ListTile(
-                      leading: Icon(Icons.close),
+                      leading: const Icon(Icons.close),
                       title: AutoSizeText(currentState.turnLog[idx]['word'],
                           maxLines: 1, maxFontSize: 18),
                       trailing: IntrinsicWidth(
@@ -580,18 +605,18 @@ class _RoundEditingState extends State<RoundEditing> {
                         IconButton(
                             icon: Icon(Icons.thumb_down, color: thumbDownColor),
                             onPressed: () async {
-                              bool? _complain = await showDialog<bool>(
+                              bool? complain = await showDialog<bool>(
                                 context: context,
                                 builder: (BuildContext context) =>
                                     WordComplainDialog(
                                   word: currentState.turnLog[idx]['word'],
                                 ),
                               );
-                              if (_complain != null && _complain) {
+                              if (complain != null && complain) {
                                 setState(() {
                                   complainedWords.add(idx);
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
+                                      const SnackBar(
                                           content: Text('Жалоба отправлена!')));
                                 });
                               }
@@ -600,9 +625,9 @@ class _RoundEditingState extends State<RoundEditing> {
             } else {
               return Card(
                   child: ListTile(
-                      leading: Icon(Icons.close),
+                      leading: const Icon(Icons.close),
                       title: TextButton(
-                        child: Text('Показать слово',
+                        child: const Text('Показать слово',
                             style: TextStyle(fontSize: 15)),
                         onPressed: () {
                           setState(() {
@@ -614,7 +639,7 @@ class _RoundEditingState extends State<RoundEditing> {
           } else if (currentState.turnLog[idx]['outcome'] == 'guessed') {
             return Card(
                 child: ListTile(
-                    leading: Icon(Icons.check, color: Colors.green),
+                    leading: const Icon(Icons.check, color: Colors.green),
                     title: AutoSizeText(currentState.turnLog[idx]['word'],
                         maxLines: 1, maxFontSize: 18),
                     trailing: IntrinsicWidth(
@@ -650,17 +675,17 @@ class _RoundEditingState extends State<RoundEditing> {
                       IconButton(
                           icon: Icon(Icons.thumb_down, color: thumbDownColor),
                           onPressed: () async {
-                            bool? _complain = await showDialog<bool>(
+                            bool? complain = await showDialog<bool>(
                                 context: context,
                                 builder: (BuildContext context) =>
                                     WordComplainDialog(
                                         word: currentState.turnLog[idx]
                                             ['word']));
-                            if (_complain != null && _complain) {
+                            if (complain != null && complain) {
                               setState(() {
                                 complainedWords.add(idx);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                         content: Text('Жалоба отправлена!')));
                               });
                             }
@@ -669,7 +694,7 @@ class _RoundEditingState extends State<RoundEditing> {
           } else {
             return Card(
                 child: ListTile(
-                    leading: Icon(Icons.error, color: Colors.red),
+                    leading: const Icon(Icons.error, color: Colors.red),
                     title: AutoSizeText(currentState.turnLog[idx]['word'],
                         maxLines: 1, maxFontSize: 18),
                     trailing: IntrinsicWidth(
@@ -702,17 +727,17 @@ class _RoundEditingState extends State<RoundEditing> {
                       IconButton(
                           icon: Icon(Icons.thumb_down, color: thumbDownColor),
                           onPressed: () async {
-                            bool? _complain = await showDialog<bool>(
+                            bool? complain = await showDialog<bool>(
                                 context: context,
                                 builder: (BuildContext context) =>
                                     WordComplainDialog(
                                         word: currentState.turnLog[idx]
                                             ['word']));
-                            if (_complain != null && _complain) {
+                            if (complain != null && complain) {
                               setState(() {
                                 complainedWords.add(idx);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                         content: Text('Жалоба отправлена!')));
                               });
                             }
@@ -726,13 +751,13 @@ class _RoundEditingState extends State<RoundEditing> {
 class WordComplainDialog extends StatefulWidget {
   final String word;
 
-  const WordComplainDialog({Key? key, required this.word}) : super(key: key);
+  const WordComplainDialog({super.key, required this.word});
 
   @override
-  _WordComplainDialogState createState() => _WordComplainDialogState();
+  WordComplainDialogState createState() => WordComplainDialogState();
 }
 
-class _WordComplainDialogState extends State<WordComplainDialog> {
+class WordComplainDialogState extends State<WordComplainDialog> {
   static GlobalKey<FormFieldState> replaceWordKey = GlobalKey<FormFieldState>();
   final ScrollController scrollController = ScrollController();
   late String word;
@@ -748,7 +773,7 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context);
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 10),
@@ -757,14 +782,14 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
     });
     return AlertDialog(
         title: Text('Пожаловаться на слово $word'),
-        content: Container(
+        content: SizedBox(
             width: double.maxFinite,
             child: ListView(
               controller: scrollController,
               shrinkWrap: true,
               children: <Widget>[
                 ListTile(
-                    title: Text('Не существительное'),
+                    title: const Text('Не существительное'),
                     leading: Radio(
                         value: 'non_noun',
                         groupValue: reason,
@@ -774,7 +799,7 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
                           });
                         })),
                 ListTile(
-                    title: Text('Несловарное слово'),
+                    title: const Text('Несловарное слово'),
                     leading: Radio(
                         value: 'non_dict',
                         groupValue: reason,
@@ -784,7 +809,7 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
                           });
                         })),
                 ListTile(
-                    title: Text('Прямое заимствование'),
+                    title: const Text('Прямое заимствование'),
                     leading: Radio(
                         value: 'loanword',
                         groupValue: reason,
@@ -794,7 +819,7 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
                           });
                         })),
                 ListTile(
-                    title: Text('Опечатка'),
+                    title: const Text('Опечатка'),
                     leading: Radio(
                         value: 'typo',
                         groupValue: reason,
@@ -806,7 +831,8 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
                 Visibility(
                     visible: reason == 'typo',
                     child: TextFormField(
-                        decoration: InputDecoration(labelText: 'Заменить на'),
+                        decoration:
+                            const InputDecoration(labelText: 'Заменить на'),
                         onSaved: (String? value) {
                           replaceWord = value!;
                         },
@@ -815,13 +841,13 @@ class _WordComplainDialogState extends State<WordComplainDialog> {
             )),
         actions: [
           TextButton(
-            child: Text('Отмена'),
+            child: const Text('Отмена'),
             onPressed: () {
               Navigator.of(context).pop(false);
             },
           ),
           TextButton(
-              child: Text('Готово'),
+              child: const Text('Готово'),
               onPressed: () async {
                 Map wordComplain;
                 if (reason == 'typo') {

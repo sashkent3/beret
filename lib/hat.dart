@@ -9,7 +9,7 @@ class Hat {
   }
 
   String getWord() {
-    if (words.length != 0) {
+    if (words.isNotEmpty) {
       int wordIdx = randomGenerator.nextInt(words.length);
       String swappedWord = words[wordIdx];
       words[wordIdx] = words.last;

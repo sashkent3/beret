@@ -10,24 +10,16 @@ import 'player.dart';
 
 part 'game_state.g.dart';
 
-class GameState = _GameState with _$GameState;
+class GameState = GameStateBase with _$GameState;
 
-abstract class _GameState with Store {
-  _GameState(prefs) {
+abstract class GameStateBase with Store {
+  GameStateBase(prefs) {
     matchDifficulty = prefs.getInt('matchDifficulty');
     wordsPerPlayer = prefs.getInt('wordsPerPlayer');
     difficultyDispersion = prefs.getInt('difficultyDispersion');
     lastStateLength = prefs.getInt('lastStateLength');
     mainStateLength = prefs.getInt('mainStateLength');
     fixTeams = prefs.getBool('fixTeams');
-    audioPlayer.loadAll([
-      'round_start_timer_tick.wav',
-      'round_start_timer_timeout.wav',
-      'round_timer_timeout.wav',
-      'word_outcome_fail.wav',
-      'word_outcome_ok.wav',
-      'word_outcome_timeout.wav'
-    ]);
   }
 
   @action
@@ -96,7 +88,7 @@ abstract class _GameState with Store {
   int turn = 0;
 
   @observable
-  AudioCache audioPlayer = AudioCache();
+  AudioPlayer audioPlayer = AudioPlayer();
 
   @observable
   int playerOneID = 0;
@@ -153,7 +145,11 @@ abstract class _GameState with Store {
         'extra_time': stopwatch.elapsedMilliseconds
       });
     }
-    audioPlayer.play('word_outcome_timeout.wav', mode: PlayerMode.LOW_LATENCY);
+    audioPlayer.stop();
+    audioPlayer.play(
+      AssetSource('word_outcome_timeout.wav'),
+      mode: PlayerMode.lowLatency,
+    );
     hat!.putWord(word!);
     changeState('verdict');
   }
@@ -191,7 +187,11 @@ abstract class _GameState with Store {
     } else {
       word = hat!.getWord();
     }
-    audioPlayer.play('word_outcome_ok.wav', mode: PlayerMode.LOW_LATENCY);
+    audioPlayer.stop();
+    audioPlayer.play(
+      AssetSource('word_outcome_ok.wav'),
+      mode: PlayerMode.lowLatency,
+    );
     stopwatch.reset();
   }
 
@@ -217,7 +217,11 @@ abstract class _GameState with Store {
         'outcome': 'failed'
       });
     }
-    audioPlayer.play('word_outcome_fail.wav', mode: PlayerMode.LOW_LATENCY);
+    audioPlayer.stop();
+    audioPlayer.play(
+      AssetSource('word_outcome_fail.wav'),
+      mode: PlayerMode.lowLatency,
+    );
     stopwatch.stop();
     stopwatch.reset();
     changeState('verdict');
@@ -253,36 +257,45 @@ abstract class _GameState with Store {
   @action
   void newTurnTimerStart() {
     newTurnTimerCnt = 3;
-    newTurnTimer = Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
+    newTurnTimer = Timer.periodic(const Duration(seconds: 1), (Timer timeout) {
       newTurnTimerSecondPass();
       if (newTurnTimerCnt == 0) {
-        _timeout.cancel();
+        timeout.cancel();
         turnStart();
       } else {
-        audioPlayer.play('round_start_timer_tick.wav',
-            mode: PlayerMode.LOW_LATENCY);
+        audioPlayer.stop();
+        audioPlayer.play(
+          AssetSource('round_start_timer_tick.wav'),
+          mode: PlayerMode.lowLatency,
+        );
       }
     });
   }
 
   @action
   void turnStart() {
-    audioPlayer.play('round_start_timer_timeout.wav',
-        mode: PlayerMode.LOW_LATENCY);
+    audioPlayer.stop();
+    audioPlayer.play(
+      AssetSource('round_start_timer_timeout.wav'),
+      mode: PlayerMode.lowLatency,
+    );
     word = hat!.getWord();
     changeState('main');
     stopwatch.start();
     turnLog = [];
-    Timer.periodic(Duration(seconds: 1), (Timer _timeout) {
+    Timer.periodic(const Duration(seconds: 1), (Timer timeout) {
       timerSecondPass();
       if (state != 'main' && state != 'last') {
-        _timeout.cancel();
+        timeout.cancel();
         timer = mainStateLength;
       } else if (timer == 0) {
         timeSpent = stopwatch.elapsedMilliseconds;
         if (lastStateLength != 0) {
-          audioPlayer.play('round_timer_timeout.wav',
-              mode: PlayerMode.LOW_LATENCY);
+          audioPlayer.stop();
+          audioPlayer.play(
+            AssetSource('round_timer_timeout.wav'),
+            mode: PlayerMode.lowLatency,
+          );
         }
         stopwatch.reset();
         changeState('last');
@@ -295,8 +308,11 @@ abstract class _GameState with Store {
           'time': timeSpent,
           'extra_time': lastStateLength,
         });
-        audioPlayer.play('round_start_timer_timeout.wav',
-            mode: PlayerMode.LOW_LATENCY);
+        audioPlayer.stop();
+        audioPlayer.play(
+          AssetSource('round_start_timer_timeout.wav'),
+          mode: PlayerMode.lowLatency,
+        );
         hat!.putWord(word!);
         changeState('verdict');
         stopwatch.stop();

@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'app_state.dart';
 
 class GameHistory extends StatelessWidget {
+  const GameHistory({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context);
@@ -20,10 +22,10 @@ class GameHistory extends StatelessWidget {
               .readAsStringSync());
       return Scaffold(
           appBar: AppBar(
-            title: Text('Шляпа'),
+            title: const Text('Шляпа'),
           ),
           body: Padding(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: ListView.builder(
                   itemCount: gameHistory.length,
                   itemBuilder: (BuildContext context, int idx) {
@@ -44,24 +46,26 @@ class GameHistory extends StatelessWidget {
                                 names,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              subtitle: Text(DateFormat('dd/MM/yyyy')
-                                      .add_Hm()
-                                      .format(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              game[1])) +
-                                  ', быстрая игра')));
+                              subtitle: Text(
+                                  '${DateFormat('dd/MM/yyyy').add_Hm().format(DateTime.fromMillisecondsSinceEpoch(game[1]))}, быстрая игра')));
                     } else {
                       return Card(
                           child: ListTile(
                         title: Text('Я и ${game[0]} объяснили ${game[1]}'),
-                        subtitle: Text(DateFormat('dd/MM/yyyy').add_Hm().format(
-                                DateTime.fromMillisecondsSinceEpoch(game[2])) +
-                            ', режим для двоих'),
+                        subtitle: Text(
+                            '${DateFormat('dd/MM/yyyy').add_Hm().format(DateTime.fromMillisecondsSinceEpoch(game[2]))}, режим для двоих'),
                       ));
                     }
                   })));
     } else {
-      return Text('У вас еще нет сыгранных игр!');
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Шляпа'),
+        ),
+        body: const Center(
+          child: Text('У вас еще нет сыгранных игр!'),
+        ),
+      );
     }
   }
 }
@@ -70,15 +74,15 @@ class ScoreBoard extends StatelessWidget {
   final List players;
   final bool fixTeams;
 
-  ScoreBoard(this.players, this.fixTeams);
+  const ScoreBoard(this.players, this.fixTeams, {super.key});
 
   @override
   Widget build(BuildContext context) {
     if (fixTeams) {
       return Scaffold(
-          appBar: AppBar(title: Text('Шляпа')),
+          appBar: AppBar(title: const Text('Шляпа')),
           body: Padding(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: players.length ~/ 2 + 1,
@@ -90,12 +94,12 @@ class ScoreBoard extends StatelessWidget {
                               leading: Icon(Icons.group,
                                   color: Color(players[idx][2])),
                               title: Container(
+                                  alignment: Alignment.centerLeft,
                                   child: Column(children: [
                                     Text(players[idx][3]),
                                     Text(players[idx + 1][3])
-                                  ]),
-                                  alignment: Alignment.centerLeft),
-                              trailing: Container(
+                                  ])),
+                              trailing: SizedBox(
                                 width: 93,
                                 child: Row(
                                     mainAxisAlignment:
@@ -120,12 +124,12 @@ class ScoreBoard extends StatelessWidget {
                                     ]),
                               )));
                     } else {
-                      return ListTile(
+                      return const ListTile(
                           leading: Visibility(
-                              child: Icon(Icons.person), visible: false),
+                              visible: false, child: Icon(Icons.person)),
                           title: Text('Имя игрока',
                               style: TextStyle(fontWeight: FontWeight.bold)),
-                          trailing: Container(
+                          trailing: SizedBox(
                             width: 100,
                             child: Row(
                                 mainAxisAlignment:
@@ -144,9 +148,9 @@ class ScoreBoard extends StatelessWidget {
                   })));
     } else {
       return Scaffold(
-          appBar: AppBar(title: Text('Шляпа')),
+          appBar: AppBar(title: const Text('Шляпа')),
           body: Padding(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: players.length + 1,
@@ -154,9 +158,9 @@ class ScoreBoard extends StatelessWidget {
                     if (idx > 0) {
                       idx -= 1;
                       return ListTile(
-                          leading: Icon(Icons.person, color: Colors.blue),
+                          leading: const Icon(Icons.person, color: Colors.blue),
                           title: Text(players[idx][3]),
-                          trailing: Container(
+                          trailing: SizedBox(
                             width: 93,
                             child: Row(
                                 mainAxisAlignment:
@@ -169,12 +173,12 @@ class ScoreBoard extends StatelessWidget {
                                 ]),
                           ));
                     } else {
-                      return ListTile(
+                      return const ListTile(
                           leading: Visibility(
-                              child: Icon(Icons.person), visible: false),
+                              visible: false, child: Icon(Icons.person)),
                           title: Text('Имя игрока',
                               style: TextStyle(fontWeight: FontWeight.bold)),
-                          trailing: Container(
+                          trailing: SizedBox(
                             width: 100,
                             child: Row(
                                 mainAxisAlignment:

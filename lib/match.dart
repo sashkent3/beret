@@ -6,6 +6,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 class Match extends StatelessWidget {
+  const Match({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentGameState = Provider.of<AppState>(context).gameState!;
@@ -28,7 +30,7 @@ class Match extends StatelessWidget {
                     title: Column(children: [
                       TextFormField(
                           key: currentGameState.players[index].key,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Имя',
                           ),
                           initialValue: currentGameState.players[index].name,
@@ -39,7 +41,7 @@ class Match extends StatelessWidget {
                           }),
                       TextFormField(
                           key: currentGameState.players[index + 1].key,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Имя',
                           ),
                           initialValue:
@@ -54,7 +56,7 @@ class Match extends StatelessWidget {
                         visible: currentGameState.players.length > 2,
                         child: IconButton(
                             tooltip: 'Удалить пару',
-                            icon: Icon(Icons.close, color: Colors.blue),
+                            icon: const Icon(Icons.close, color: Colors.blue),
                             onPressed: () {
                               currentGameState.removePlayer(index);
                               currentGameState.removePlayer(index);
@@ -67,7 +69,7 @@ class Match extends StatelessWidget {
             listView.add(ListTile(
                 title: TextFormField(
                     key: currentGameState.players[index].key,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       icon: Icon(Icons.person, color: Colors.blue),
                       labelText: 'Имя',
                     ),
@@ -81,16 +83,16 @@ class Match extends StatelessWidget {
                     visible: currentGameState.players.length > 2,
                     child: IconButton(
                         tooltip: 'Удалить игрока',
-                        icon: Icon(Icons.close, color: Colors.blue),
+                        icon: const Icon(Icons.close, color: Colors.blue),
                         onPressed: () {
                           currentGameState.removePlayer(index);
                         }))));
           }
         }
-        SchedulerBinding.instance!.addPostFrameCallback((_) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
           scrollController.animateTo(
             scrollController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 10),
+            duration: const Duration(milliseconds: 10),
             curve: Curves.easeOut,
           );
         });
@@ -109,23 +111,23 @@ class Match extends StatelessWidget {
                               currentGameState.addPlayer();
                               currentGameState.addPlayer();
                             },
-                            icon: Icon(Icons.group_add))),
+                            icon: const Icon(Icons.group_add))),
                     Visibility(
                         visible: !currentGameState.fixTeams!,
                         child: IconButton(
                             color: Colors.white,
                             tooltip: 'Добавить игрока',
                             onPressed: currentGameState.addPlayer,
-                            icon: Icon(Icons.person_add))),
+                            icon: const Icon(Icons.person_add))),
                     IconButton(
                         color: Colors.white,
                         tooltip: 'Перемешать игроков',
                         onPressed: currentGameState.players.shuffle,
-                        icon: Icon(Icons.shuffle)),
+                        icon: const Icon(Icons.shuffle)),
                     IconButton(
                         color: Colors.white,
                         tooltip: 'Настройки матча',
-                        icon: Icon(Icons.settings),
+                        icon: const Icon(Icons.settings),
                         onPressed: () {
                           showDialog<void>(
                               context: context,
@@ -140,8 +142,8 @@ class Match extends StatelessWidget {
                   ])),
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
           floatingActionButton: FloatingActionButton(
-            backgroundColor: Color(0xFFDEA90C),
-            child: Icon(Icons.play_arrow),
+            backgroundColor: const Color(0xFFDEA90C),
+            child: const Icon(Icons.play_arrow),
             onPressed: () {
               if (currentGameState.validateAll()) {
                 currentGameState.createHat(currentAppState.dictionary!);
@@ -151,19 +153,19 @@ class Match extends StatelessWidget {
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => Turn()),
+                        builder: (BuildContext context) => const Turn()),
                     (Route<dynamic> route) => false);
               } else {
                 showDialog<void>(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      content: Text(
+                      content: const Text(
                         'У всех игроков должны быть разные имена хотя бы из одного символа!',
                       ),
                       actions: <Widget>[
                         TextButton(
-                          child: Text(
+                          child: const Text(
                             'Закрыть',
                           ),
                           onPressed: () {
@@ -178,11 +180,11 @@ class Match extends StatelessWidget {
             },
           ),
           appBar: AppBar(
-            title: Text('Шляпа'),
+            title: const Text('Шляпа'),
           ),
           body: Align(
             alignment: Alignment.topCenter,
-            child: ListView(children: listView, controller: scrollController),
+            child: ListView(controller: scrollController, children: listView),
           ),
         );
       },
@@ -196,17 +198,16 @@ class SettingsDialog extends StatefulWidget {
   final bool currentSetFixTeams;
 
   const SettingsDialog(
-      {Key? key,
+      {super.key,
       required this.currentSetDifficulty,
       required this.currentSetDifficultyDispersion,
-      required this.currentSetFixTeams})
-      : super(key: key);
+      required this.currentSetFixTeams});
 
   @override
-  _SettingsDialogState createState() => _SettingsDialogState();
+  SettingsDialogState createState() => SettingsDialogState();
 }
 
-class _SettingsDialogState extends State<SettingsDialog> {
+class SettingsDialogState extends State<SettingsDialog> {
   static GlobalKey<FormState> settingsKey = GlobalKey<FormState>();
   late int currentSetDifficulty;
   late int currentSetDifficultyDispersion;
@@ -224,10 +225,10 @@ class _SettingsDialogState extends State<SettingsDialog> {
   build(BuildContext context) {
     final currentGameState = Provider.of<AppState>(context).gameState!;
     return AlertDialog(
-      title: Text('Настройки'),
+      title: const Text('Настройки'),
       content: Form(
           key: settingsKey,
-          child: Container(
+          child: SizedBox(
               width: double.maxFinite,
               child: ListView(shrinkWrap: true, children: [
                 TextFormField(
@@ -282,7 +283,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
                   },
                 ),
                 Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     child: Text('Сложность',
                         style: TextStyle(
                             fontSize: 12,
@@ -329,7 +330,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
               ]))),
       actions: <Widget>[
         TextButton(
-          child: Text('Готово'),
+          child: const Text('Готово'),
           onPressed: () {
             if (settingsKey.currentState!.validate()) {
               currentGameState.matchDifficulty = currentSetDifficulty;

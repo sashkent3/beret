@@ -1,122 +1,132 @@
 import 'package:beret/telegram_icon_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class Info extends StatelessWidget {
+  const Info({super.key});
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
             appBar: AppBar(
-                title: Text('Шляпа'),
-                bottom: TabBar(tabs: <Widget>[
+                title: const Text('Шляпа'),
+                bottom: const TabBar(tabs: <Widget>[
                   Tab(text: 'Авторы'),
                   Tab(text: 'Доп. информация')
                 ])),
             body: Builder(
                 builder: (context) => Padding(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     child: TabBarView(children: [
                       SingleChildScrollView(
                           child: RichText(
                               text: TextSpan(
-                                  style: TextStyle(color: Colors.black),
+                                  style: const TextStyle(color: Colors.black),
                                   children: [
-                            TextSpan(
+                            const TextSpan(
                                 text: 'Новый Android-клиент:\n',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                             WidgetSpan(
                                 child: Row(children: [
-                              Text('Зинов Александр',
+                              const Text('Зинов Александр',
                                   style: TextStyle(fontSize: 14)),
                               InkWell(
-                                  child: Icon(TelegramIcon.telegram),
+                                  child: const Icon(TelegramIcon.telegram),
                                   onTap: () {
-                                    launch('tg://resolve?domain=sashkent3')
+                                    launchUrlString(
+                                            'tg://resolve?domain=sashkent3')
                                         .catchError((e) {
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
+                                          .showSnackBar(const SnackBar(
                                               content: Text(
                                                   'Telegram: @sashkent3')));
+                                      return false;
                                     });
                                   }),
                               InkWell(
-                                  child: Icon(Icons.email),
+                                  child: const Icon(Icons.email),
                                   onTap: () {
-                                    launch('mailto:sashkent3@gmail.com');
+                                    launchUrlString(
+                                        'mailto:sashkent3@gmail.com');
                                   }),
                             ])),
-                            TextSpan(
+                            const TextSpan(
                                 text: '\nпод руководством Зинова Николая\n\n'),
-                            TextSpan(
+                            const TextSpan(
                                 text: 'Старый Android-клиент: ',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: 'Денис Кузнецов\n\n'),
-                            TextSpan(
+                            const TextSpan(text: 'Денис Кузнецов\n\n'),
+                            const TextSpan(
                                 text: 'Сервер: ',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(
+                            const TextSpan(
                                 text:
                                     'ЛКШ.Зима 2013-2014, Параллель П в составе:\n\n'),
-                            TextSpan(
+                            const TextSpan(
                                 text: 'Преподаватели:\n',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: 'Дробин Вадим Дмитриевич\n'),
-                            TextSpan(text: 'Кузнецов Денис Васильевич\n\n'),
-                            TextSpan(
+                            const TextSpan(text: 'Дробин Вадим Дмитриевич\n'),
+                            const TextSpan(
+                                text: 'Кузнецов Денис Васильевич\n\n'),
+                            const TextSpan(
                                 text: 'Школьники:\n',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: 'Калинин Николай\n'),
-                            TextSpan(text: 'Козловцев Константин\n'),
-                            TextSpan(text: 'Лабутин Игорь\n'),
-                            TextSpan(text: 'Павлов Иван\n'),
-                            TextSpan(text: 'Торба Дмитрий\n\n'),
-                            TextSpan(
+                            const TextSpan(text: 'Калинин Николай\n'),
+                            const TextSpan(text: 'Козловцев Константин\n'),
+                            const TextSpan(text: 'Лабутин Игорь\n'),
+                            const TextSpan(text: 'Павлов Иван\n'),
+                            const TextSpan(text: 'Торба Дмитрий\n\n'),
+                            const TextSpan(
                                 text: 'Последующая работа над сервером:\n\n',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: 'Зинов Николай\n'),
-                            TextSpan(text: 'Павлов Иван\n'),
-                            TextSpan(text: 'под руководством\n'),
-                            TextSpan(text: 'Гольдштейна Виталия Борисовича\n'),
-                            TextSpan(text: 'Кузнецова Дениса Васильевича\n\n'),
-                            TextSpan(
+                            const TextSpan(text: 'Зинов Николай\n'),
+                            const TextSpan(text: 'Павлов Иван\n'),
+                            const TextSpan(text: 'под руководством\n'),
+                            const TextSpan(
+                                text: 'Гольдштейна Виталия Борисовича\n'),
+                            const TextSpan(
+                                text: 'Кузнецова Дениса Васильевича\n\n'),
+                            const TextSpan(
                                 text:
                                     'Разработка основана на приложении, написанном участниками параллели П в ЛКШ.Август 2013:\n\n'),
-                            TextSpan(
+                            const TextSpan(
                                 text: 'Преподаватели\n',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: 'Гольдштейн Виталий Борисович\n'),
-                            TextSpan(text: 'Дробин Вадим Дмитриевич\n'),
-                            TextSpan(text: 'Кузнецов Денис Васильевич\n'),
-                            TextSpan(text: 'Назаров Сергей Игоревич\n'),
-                            TextSpan(text: 'Шестимеров Андрей Алексеевич\n\n'),
-                            TextSpan(
+                            const TextSpan(
+                                text: 'Гольдштейн Виталий Борисович\n'),
+                            const TextSpan(text: 'Дробин Вадим Дмитриевич\n'),
+                            const TextSpan(text: 'Кузнецов Денис Васильевич\n'),
+                            const TextSpan(text: 'Назаров Сергей Игоревич\n'),
+                            const TextSpan(
+                                text: 'Шестимеров Андрей Алексеевич\n\n'),
+                            const TextSpan(
                                 text: 'Школьники:\n',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: 'Зинов Николай\n'),
-                            TextSpan(text: 'Калинин Николай\n'),
-                            TextSpan(text: 'Карпенко Даниил\n'),
-                            TextSpan(text: 'Козловцев Константин\n'),
-                            TextSpan(text: 'Кравченко Дмитрий\n'),
-                            TextSpan(text: 'Лабутин Игорь\n'),
-                            TextSpan(text: 'Лиференко Даниил\n'),
-                            TextSpan(text: 'Павлов Иван\n'),
-                            TextSpan(text: 'Сергеев Иван\n'),
-                            TextSpan(text: 'Торба Дмитрий')
+                            const TextSpan(text: 'Зинов Николай\n'),
+                            const TextSpan(text: 'Калинин Николай\n'),
+                            const TextSpan(text: 'Карпенко Даниил\n'),
+                            const TextSpan(text: 'Козловцев Константин\n'),
+                            const TextSpan(text: 'Кравченко Дмитрий\n'),
+                            const TextSpan(text: 'Лабутин Игорь\n'),
+                            const TextSpan(text: 'Лиференко Даниил\n'),
+                            const TextSpan(text: 'Павлов Иван\n'),
+                            const TextSpan(text: 'Сергеев Иван\n'),
+                            const TextSpan(text: 'Торба Дмитрий')
                           ]))),
                       ListView(children: [
                         Card(
                             child: ListTile(
-                                title: Text(
+                                title: const Text(
                                   'Политика конфиденциальности',
                                 ),
-                                subtitle: Text('Условия и положения'),
+                                subtitle: const Text('Условия и положения'),
                                 onTap: () {
-                                  launch(
-                                      'https://docs.google.com/document/d/1T81rAWe-KG2_7RJ946Qb628zBHS9eqdMf4ik8uB_jIU/edit',
-                                      forceWebView: true,
-                                      enableJavaScript: true);
+                                  launchUrlString(
+                                    'https://docs.google.com/document/d/1T81rAWe-KG2_7RJ946Qb628zBHS9eqdMf4ik8uB_jIU/edit',
+                                    mode: LaunchMode.inAppWebView,
+                                  );
                                 }))
                       ])
                     ])))));

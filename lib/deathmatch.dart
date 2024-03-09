@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:http/http.dart' as http;
-import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +17,7 @@ Future<void> sendSingleGameLog(List args) async {
   var gameLog = args[0];
   String documentsPath = args[1];
   String host = 'the-hat.appspot.com';
-  var response;
+  http.Response? response;
   try {
     response = await http.post(Uri.http(host, '/api/v2/game/log'),
         headers: {"content-type": "application/json"},
@@ -57,6 +57,8 @@ Future<void> saveToHistory(List args) async {
 }
 
 class Deathmatch extends StatelessWidget {
+  const Deathmatch({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).deathmatchState!;
@@ -66,13 +68,13 @@ class Deathmatch extends StatelessWidget {
       if (currentState.state == 'start') {
         return Scaffold(
             appBar: AppBar(
-              title: Text('Шляпа'),
+              title: const Text('Шляпа'),
             ),
             floatingActionButton: FloatingActionButton(
-                backgroundColor: Color(0xFFDEA90C),
-                child: Icon(Icons.arrow_forward),
-                onPressed: currentState.startCountdown),
-            body: Padding(
+                backgroundColor: const Color(0xFFDEA90C),
+                onPressed: currentState.startCountdown,
+                child: const Icon(Icons.arrow_forward)),
+            body: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Center(
                     child: Card(
@@ -80,26 +82,26 @@ class Deathmatch extends StatelessWidget {
                   padding: EdgeInsets.all(6),
                   child: Text(
                     'В этом режиме вам необходимо объяснить как можно больше слов по правилам обычной шляпы. Если вы допустили ошибку - придется сдаться. Изначально вам дано 60 секунд основного времени, а также на каждое слово выделено некоторое добавочное время, изначально равное 10 секундам. Каждые 5 отгаданных слов случайным образом либо увеличится сложность слов, либо добавочное время уменьшится на секунду. Побивайте рекорды и соревнуйтесь с друзьями!',
-                    textScaleFactor: 1.5,
+                    textScaler: TextScaler.linear(1.5),
                   ),
                 )))));
       } else if (currentState.state == 'countdown') {
-        return WillPopScope(
-            onWillPop: () async {
+        return PopScope(
+            canPop: false,
+            onPopInvoked: (_) {
               currentState.setState('start');
               currentState.countdownTimer!.cancel();
-              return false;
             },
             child: Scaffold(
                 appBar: AppBar(
-                  title: Text('Шляпа'),
+                  title: const Text('Шляпа'),
                 ),
                 body: Padding(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     child: Stack(children: [
                       Center(
                           child: Text(currentState.startingCountdown.toString(),
-                              style: TextStyle(fontSize: 157))),
+                              style: const TextStyle(fontSize: 157))),
                       GestureDetector(onTap: () {
                         currentState.startMatch();
                       })
@@ -111,32 +113,30 @@ class Deathmatch extends StatelessWidget {
         } else {
           colors = [Colors.green, null];
         }
-        return WillPopScope(
-            onWillPop: () async {
-              return false;
-            },
+        return PopScope(
+            canPop: false,
             child: Scaffold(
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
-                  title: Text('Шляпа'),
+                  title: const Text('Шляпа'),
                 ),
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.endDocked,
-                floatingActionButton: GuessedRightButton(),
-                bottomNavigationBar: BottomAppBar(
+                floatingActionButton: const GuessedRightButton(),
+                bottomNavigationBar: const BottomAppBar(
                     color: Colors.blue,
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [ConcedeButton()])),
                 body: Padding(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     child: Stack(children: <Widget>[
                       Align(
                           alignment: Alignment.topLeft,
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Сложность:',
+                                const Text('Сложность:',
                                     style: TextStyle(
                                         color: Colors.red,
                                         fontSize: 15,
@@ -147,32 +147,37 @@ class Deathmatch extends StatelessWidget {
                                     child: LiquidCustomProgressIndicator(
                                         value: currentState.difficulty / 100,
                                         valueColor:
-                                            AlwaysStoppedAnimation(Colors.blue),
+                                            const AlwaysStoppedAnimation(
+                                                Colors.blue),
                                         backgroundColor: Colors.amber,
                                         direction: Axis.vertical,
                                         shapePath: parseSvgPathData(
                                             " M 85 10 L 69.407 50.82 L 72.319 50.82 L 72.319 61.624 L 85 61.76 L 85 69.869 L 10 69.869 L 10 61.624 L 23.525 61.624 L 23.525 51.011 L 25.62 50.82 L 10 10 L 85 10 Z ")))
                               ])),
                       Align(
+                          alignment: Alignment.topCenter,
                           child: Text(currentState.score.toString(),
-                              textScaleFactor: 2.5),
-                          alignment: Alignment.topCenter),
+                              textScaler: const TextScaler.linear(2.5))),
                       Align(
                           alignment: Alignment.topRight,
-                          child: Column(children: [
-                            Text('${currentState.mainTimer}',
-                                textScaleFactor: 2.5,
-                                style: TextStyle(color: colors[1])),
-                            Visibility(
-                                visible: currentState.diffAndTimeVisibility[1],
-                                child: Text('${currentState.addTimer}',
-                                    textScaleFactor: 2.5,
-                                    style: TextStyle(color: colors[0])))
-                          ], crossAxisAlignment: CrossAxisAlignment.end)),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text('${currentState.mainTimer}',
+                                    textScaler: const TextScaler.linear(2.5),
+                                    style: TextStyle(color: colors[1])),
+                                Visibility(
+                                    visible:
+                                        currentState.diffAndTimeVisibility[1],
+                                    child: Text('${currentState.addTimer}',
+                                        textScaler:
+                                            const TextScaler.linear(2.5),
+                                        style: TextStyle(color: colors[0])))
+                              ])),
                       Center(
                           child: Text(
                         '${currentState.word}',
-                        textScaleFactor: 2.5,
+                        textScaler: const TextScaler.linear(2.5),
                       ))
                     ]))));
       } else {
@@ -199,10 +204,10 @@ class Deathmatch extends StatelessWidget {
           });
         }
         return Scaffold(
-            appBar: AppBar(title: Text('Шляпа')),
+            appBar: AppBar(title: const Text('Шляпа')),
             floatingActionButton: FloatingActionButton(
-                backgroundColor: Color(0xFFDEA90C),
-                child: Icon(Icons.arrow_forward),
+                backgroundColor: const Color(0xFFDEA90C),
+                child: const Icon(Icons.arrow_forward),
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
                     formKey.currentState!.save();
@@ -210,26 +215,26 @@ class Deathmatch extends StatelessWidget {
                       currentState.partner,
                       currentAppState.documentsPath,
                       currentState.gameLog['start_timestamp'],
-                      currentState.score.toString() + ' слов' + correctEnding,
+                      '${currentState.score} слов$correctEnding',
                     ]);
                     Navigator.of(context).pop();
                   }
                 }),
             body: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ListTile(
                         title: Text(
                             'Ваш результат: ${currentState.score} слов$correctEnding!',
-                            textScaleFactor: 1.7),
-                        subtitle: Text(
+                            textScaler: const TextScaler.linear(1.7)),
+                        subtitle: const Text(
                             'Введите имя партнера, чтобы поделиться результатом в соцсетях!'),
                         trailing: IconButton(
                           iconSize: 40,
                           color: Colors.blue,
-                          icon: Icon(Icons.share),
+                          icon: const Icon(Icons.share),
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
                               formKey.currentState!.save();
@@ -242,7 +247,7 @@ class Deathmatch extends StatelessWidget {
                       Form(
                           key: formKey,
                           child: TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 labelText: 'Имя партнера',
                                 icon: Icon(Icons.person)),
                             initialValue: 'мой друг',
@@ -268,20 +273,22 @@ class Deathmatch extends StatelessWidget {
 }
 
 class GuessedRightButton extends StatelessWidget {
+  const GuessedRightButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).deathmatchState!;
 
     return FloatingActionButton.extended(
-      backgroundColor: Color(0xFFDEA90C),
+      backgroundColor: const Color(0xFFDEA90C),
       onPressed: () {
         currentState.guessedRight();
       },
-      label: Text(
+      label: const Text(
         'УГАДАНО',
         style: TextStyle(color: Colors.white),
       ),
-      icon: Icon(
+      icon: const Icon(
         Icons.check,
         color: Colors.white,
       ),
@@ -290,14 +297,16 @@ class GuessedRightButton extends StatelessWidget {
 }
 
 class ConcedeButton extends StatelessWidget {
+  const ConcedeButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentState = Provider.of<AppState>(context).deathmatchState!;
 
     return TextButton.icon(
-      icon: Icon(Icons.close, color: Colors.white),
+      icon: const Icon(Icons.close, color: Colors.white),
       onPressed: currentState.concede,
-      label: Text('СДАТЬСЯ', style: TextStyle(color: Colors.white)),
+      label: const Text('СДАТЬСЯ', style: TextStyle(color: Colors.white)),
     );
   }
 }

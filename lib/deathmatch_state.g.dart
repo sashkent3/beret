@@ -6,10 +6,11 @@ part of 'deathmatch_state.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$DeathmatchState on _DeathmatchState, Store {
-  final _$stopwatchAtom = Atom(name: '_DeathmatchState.stopwatch');
+mixin _$DeathmatchState on DeathmatchStateBase, Store {
+  late final _$stopwatchAtom =
+      Atom(name: 'DeathmatchStateBase.stopwatch', context: context);
 
   @override
   Stopwatch get stopwatch {
@@ -24,8 +25,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$diffAndTimeVisibilityAtom =
-      Atom(name: '_DeathmatchState.diffAndTimeVisibility');
+  late final _$diffAndTimeVisibilityAtom =
+      Atom(name: 'DeathmatchStateBase.diffAndTimeVisibility', context: context);
 
   @override
   ObservableList<bool> get diffAndTimeVisibility {
@@ -41,7 +42,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$gameLogAtom = Atom(name: '_DeathmatchState.gameLog');
+  late final _$gameLogAtom =
+      Atom(name: 'DeathmatchStateBase.gameLog', context: context);
 
   @override
   Map<dynamic, dynamic> get gameLog {
@@ -56,22 +58,24 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$audioPlayerAtom = Atom(name: '_DeathmatchState.audioPlayer');
+  late final _$audioPlayerAtom =
+      Atom(name: 'DeathmatchStateBase.audioPlayer', context: context);
 
   @override
-  AudioCache get audioPlayer {
+  AudioPlayer get audioPlayer {
     _$audioPlayerAtom.reportRead();
     return super.audioPlayer;
   }
 
   @override
-  set audioPlayer(AudioCache value) {
+  set audioPlayer(AudioPlayer value) {
     _$audioPlayerAtom.reportWrite(value, super.audioPlayer, () {
       super.audioPlayer = value;
     });
   }
 
-  final _$dictionaryAtom = Atom(name: '_DeathmatchState.dictionary');
+  late final _$dictionaryAtom =
+      Atom(name: 'DeathmatchStateBase.dictionary', context: context);
 
   @override
   Dictionary? get dictionary {
@@ -86,7 +90,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$rngAtom = Atom(name: '_DeathmatchState.rng');
+  late final _$rngAtom =
+      Atom(name: 'DeathmatchStateBase.rng', context: context);
 
   @override
   Random get rng {
@@ -101,7 +106,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$wordAtom = Atom(name: '_DeathmatchState.word');
+  late final _$wordAtom =
+      Atom(name: 'DeathmatchStateBase.word', context: context);
 
   @override
   String? get word {
@@ -116,7 +122,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$difficultyAtom = Atom(name: '_DeathmatchState.difficulty');
+  late final _$difficultyAtom =
+      Atom(name: 'DeathmatchStateBase.difficulty', context: context);
 
   @override
   int get difficulty {
@@ -131,7 +138,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$additionalTimeAtom = Atom(name: '_DeathmatchState.additionalTime');
+  late final _$additionalTimeAtom =
+      Atom(name: 'DeathmatchStateBase.additionalTime', context: context);
 
   @override
   int get additionalTime {
@@ -146,7 +154,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$partnerAtom = Atom(name: '_DeathmatchState.partner');
+  late final _$partnerAtom =
+      Atom(name: 'DeathmatchStateBase.partner', context: context);
 
   @override
   String? get partner {
@@ -161,7 +170,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$scoreAtom = Atom(name: '_DeathmatchState.score');
+  late final _$scoreAtom =
+      Atom(name: 'DeathmatchStateBase.score', context: context);
 
   @override
   int get score {
@@ -176,7 +186,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$mainTimerAtom = Atom(name: '_DeathmatchState.mainTimer');
+  late final _$mainTimerAtom =
+      Atom(name: 'DeathmatchStateBase.mainTimer', context: context);
 
   @override
   int get mainTimer {
@@ -191,7 +202,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$addTimerAtom = Atom(name: '_DeathmatchState.addTimer');
+  late final _$addTimerAtom =
+      Atom(name: 'DeathmatchStateBase.addTimer', context: context);
 
   @override
   int get addTimer {
@@ -206,7 +218,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$stateAtom = Atom(name: '_DeathmatchState.state');
+  late final _$stateAtom =
+      Atom(name: 'DeathmatchStateBase.state', context: context);
 
   @override
   String get state {
@@ -221,7 +234,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$matchTimerAtom = Atom(name: '_DeathmatchState.matchTimer');
+  late final _$matchTimerAtom =
+      Atom(name: 'DeathmatchStateBase.matchTimer', context: context);
 
   @override
   Timer? get matchTimer {
@@ -236,7 +250,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$gameLogSentAtom = Atom(name: '_DeathmatchState.gameLogSent');
+  late final _$gameLogSentAtom =
+      Atom(name: 'DeathmatchStateBase.gameLogSent', context: context);
 
   @override
   bool get gameLogSent {
@@ -251,8 +266,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$startingCountdownAtom =
-      Atom(name: '_DeathmatchState.startingCountdown');
+  late final _$startingCountdownAtom =
+      Atom(name: 'DeathmatchStateBase.startingCountdown', context: context);
 
   @override
   int get startingCountdown {
@@ -267,7 +282,8 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$countdownTimerAtom = Atom(name: '_DeathmatchState.countdownTimer');
+  late final _$countdownTimerAtom =
+      Atom(name: 'DeathmatchStateBase.countdownTimer', context: context);
 
   @override
   Timer? get countdownTimer {
@@ -282,116 +298,116 @@ mixin _$DeathmatchState on _DeathmatchState, Store {
     });
   }
 
-  final _$_DeathmatchStateActionController =
-      ActionController(name: '_DeathmatchState');
+  late final _$DeathmatchStateBaseActionController =
+      ActionController(name: 'DeathmatchStateBase', context: context);
 
   @override
   void toggleVisibility(int idx) {
-    final _$actionInfo = _$_DeathmatchStateActionController.startAction(
-        name: '_DeathmatchState.toggleVisibility');
+    final _$actionInfo = _$DeathmatchStateBaseActionController.startAction(
+        name: 'DeathmatchStateBase.toggleVisibility');
     try {
       return super.toggleVisibility(idx);
     } finally {
-      _$_DeathmatchStateActionController.endAction(_$actionInfo);
+      _$DeathmatchStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void startBlinking(int idx) {
-    final _$actionInfo = _$_DeathmatchStateActionController.startAction(
-        name: '_DeathmatchState.startBlinking');
+    final _$actionInfo = _$DeathmatchStateBaseActionController.startAction(
+        name: 'DeathmatchStateBase.startBlinking');
     try {
       return super.startBlinking(idx);
     } finally {
-      _$_DeathmatchStateActionController.endAction(_$actionInfo);
+      _$DeathmatchStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void guessedRight() {
-    final _$actionInfo = _$_DeathmatchStateActionController.startAction(
-        name: '_DeathmatchState.guessedRight');
+    final _$actionInfo = _$DeathmatchStateBaseActionController.startAction(
+        name: 'DeathmatchStateBase.guessedRight');
     try {
       return super.guessedRight();
     } finally {
-      _$_DeathmatchStateActionController.endAction(_$actionInfo);
+      _$DeathmatchStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void timerTick() {
-    final _$actionInfo = _$_DeathmatchStateActionController.startAction(
-        name: '_DeathmatchState.timerTick');
+    final _$actionInfo = _$DeathmatchStateBaseActionController.startAction(
+        name: 'DeathmatchStateBase.timerTick');
     try {
       return super.timerTick();
     } finally {
-      _$_DeathmatchStateActionController.endAction(_$actionInfo);
+      _$DeathmatchStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void setState(String newState) {
-    final _$actionInfo = _$_DeathmatchStateActionController.startAction(
-        name: '_DeathmatchState.setState');
+    final _$actionInfo = _$DeathmatchStateBaseActionController.startAction(
+        name: 'DeathmatchStateBase.setState');
     try {
       return super.setState(newState);
     } finally {
-      _$_DeathmatchStateActionController.endAction(_$actionInfo);
+      _$DeathmatchStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void concede() {
-    final _$actionInfo = _$_DeathmatchStateActionController.startAction(
-        name: '_DeathmatchState.concede');
+    final _$actionInfo = _$DeathmatchStateBaseActionController.startAction(
+        name: 'DeathmatchStateBase.concede');
     try {
       return super.concede();
     } finally {
-      _$_DeathmatchStateActionController.endAction(_$actionInfo);
+      _$DeathmatchStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void startMatch() {
-    final _$actionInfo = _$_DeathmatchStateActionController.startAction(
-        name: '_DeathmatchState.startMatch');
+    final _$actionInfo = _$DeathmatchStateBaseActionController.startAction(
+        name: 'DeathmatchStateBase.startMatch');
     try {
       return super.startMatch();
     } finally {
-      _$_DeathmatchStateActionController.endAction(_$actionInfo);
+      _$DeathmatchStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void startingCountdownTick() {
-    final _$actionInfo = _$_DeathmatchStateActionController.startAction(
-        name: '_DeathmatchState.startingCountdownTick');
+    final _$actionInfo = _$DeathmatchStateBaseActionController.startAction(
+        name: 'DeathmatchStateBase.startingCountdownTick');
     try {
       return super.startingCountdownTick();
     } finally {
-      _$_DeathmatchStateActionController.endAction(_$actionInfo);
+      _$DeathmatchStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void startCountdown() {
-    final _$actionInfo = _$_DeathmatchStateActionController.startAction(
-        name: '_DeathmatchState.startCountdown');
+    final _$actionInfo = _$DeathmatchStateBaseActionController.startAction(
+        name: 'DeathmatchStateBase.startCountdown');
     try {
       return super.startCountdown();
     } finally {
-      _$_DeathmatchStateActionController.endAction(_$actionInfo);
+      _$DeathmatchStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void resetMatchTimer() {
-    final _$actionInfo = _$_DeathmatchStateActionController.startAction(
-        name: '_DeathmatchState.resetMatchTimer');
+    final _$actionInfo = _$DeathmatchStateBaseActionController.startAction(
+        name: 'DeathmatchStateBase.resetMatchTimer');
     try {
       return super.resetMatchTimer();
     } finally {
-      _$_DeathmatchStateActionController.endAction(_$actionInfo);
+      _$DeathmatchStateBaseActionController.endAction(_$actionInfo);
     }
   }
 

@@ -6,23 +6,26 @@ part of 'game_state.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$GameState on _GameState, Store {
+mixin _$GameState on GameStateBase, Store {
   Computed<String>? _$playerOneComputed;
 
   @override
-  String get playerOne => (_$playerOneComputed ??=
-          Computed<String>(() => super.playerOne, name: '_GameState.playerOne'))
-      .value;
+  String get playerOne =>
+      (_$playerOneComputed ??= Computed<String>(() => super.playerOne,
+              name: 'GameStateBase.playerOne'))
+          .value;
   Computed<String>? _$playerTwoComputed;
 
   @override
-  String get playerTwo => (_$playerTwoComputed ??=
-          Computed<String>(() => super.playerTwo, name: '_GameState.playerTwo'))
-      .value;
+  String get playerTwo =>
+      (_$playerTwoComputed ??= Computed<String>(() => super.playerTwo,
+              name: 'GameStateBase.playerTwo'))
+          .value;
 
-  final _$newTurnTimerCntAtom = Atom(name: '_GameState.newTurnTimerCnt');
+  late final _$newTurnTimerCntAtom =
+      Atom(name: 'GameStateBase.newTurnTimerCnt', context: context);
 
   @override
   int get newTurnTimerCnt {
@@ -37,7 +40,7 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$stateAtom = Atom(name: '_GameState.state');
+  late final _$stateAtom = Atom(name: 'GameStateBase.state', context: context);
 
   @override
   String get state {
@@ -52,7 +55,7 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$logAtom = Atom(name: '_GameState.log');
+  late final _$logAtom = Atom(name: 'GameStateBase.log', context: context);
 
   @override
   List<dynamic> get log {
@@ -67,7 +70,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$turnLogAtom = Atom(name: '_GameState.turnLog');
+  late final _$turnLogAtom =
+      Atom(name: 'GameStateBase.turnLog', context: context);
 
   @override
   List<dynamic> get turnLog {
@@ -82,7 +86,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$gameLogAtom = Atom(name: '_GameState.gameLog');
+  late final _$gameLogAtom =
+      Atom(name: 'GameStateBase.gameLog', context: context);
 
   @override
   Map<dynamic, dynamic> get gameLog {
@@ -97,7 +102,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$mainStateLengthAtom = Atom(name: '_GameState.mainStateLength');
+  late final _$mainStateLengthAtom =
+      Atom(name: 'GameStateBase.mainStateLength', context: context);
 
   @override
   int? get mainStateLength {
@@ -112,7 +118,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$lastStateLengthAtom = Atom(name: '_GameState.lastStateLength');
+  late final _$lastStateLengthAtom =
+      Atom(name: 'GameStateBase.lastStateLength', context: context);
 
   @override
   int? get lastStateLength {
@@ -127,7 +134,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$matchDifficultyAtom = Atom(name: '_GameState.matchDifficulty');
+  late final _$matchDifficultyAtom =
+      Atom(name: 'GameStateBase.matchDifficulty', context: context);
 
   @override
   int? get matchDifficulty {
@@ -142,7 +150,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$fixTeamsAtom = Atom(name: '_GameState.fixTeams');
+  late final _$fixTeamsAtom =
+      Atom(name: 'GameStateBase.fixTeams', context: context);
 
   @override
   bool? get fixTeams {
@@ -157,7 +166,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$playersAtom = Atom(name: '_GameState.players');
+  late final _$playersAtom =
+      Atom(name: 'GameStateBase.players', context: context);
 
   @override
   ObservableList<Player> get players {
@@ -172,7 +182,7 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$turnAtom = Atom(name: '_GameState.turn');
+  late final _$turnAtom = Atom(name: 'GameStateBase.turn', context: context);
 
   @override
   int get turn {
@@ -187,22 +197,24 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$audioPlayerAtom = Atom(name: '_GameState.audioPlayer');
+  late final _$audioPlayerAtom =
+      Atom(name: 'GameStateBase.audioPlayer', context: context);
 
   @override
-  AudioCache get audioPlayer {
+  AudioPlayer get audioPlayer {
     _$audioPlayerAtom.reportRead();
     return super.audioPlayer;
   }
 
   @override
-  set audioPlayer(AudioCache value) {
+  set audioPlayer(AudioPlayer value) {
     _$audioPlayerAtom.reportWrite(value, super.audioPlayer, () {
       super.audioPlayer = value;
     });
   }
 
-  final _$playerOneIDAtom = Atom(name: '_GameState.playerOneID');
+  late final _$playerOneIDAtom =
+      Atom(name: 'GameStateBase.playerOneID', context: context);
 
   @override
   int get playerOneID {
@@ -217,7 +229,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$playerTwoIDAtom = Atom(name: '_GameState.playerTwoID');
+  late final _$playerTwoIDAtom =
+      Atom(name: 'GameStateBase.playerTwoID', context: context);
 
   @override
   int get playerTwoID {
@@ -232,7 +245,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$wordsPerPlayerAtom = Atom(name: '_GameState.wordsPerPlayer');
+  late final _$wordsPerPlayerAtom =
+      Atom(name: 'GameStateBase.wordsPerPlayer', context: context);
 
   @override
   int get wordsPerPlayer {
@@ -247,7 +261,7 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$timerAtom = Atom(name: '_GameState.timer');
+  late final _$timerAtom = Atom(name: 'GameStateBase.timer', context: context);
 
   @override
   int? get timer {
@@ -262,8 +276,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$difficultyDispersionAtom =
-      Atom(name: '_GameState.difficultyDispersion');
+  late final _$difficultyDispersionAtom =
+      Atom(name: 'GameStateBase.difficultyDispersion', context: context);
 
   @override
   int get difficultyDispersion {
@@ -279,7 +293,7 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$wordAtom = Atom(name: '_GameState.word');
+  late final _$wordAtom = Atom(name: 'GameStateBase.word', context: context);
 
   @override
   String? get word {
@@ -294,7 +308,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$timeSpentAtom = Atom(name: '_GameState.timeSpent');
+  late final _$timeSpentAtom =
+      Atom(name: 'GameStateBase.timeSpent', context: context);
 
   @override
   int? get timeSpent {
@@ -309,7 +324,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$stopwatchAtom = Atom(name: '_GameState.stopwatch');
+  late final _$stopwatchAtom =
+      Atom(name: 'GameStateBase.stopwatch', context: context);
 
   @override
   Stopwatch get stopwatch {
@@ -324,7 +340,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$newTurnTimerAtom = Atom(name: '_GameState.newTurnTimer');
+  late final _$newTurnTimerAtom =
+      Atom(name: 'GameStateBase.newTurnTimer', context: context);
 
   @override
   Timer? get newTurnTimer {
@@ -339,7 +356,8 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$soundsAtom = Atom(name: '_GameState.sounds');
+  late final _$soundsAtom =
+      Atom(name: 'GameStateBase.sounds', context: context);
 
   @override
   HashMap<dynamic, dynamic>? get sounds {
@@ -354,7 +372,7 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$hatAtom = Atom(name: '_GameState.hat');
+  late final _$hatAtom = Atom(name: 'GameStateBase.hat', context: context);
 
   @override
   Hat? get hat {
@@ -369,170 +387,171 @@ mixin _$GameState on _GameState, Store {
     });
   }
 
-  final _$_GameStateActionController = ActionController(name: '_GameState');
+  late final _$GameStateBaseActionController =
+      ActionController(name: 'GameStateBase', context: context);
 
   @override
   int getPlayerOneId() {
-    final _$actionInfo = _$_GameStateActionController.startAction(
-        name: '_GameState.getPlayerOneId');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.getPlayerOneId');
     try {
       return super.getPlayerOneId();
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   int getPlayerTwoId() {
-    final _$actionInfo = _$_GameStateActionController.startAction(
-        name: '_GameState.getPlayerTwoId');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.getPlayerTwoId');
     try {
       return super.getPlayerTwoId();
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void changeState(String newState) {
-    final _$actionInfo = _$_GameStateActionController.startAction(
-        name: '_GameState.changeState');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.changeState');
     try {
       return super.changeState(newState);
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void concede() {
-    final _$actionInfo =
-        _$_GameStateActionController.startAction(name: '_GameState.concede');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.concede');
     try {
       return super.concede();
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void guessedRight() {
-    final _$actionInfo = _$_GameStateActionController.startAction(
-        name: '_GameState.guessedRight');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.guessedRight');
     try {
       return super.guessedRight();
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void error() {
-    final _$actionInfo =
-        _$_GameStateActionController.startAction(name: '_GameState.error');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.error');
     try {
       return super.error();
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   bool validateAll() {
-    final _$actionInfo = _$_GameStateActionController.startAction(
-        name: '_GameState.validateAll');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.validateAll');
     try {
       return super.validateAll();
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void newTurn() {
-    final _$actionInfo =
-        _$_GameStateActionController.startAction(name: '_GameState.newTurn');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.newTurn');
     try {
       return super.newTurn();
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void newTurnTimerSecondPass() {
-    final _$actionInfo = _$_GameStateActionController.startAction(
-        name: '_GameState.newTurnTimerSecondPass');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.newTurnTimerSecondPass');
     try {
       return super.newTurnTimerSecondPass();
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void newTurnTimerStart() {
-    final _$actionInfo = _$_GameStateActionController.startAction(
-        name: '_GameState.newTurnTimerStart');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.newTurnTimerStart');
     try {
       return super.newTurnTimerStart();
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void turnStart() {
-    final _$actionInfo =
-        _$_GameStateActionController.startAction(name: '_GameState.turnStart');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.turnStart');
     try {
       return super.turnStart();
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void timerSecondPass() {
-    final _$actionInfo = _$_GameStateActionController.startAction(
-        name: '_GameState.timerSecondPass');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.timerSecondPass');
     try {
       return super.timerSecondPass();
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void addPlayer() {
-    final _$actionInfo =
-        _$_GameStateActionController.startAction(name: '_GameState.addPlayer');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.addPlayer');
     try {
       return super.addPlayer();
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void removePlayer(int i) {
-    final _$actionInfo = _$_GameStateActionController.startAction(
-        name: '_GameState.removePlayer');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.removePlayer');
     try {
       return super.removePlayer(i);
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void createHat(Dictionary dictionary) {
-    final _$actionInfo =
-        _$_GameStateActionController.startAction(name: '_GameState.createHat');
+    final _$actionInfo = _$GameStateBaseActionController.startAction(
+        name: 'GameStateBase.createHat');
     try {
       return super.createHat(dictionary);
     } finally {
-      _$_GameStateActionController.endAction(_$actionInfo);
+      _$GameStateBaseActionController.endAction(_$actionInfo);
     }
   }
 

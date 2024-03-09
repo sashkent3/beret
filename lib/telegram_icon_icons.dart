@@ -13,6 +13,7 @@
 ///
 ///
 ///
+library;
 import 'package:flutter/widgets.dart';
 
 class TelegramIcon {
@@ -21,5 +22,5 @@ class TelegramIcon {
   static const _kFontFam = 'TelegramIcon';
 
   static const IconData telegram =
-      const IconData(0xe800, fontFamily: _kFontFam);
+      IconData(0xe800, fontFamily: _kFontFam);
 }

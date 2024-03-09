@@ -54,7 +54,7 @@ class Dictionary {
   List getUsedWords() {
     if (!File('$usedWordsPath/used_words.json').existsSync()) {
       List usedWords = List.filled(1000, null);
-      new File('$usedWordsPath/used_words.json').createSync();
+      File('$usedWordsPath/used_words.json').createSync();
       File('$usedWordsPath/used_words.json')
           .writeAsStringSync(jsonEncode(usedWords));
       return usedWords;
@@ -69,14 +69,14 @@ class Dictionary {
     List hatWords = [];
     List usedWords = getUsedWords();
     int usedWordsIter = getUsedWordsIter();
+    final Normal distribution = Normal(
+      difficulty,
+      difficultyDispersion * difficultyDispersion / 9,
+    );
     for (var i = 0; i < size; i++) {
-      int bucketIdx =
-          (Normal.generate(1)[0] / 3 * difficultyDispersion + difficulty)
-              .round();
+      int bucketIdx = distribution.generate(1).first.round();
       while (bucketIdx < 0 || bucketIdx > 100) {
-        bucketIdx =
-            (Normal.generate(1)[0] / 3 * difficultyDispersion + difficulty)
-                .round();
+        bucketIdx = distribution.generate(1).first.round();
       }
       String word = buckets[bucketIdx][bucketsIters[bucketIdx]];
       bool bucketShuffled = false;
@@ -85,15 +85,11 @@ class Dictionary {
         bucketsIters[bucketIdx]++;
         if (bucketsIters[bucketIdx] == buckets[bucketIdx].length) {
           if (bucketShuffled) {
-            int newBucketIdx =
-                (Normal.generate(1)[0] / 3 * difficultyDispersion + difficulty)
-                    .round();
+            int newBucketIdx = distribution.generate(1).first.round();
             while (newBucketIdx < 0 ||
                 newBucketIdx > 100 ||
                 newBucketIdx == bucketIdx) {
-              newBucketIdx = (Normal.generate(1)[0] / 3 * difficultyDispersion +
-                      difficulty)
-                  .round();
+              newBucketIdx = distribution.generate(1).first.round();
             }
             bucketIdx = newBucketIdx;
             bucketShuffled = false;

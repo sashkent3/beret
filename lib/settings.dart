@@ -9,17 +9,16 @@ class SettingsPage extends StatefulWidget {
   final bool currentSetFixTeams;
 
   const SettingsPage(
-      {Key? key,
+      {super.key,
       required this.currentSetDifficulty,
       required this.currentSetDifficultyDispersion,
-      required this.currentSetFixTeams})
-      : super(key: key);
+      required this.currentSetFixTeams});
 
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  SettingsPageState createState() => SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class SettingsPageState extends State<SettingsPage> {
   static GlobalKey<FormState> settingsKey = GlobalKey<FormState>();
   late int currentSetDifficulty;
   late int currentSetDifficultyDispersion;
@@ -38,13 +37,13 @@ class _SettingsPageState extends State<SettingsPage> {
     final currentState = Provider.of<AppState>(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text('Шляпа'),
+          title: const Text('Шляпа'),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: FloatingActionButton(
           tooltip: 'Сохранить настройки',
-          backgroundColor: Color(0xFFDEA90C),
-          child: Icon(Icons.save),
+          backgroundColor: const Color(0xFFDEA90C),
+          child: const Icon(Icons.save),
           onPressed: () {
             if (settingsKey.currentState!.validate()) {
               settingsKey.currentState!.save();
@@ -61,23 +60,23 @@ class _SettingsPageState extends State<SettingsPage> {
             color: Colors.blue,
             child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
               TextButton.icon(
-                  label: Text(
+                  label: const Text(
                     'СБРОСИТЬ НАСТРОЙКИ',
                     style: TextStyle(color: Colors.white),
                   ),
-                  icon:
-                      Icon(Icons.settings_backup_restore, color: Colors.white),
+                  icon: const Icon(Icons.settings_backup_restore,
+                      color: Colors.white),
                   onPressed: () {
                     showDialog<void>(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            content: Text(
+                            content: const Text(
                               'Вы уверены, что вы хотите сбросить настройки до стандартных значений?',
                             ),
                             actions: <Widget>[
                               TextButton(
-                                child: Text(
+                                child: const Text(
                                   'Нет',
                                 ),
                                 onPressed: () {
@@ -85,7 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 },
                               ),
                               TextButton(
-                                  child: Text(
+                                  child: const Text(
                                     'Да',
                                   ),
                                   onPressed: () {
@@ -111,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Form(
               key: settingsKey,
               child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   shrinkWrap: true,
                   children: [
                     TextFormField(
@@ -181,7 +180,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       },
                     ),
                     Padding(
-                        padding: EdgeInsets.only(top: 10),
+                        padding: const EdgeInsets.only(top: 10),
                         child: Text('Сложность',
                             style: TextStyle(
                                 fontSize: 12,

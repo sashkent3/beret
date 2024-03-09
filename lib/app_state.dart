@@ -15,7 +15,7 @@ import 'game_state.dart';
 
 part 'app_state.g.dart';
 
-class AppState = _AppState with _$AppState;
+class AppState = AppStateBase with _$AppState;
 
 Future<void> syncWithServer(List<String?> args) async {
   String documentsPath = args[0]!;
@@ -24,9 +24,9 @@ Future<void> syncWithServer(List<String?> args) async {
   if (File('$documentsPath/gameLogs.json').existsSync()) {
     List gameLogs =
         jsonDecode(File('$documentsPath/gameLogs.json').readAsStringSync());
-    Set sentLogs = Set();
+    Set sentLogs = {};
     for (var gameLog in gameLogs) {
-      var response;
+      http.Response? response;
       try {
         response = await http.post(Uri.http(host, '/api/v2/game/log'),
             headers: {"content-type": "application/json"},
@@ -50,7 +50,7 @@ Future<void> syncWithServer(List<String?> args) async {
   }
   if (File('$documentsPath/wordsComplains.json').existsSync()) {
     try {
-      var response;
+      http.Response? response;
       try {
         response = await http
             .post(Uri.http(host, '/$deviceId/complain'), body: {
@@ -59,13 +59,14 @@ Future<void> syncWithServer(List<String?> args) async {
       } on SocketException catch (_) {
         response = null;
       }
-      if (response.statusCode == 200)
+      if (response != null && response.statusCode == 200) {
         File('$documentsPath/wordsComplains.json').deleteSync();
+      }
     } on SocketException catch (_) {}
   }
 }
 
-abstract class _AppState with Store {
+abstract class AppStateBase with Store {
   @observable
   bool loading = false;
 
@@ -73,7 +74,7 @@ abstract class _AppState with Store {
   bool loaded = false;
 
   @observable
-  Uuid uuid = Uuid();
+  Uuid uuid = const Uuid();
 
   @observable
   String? deviceId;
@@ -114,7 +115,7 @@ abstract class _AppState with Store {
       } else {
         deviceId = prefs!.getString('deviceId')!;
       }
-      Timer.periodic(Duration(minutes: 5), (Timer timeout) {
+      Timer.periodic(const Duration(minutes: 5), (Timer timeout) {
         if (!syncing) {
           syncing = true;
           compute(syncWithServer, [documentsPath, deviceId]).then((void _) {

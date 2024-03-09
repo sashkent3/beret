@@ -6,10 +6,11 @@ part of 'app_state.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$AppState on _AppState, Store {
-  final _$loadingAtom = Atom(name: '_AppState.loading');
+mixin _$AppState on AppStateBase, Store {
+  late final _$loadingAtom =
+      Atom(name: 'AppStateBase.loading', context: context);
 
   @override
   bool get loading {
@@ -24,7 +25,7 @@ mixin _$AppState on _AppState, Store {
     });
   }
 
-  final _$loadedAtom = Atom(name: '_AppState.loaded');
+  late final _$loadedAtom = Atom(name: 'AppStateBase.loaded', context: context);
 
   @override
   bool get loaded {
@@ -39,7 +40,7 @@ mixin _$AppState on _AppState, Store {
     });
   }
 
-  final _$uuidAtom = Atom(name: '_AppState.uuid');
+  late final _$uuidAtom = Atom(name: 'AppStateBase.uuid', context: context);
 
   @override
   Uuid get uuid {
@@ -54,7 +55,8 @@ mixin _$AppState on _AppState, Store {
     });
   }
 
-  final _$deviceIdAtom = Atom(name: '_AppState.deviceId');
+  late final _$deviceIdAtom =
+      Atom(name: 'AppStateBase.deviceId', context: context);
 
   @override
   String? get deviceId {
@@ -69,7 +71,8 @@ mixin _$AppState on _AppState, Store {
     });
   }
 
-  final _$gameStateAtom = Atom(name: '_AppState.gameState');
+  late final _$gameStateAtom =
+      Atom(name: 'AppStateBase.gameState', context: context);
 
   @override
   GameState? get gameState {
@@ -84,7 +87,8 @@ mixin _$AppState on _AppState, Store {
     });
   }
 
-  final _$deathmatchStateAtom = Atom(name: '_AppState.deathmatchState');
+  late final _$deathmatchStateAtom =
+      Atom(name: 'AppStateBase.deathmatchState', context: context);
 
   @override
   DeathmatchState? get deathmatchState {
@@ -99,7 +103,7 @@ mixin _$AppState on _AppState, Store {
     });
   }
 
-  final _$prefsAtom = Atom(name: '_AppState.prefs');
+  late final _$prefsAtom = Atom(name: 'AppStateBase.prefs', context: context);
 
   @override
   SharedPreferences? get prefs {
@@ -114,7 +118,8 @@ mixin _$AppState on _AppState, Store {
     });
   }
 
-  final _$dictionaryAtom = Atom(name: '_AppState.dictionary');
+  late final _$dictionaryAtom =
+      Atom(name: 'AppStateBase.dictionary', context: context);
 
   @override
   Dictionary? get dictionary {
@@ -129,7 +134,8 @@ mixin _$AppState on _AppState, Store {
     });
   }
 
-  final _$documentsPathAtom = Atom(name: '_AppState.documentsPath');
+  late final _$documentsPathAtom =
+      Atom(name: 'AppStateBase.documentsPath', context: context);
 
   @override
   String? get documentsPath {
@@ -144,7 +150,8 @@ mixin _$AppState on _AppState, Store {
     });
   }
 
-  final _$syncingAtom = Atom(name: '_AppState.syncing');
+  late final _$syncingAtom =
+      Atom(name: 'AppStateBase.syncing', context: context);
 
   @override
   bool get syncing {
@@ -159,45 +166,47 @@ mixin _$AppState on _AppState, Store {
     });
   }
 
-  final _$loadAppAsyncAction = AsyncAction('_AppState.loadApp');
+  late final _$loadAppAsyncAction =
+      AsyncAction('AppStateBase.loadApp', context: context);
 
   @override
   Future<void> loadApp() {
     return _$loadAppAsyncAction.run(() => super.loadApp());
   }
 
-  final _$_AppStateActionController = ActionController(name: '_AppState');
+  late final _$AppStateBaseActionController =
+      ActionController(name: 'AppStateBase', context: context);
 
   @override
   void restoreDefaultSettings() {
-    final _$actionInfo = _$_AppStateActionController.startAction(
-        name: '_AppState.restoreDefaultSettings');
+    final _$actionInfo = _$AppStateBaseActionController.startAction(
+        name: 'AppStateBase.restoreDefaultSettings');
     try {
       return super.restoreDefaultSettings();
     } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
+      _$AppStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void newGame() {
-    final _$actionInfo =
-        _$_AppStateActionController.startAction(name: '_AppState.newGame');
+    final _$actionInfo = _$AppStateBaseActionController.startAction(
+        name: 'AppStateBase.newGame');
     try {
       return super.newGame();
     } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
+      _$AppStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void newDeathMatch() {
-    final _$actionInfo = _$_AppStateActionController.startAction(
-        name: '_AppState.newDeathMatch');
+    final _$actionInfo = _$AppStateBaseActionController.startAction(
+        name: 'AppStateBase.newDeathMatch');
     try {
       return super.newDeathMatch();
     } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
+      _$AppStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
