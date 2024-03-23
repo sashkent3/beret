@@ -1,0 +1,2 @@
+An app to play the Hat game (aka Alias) in Russian, integrated with the Sombrero server to automatically calculate word difficulties.
+http://the-hat.appspot.com/
